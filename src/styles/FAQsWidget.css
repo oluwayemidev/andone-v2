@@ -1,0 +1,24 @@
+/* src/styles/FAQsWidget.css */
+
+.faqs-widget {
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px;
+  }
+  
+  .ant-card-head-title {
+    font-size: 1.2em;
+    color: #3A3A8D; /* Primary color */
+    font-weight: bold;
+  }
+  
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    font-size: 1em;
+    color: #3A3A8D; /* Primary color */
+  }
+  
+  .ant-collapse-content-box {
+    font-size: 0.9em;
+    color: #555; /* Secondary text color */
+  }
+  

@@ -1,0 +1,27 @@
+/* src/pages/Home.css */
+.home-container {
+    padding: 24px;
+  }
+  
+  .glass-widget {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 16px;
+    overflow: hidden; /* Ensures child elements don't break out of the glass effect */
+  }
+  
+  .glass-widget .ant-card-body {
+    background: transparent;
+  }
+  
+  @media (max-width: 767px) {
+    .glass-widget {
+      margin-bottom: 16px;
+    }
+  }
+  
+  

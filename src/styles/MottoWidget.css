@@ -1,0 +1,55 @@
+/* src/styles/MottoWidget.css */
+.motto-card {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0;
+  text-align: center;
+}
+
+.motto-card .ant-card-body{
+  padding: 10px;
+}
+
+.motto-carousel .slick-slide {
+  display: flex !important;
+  justify-content: center;
+}
+
+.motto-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.motto-item-icon {
+  font-size: 2em;
+  color: #3A3A8D; /* Primary color for the icon */
+}
+
+.motto-item-text {
+  color: #E52027; /* Secondary color for the text */
+  font-size: 1em;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .motto-item-text {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .motto-item-icon {
+    font-size: 0.9em;
+  }
+
+  .motto-item-text {
+    font-size: 0.9em;
+  }
+}

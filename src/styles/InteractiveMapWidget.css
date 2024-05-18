@@ -1,0 +1,12 @@
+/* src/styles/InteractiveMapWidget.css */
+
+.interactive-map-widget {
+    height: 100%;
+  }
+  
+  .map-container {
+    height: 400px; /* Set a fixed height for the map */
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  

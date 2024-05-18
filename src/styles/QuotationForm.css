@@ -1,0 +1,11 @@
+/* src/pages/QuotationForm.css */
+.quotation-form-card {
+    max-width: 600px;
+    margin: 20px auto;
+    border-radius: 8px;
+  }
+  
+  .quotation-form {
+    padding: 16px;
+  }
+  

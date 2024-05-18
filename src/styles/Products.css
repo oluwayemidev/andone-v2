@@ -1,0 +1,22 @@
+/* src/styles/Products.css */
+
+.header {
+    background: #001529;
+    padding: 0;
+    color: white;
+  }
+  
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  
+  .product-card {
+    transition: transform 0.3s;
+  }
+  
+  .product-card:hover {
+    transform: scale(1.05);
+  }
+  
