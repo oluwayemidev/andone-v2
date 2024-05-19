@@ -13,6 +13,7 @@ import {
   PhoneOutlined,
   FileSearchOutlined,
   GlobalOutlined,
+  SunOutlined
 } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import Home from "./pages/Home";
@@ -32,7 +33,7 @@ import QuotationForm from "./pages/QuotationForm";
 import QuotationsPage from "./pages/QuotationsPage";
 import CategoryPage from "./pages/CategoryPage";
 import SolarCalculations from "./pages/SolarCalculations";
-import SolarResult from './pages/SolarResultsPage'
+import SolarResult from "./pages/SolarResultsPage";
 import "./App.css";
 import logo from "./images/logo.png";
 import ScrollToTop from "./components/ScrollToTop";
@@ -113,7 +114,8 @@ const App = () => {
       </Menu.Item>
       <Menu.Item key="7" icon={<FileSearchOutlined />}>
         <Link to="/solar-calculation">
-          {translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}
+          {translatedTexts.getSolarCalculation ||
+            textsToTranslate.getSolarCalculation}
         </Link>
       </Menu.Item>
     </Menu>
@@ -198,9 +200,10 @@ const App = () => {
                   {translatedTexts.getQuote || textsToTranslate.getQuote}
                 </Link>
               </Menu.Item>
-              <Menu.Item key="7" icon={<FileSearchOutlined />}>
+              <Menu.Item key="7" icon={<SunOutlined />}>
                 <Link to="/solar-calculation">
-                  {translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}
+                  {translatedTexts.getSolarCalculation ||
+                    textsToTranslate.getSolarCalculation}
                 </Link>
               </Menu.Item>
               <Menu.Item

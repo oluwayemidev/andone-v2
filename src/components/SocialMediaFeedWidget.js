@@ -6,27 +6,27 @@ import { UserOutlined } from '@ant-design/icons';
 const socialMediaPosts = [
   {
     id: 1,
-    username: 'john_doe',
-    content: 'Just had a great time hiking in the mountains! #nature #hiking',
+    username: 'John Smith',
+    content: 'Can I get a quotation for Inverter?',
     avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
   },
   {
     id: 2,
-    username: 'jane_smith',
-    content: 'Enjoying a cup of coffee on this beautiful morning. #coffeetime',
+    username: 'Kate Johnson',
+    content: 'Your products are the best.',
     avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
   },
-  {
-    id: 3,
-    username: 'sam_wilson',
-    content: 'Excited to start my new project! #coding #development',
-    avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
-  },
+  // {
+  //   id: 3,
+  //   username: 'sam_wilson',
+  //   content: 'Excited to start my new project! #coding #development',
+  //   avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
+  // },
 ];
 
 const SocialMediaFeedWidget = () => {
   return (
-    <Card title="Social Media Feed" style={{ width: '100%' }}>
+    <Card title="Social Media Feed" style={{ width: '100%', height: 300, overflowY: 'auto' }}>
       <List
         itemLayout="vertical"
         size="large"
