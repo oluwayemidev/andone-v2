@@ -13,7 +13,7 @@ import {
   PhoneOutlined,
   FileSearchOutlined,
   GlobalOutlined,
-  SunOutlined
+  SunOutlined,
 } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import Home from "./pages/Home";
@@ -34,6 +34,8 @@ import QuotationsPage from "./pages/QuotationsPage";
 import CategoryPage from "./pages/CategoryPage";
 import SolarCalculations from "./pages/SolarCalculations";
 import SolarResult from "./pages/SolarResultsPage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
 import logo from "./images/logo.png";
 import ScrollToTop from "./components/ScrollToTop";
@@ -112,7 +114,7 @@ const App = () => {
           {translatedTexts.getQuote || textsToTranslate.getQuote}
         </Link>
       </Menu.Item>
-      <Menu.Item key="7" icon={<FileSearchOutlined />}>
+      <Menu.Item key="7" icon={<SunOutlined />}>
         <Link to="/solar-calculation">
           {translatedTexts.getSolarCalculation ||
             textsToTranslate.getSolarCalculation}
@@ -241,6 +243,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/quotation" element={<QuotationForm />} />
@@ -256,6 +259,7 @@ const App = () => {
               <Route path="quotations" element={<QuotationsPage />} />
               <Route path="solar-results" element={<SolarResult />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Content>
         <FloatingButton />

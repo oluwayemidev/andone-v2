@@ -53,9 +53,11 @@ const ProductsPage = () => {
     formData.append('category', values.category);
     formData.append('price', values.price);
     formData.append('description', values.description);
+    formData.append('img', values.image);
+    console.log(values.image)
 
     if (fileList.length > 0) {
-      formData.append('image', fileList[0].originFileObj);
+      formData.append('image', values.image.fileList[0].originFileObj);
     }
 
     try {
@@ -128,8 +130,8 @@ const ProductsPage = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the product description!' }]}>
             <Input.TextArea rows={4} />
           </Form.Item>
-          <Form.Item label="Image">
-            <Upload {...uploadProps} listType="picture">
+          <Form.Item label="Image" name="image">
+            <Upload {...uploadProps} name='image' listType="picture">
               <Button icon={<UploadOutlined />}>Upload (Max: 1)</Button>
             </Upload>
           </Form.Item>
