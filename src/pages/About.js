@@ -1,80 +1,114 @@
-// src/pages/About.js
-import React from "react";
-import { Card, Layout, Typography } from "antd";
-import { Header } from "antd/es/layout/layout";
+import React from 'react';
+import { Layout, Row, Col, Typography, Card, Avatar } from 'antd';
+import { animated } from '@react-spring/web';
+import { useSpring } from '@react-spring/core';
+import { TeamOutlined, SmileOutlined, GlobalOutlined } from '@ant-design/icons';
+import '../styles/About.css';
 
+const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const About = () => (
-  <Layout>
-    <Header className="header">
-      <Title level={2} style={{ color: "white", textAlign: "center" }}>
-        About Us
-      </Title>
-    </Header>
-    <Card
-      title=""
-      bordered={false}
-      style={{ width: "100%", margin: "20px auto", maxWidth: "800px" }}
-    >
-      <Typography>
-        <Title level={2}>Introduction</Title>
-        <Paragraph>
-          We are a leading provider of solar energy solutions, committed to
-          delivering high-quality solar products and services to our customers.
-          Our mission is to promote sustainable energy and reduce carbon
-          footprints through innovative and efficient solar technologies.
-        </Paragraph>
-        <Paragraph>
-          Founded in [Year], our company has grown to become a trusted name in
-          the solar industry. We pride ourselves on our commitment to
-          excellence, customer satisfaction, and environmental responsibility.
-        </Paragraph>
-        <Paragraph>
-          Our team of experienced professionals offers comprehensive solutions,
-          from consultation and design to installation and maintenance of solar
-          panels. We work closely with our clients to understand their unique
-          energy needs and provide customized solutions that maximize efficiency
-          and savings.
-        </Paragraph>
-        <Paragraph>
-          In addition to our product offerings, we are dedicated to educating
-          the public about the benefits of solar energy and advocating for
-          sustainable practices. We believe that by empowering individuals and
-          businesses to harness the power of the sun, we can contribute to a
-          cleaner, greener future for all.
-        </Paragraph>
-        <Title level={3}>Our Services</Title>
-        <Paragraph>
-          <ul>
-            <li>Solar panel installation</li>
-            <li>Maintenance and repair services</li>
-            <li>Energy efficiency consultation</li>
-            <li>
-              Customized solar solutions for residential and commercial
-              properties
-            </li>
-          </ul>
-        </Paragraph>
-        <Title level={3}>Our Mission</Title>
-        <Paragraph>
-          Our mission is to provide sustainable energy solutions that are
-          accessible, affordable, and efficient. We are dedicated to reducing
-          our customers' energy costs while promoting a cleaner environment
-          through the use of renewable energy sources.
-        </Paragraph>
-        <Title level={3}>Contact Us</Title>
-        <Paragraph>
-          For more information about our products and services, please contact
-          us at:
-          <br />
-          Email: info@solarcompany.com
-          <br />
-          Phone: (123) 456-7890
-        </Paragraph>
-      </Typography>
-    </Card>
-  </Layout>
-);
+const AboutPage = () => {
+  const overviewAnimation = useSpring({
+    from: { opacity: 0, transform: 'translateY(-50px)' },
+    to: { opacity: 1, transform: 'translateY(0)' },
+    config: { duration: 800 },
+  });
 
-export default About;
+  const missionVisionAnimation = useSpring({
+    from: { opacity: 0, transform: 'translateY(50px)' },
+    to: { opacity: 1, transform: 'translateY(0)' },
+    config: { duration: 800 },
+    delay: 200,
+  });
+
+  const teamAnimation = useSpring({
+    from: { opacity: 0, transform: 'scale(0.8)' },
+    to: { opacity: 1, transform: 'scale(1)' },
+    config: { duration: 800 },
+    delay: 400,
+  });
+
+  const teamMembers = [
+    {
+      name: 'John Doe',
+      position: 'CEO',
+      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+    },
+    {
+      name: 'Jane Smith',
+      position: 'CTO',
+      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+    },
+    {
+      name: 'Bob Johnson',
+      position: 'CFO',
+      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+    },
+  ];
+
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Header className="about-header">
+      <Title
+          level={2}
+          style={{ color: "white", lineHeight: "64px", textAlign: "center" }}
+        >
+          About Us
+        </Title>
+      </Header>
+      <Content className="about-content">
+        <animated.div style={overviewAnimation}>
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <Title level={2}>Who We Are</Title>
+            <Paragraph>
+              We are a leading provider of solar energy solutions, dedicated to delivering clean and sustainable energy to communities around the world.
+            </Paragraph>
+          </div>
+        </animated.div>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <animated.div style={missionVisionAnimation}>
+              <Card className="about-card">
+                <GlobalOutlined className="about-icon" />
+                <Title level={3}>Our Mission</Title>
+                <Paragraph>
+                  To innovate and provide top-quality solar energy solutions that empower communities and help preserve our planet for future generations.
+                </Paragraph>
+              </Card>
+            </animated.div>
+          </Col>
+          <Col xs={24} md={12}>
+            <animated.div style={missionVisionAnimation}>
+              <Card className="about-card">
+                <SmileOutlined className="about-icon" />
+                <Title level={3}>Our Vision</Title>
+                <Paragraph>
+                  A world where every home and business is powered by clean, renewable energy, contributing to a healthier and more sustainable planet.
+                </Paragraph>
+              </Card>
+            </animated.div>
+          </Col>
+        </Row>
+        <animated.div style={teamAnimation}>
+          <div style={{ textAlign: 'center', margin: '50px 0' }}>
+            <Title level={2}>Meet Our Team</Title>
+          </div>
+          <Row gutter={[16, 16]}>
+            {teamMembers.map((member, index) => (
+              <Col xs={24} md={8} key={index}>
+                <Card className="about-team-card">
+                  <Avatar size={120} src={member.avatar} />
+                  <Title level={4}>{member.name}</Title>
+                  <Paragraph>{member.position}</Paragraph>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </animated.div>
+      </Content>
+    </Layout>
+  );
+};
+
+export default AboutPage;

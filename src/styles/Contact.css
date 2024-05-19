@@ -1,0 +1,35 @@
+.contact-header {
+    background-color: #001529;
+    padding: 0 50px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contact-content {
+    padding: 50px;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    animation: backgroundAnimation 10s infinite alternate;
+  }
+  
+  @keyframes backgroundAnimation {
+    0% {
+      background: linear-gradient(135deg, #e0f7fa, #80deea);
+    }
+    100% {
+      background: linear-gradient(135deg, #80deea, #e0f7fa);
+    }
+  }
+  
+  .contact-form {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contact-info {
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  

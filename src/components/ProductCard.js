@@ -1,6 +1,6 @@
-// src/components/ProductCard.js
 import React from 'react';
 import { Card, Button, Typography } from 'antd';
+import { Link } from 'react-router-dom'; // Import Link from React Router
 
 const { Title, Text } = Typography;
 
@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
       cover={<img alt={product.name} src={product.image} />}
       actions={[
         <Button type="primary">Add to Cart</Button>,
-        <Button type="default">Details</Button>
+        <Link to={`/products/${product.id}`}>Details</Link> // Navigate to product details page
       ]}
     >
       <Title level={4}>{product.name}</Title>

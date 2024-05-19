@@ -1,8 +1,10 @@
 // src/components/AdminDashboard.js (Updated to include Quotation Form link)
-import React, { useState } from 'react';
-import { Layout, Menu } from 'antd';
-import { Outlet, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Layout, Menu } from "antd";
+import { Outlet, Link } from "react-router-dom";
 import {
+  BulbOutlined,
+  ContainerOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   AppstoreOutlined,
@@ -10,9 +12,9 @@ import {
   MessageOutlined,
   ContactsOutlined,
   FileTextOutlined,
-  FormOutlined
-} from '@ant-design/icons';
-import '../styles/AdminDashboard.css';
+  FormOutlined,
+} from "@ant-design/icons";
+import "../styles/AdminDashboard.css";
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,33 +26,48 @@ const AdminDashboard = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={toggle}
         breakpoint="lg"
         collapsedWidth="80"
-        className="sider"
+        style={{
+          overflow: "auto",
+          height: "100vh",
+          position: "fixed",
+          paddingTop: 20,
+          zIndex: 1,
+          left: 0,
+          top: 60,
+          bottom: 0,
+        }}
       >
         <div className="logo" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<AppstoreOutlined />}>
             <Link to="/admin/products">Products</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />}>
+          <Menu.Item key="2" icon={<ContainerOutlined />}>
+            <Link to="/admin/categories">Categories</Link>
+          </Menu.Item>
+          <Menu.Item key="3" icon={<UserOutlined />}>
             <Link to="/admin/users">Users</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<MessageOutlined />}>
+          <Menu.Item key="4" icon={<MessageOutlined />}>
             <Link to="/admin/messages">Messages</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<ContactsOutlined />}>
+          <Menu.Item key="5" icon={<ContactsOutlined />}>
             <Link to="/admin/contacts">Contacts</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<FileTextOutlined />}>
+          <Menu.Item key="6" icon={<FileTextOutlined />}>
             <Link to="/admin/quotations">Quotations</Link>
           </Menu.Item>
-          <Menu.Item key="6" icon={<FormOutlined />}>
+          <Menu.Item key="7" icon={<BulbOutlined />}>
+            <Link to="/admin/solar-results">Solar Results</Link>
+          </Menu.Item>
+          <Menu.Item key="8" icon={<FormOutlined />}>
             <Link to="/quotation">Request Quotation</Link>
           </Menu.Item>
         </Menu>
@@ -61,7 +78,7 @@ const AdminDashboard = () => {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </div>
         </Header>
-        <Content style={{ margin: '0 16px', overflow: 'initial' }}>
+        <Content style={{ margin: "0 16px", overflow: "initial" }}>
           <Outlet />
         </Content>
       </Layout>

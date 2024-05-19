@@ -11,13 +11,27 @@ const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
 const { Option } = Select;
 
-const categories = ['All', 'Solar Panels', 'Accessories', 'Inverters', 'Batteries'];
+// const categories = ['All', 'Solar Panels', 'Accessories', 'Inverters', 'Batteries'];
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/categories");
+      setCategories(response.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   useEffect(() => {
     // Fetch products from an API or use static data
@@ -55,11 +69,11 @@ const ProductPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className="header">
-        <Title level={2} style={{ color: 'white', textAlign: 'center' }}>Our Products</Title>
+        <Title level={2} style={{ color: 'white', lineHeight: '64px', textAlign: 'center' }}>Our Products</Title>
       </Header>
       <Layout>
         <Sider width={200} className="site-layout-background">
-          <Filters categories={categories} onCategoryChange={handleCategoryChange} />
+          <Filters categories={categories && categories.map(category => category.name)} onCategoryChange={handleCategoryChange} />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
           <Content
@@ -83,7 +97,7 @@ const ProductPage = () => {
                 style={{ width: 200 }}
               >
                 {categories.map(category => (
-                  <Option key={category} value={category}>{category}</Option>
+                  <Option key={category.id} value={category.name}>{category.name}</Option>
                 ))}
               </Select>
             </div>
