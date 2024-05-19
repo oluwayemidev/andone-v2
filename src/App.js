@@ -53,6 +53,7 @@ const App = () => {
     services: "Services",
     contact: "Contact",
     getQuote: "Get Quote",
+    getSolarCalculation: "Solar Calculator",
   };
 
   useEffect(() => {
@@ -108,6 +109,11 @@ const App = () => {
       <Menu.Item key="6" icon={<FileSearchOutlined />}>
         <Link to="/quotation">
           {translatedTexts.getQuote || textsToTranslate.getQuote}
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="7" icon={<FileSearchOutlined />}>
+        <Link to="/solar-calculation">
+          {translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}
         </Link>
       </Menu.Item>
     </Menu>
@@ -190,6 +196,11 @@ const App = () => {
               <Menu.Item key="6" icon={<FileSearchOutlined />}>
                 <Link to="/quotation">
                   {translatedTexts.getQuote || textsToTranslate.getQuote}
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="7" icon={<FileSearchOutlined />}>
+                <Link to="/solar-calculation">
+                  {translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}
                 </Link>
               </Menu.Item>
               <Menu.Item

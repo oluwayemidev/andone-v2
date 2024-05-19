@@ -7,6 +7,7 @@ const textsToTranslate = {
     services: 'Services',
     contact: 'Contact',
     getQuote: 'Get Quote',
+    getSolarCalculation: 'Solar Calculation',
     welcomeMessage: 'Welcome to Our Solar Company',
     aboutUs: 'About Us',
     productsDescription: 'Explore our range of solar products.',
