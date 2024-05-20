@@ -1,39 +1,62 @@
-// src/pages/LoginPage.js
-import React, { useState } from 'react';
-import { Form, Input, Button, Card } from 'antd';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../actions/userActions';
 import { useNavigate } from 'react-router-dom';
+import { Form, Input, Button, Typography, Alert } from 'antd';
 
-const LoginPage = () => {
-  const [username, setUsername] = useState('');
+const { Title } = Typography;
+
+const Login = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/users/login', { username, password });
-      localStorage.setItem('token', response.data.token);
-      navigate('/admin/dashboard');
-    } catch (error) {
-      console.error('Login failed', error);
-    }
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
   };
 
+  useEffect(() => {
+    if (userInfo) {
+      if (userInfo.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/chat');
+      }
+    }
+  }, [userInfo, navigate]);
+
   return (
-    <Card title="Admin Login" style={{ maxWidth: 400, margin: '0 auto' }}>
-      <Form>
-        <Form.Item label="Username">
-          <Input value={username} onChange={e => setUsername(e.target.value)} />
+    <div style={{ maxWidth: 600, margin: 'auto', padding: '1rem' }}>
+      <Title level={3}>Login</Title>
+      {error && <Alert message={error} type="error" showIcon />}
+      <Form onSubmitCapture={submitHandler}>
+        <Form.Item label="Email">
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Form.Item>
         <Form.Item label="Password">
-          <Input.Password value={password} onChange={e => setPassword(e.target.value)} />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={handleLogin}>Login</Button>
+          <Button type="primary" htmlType="submit" loading={loading}>
+            Login
+          </Button>
         </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 
-export default LoginPage;
+export default Login;

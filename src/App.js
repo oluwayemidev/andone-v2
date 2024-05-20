@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { Layout, Menu, Drawer, Button, Grid, Image, Dropdown } from "antd";
@@ -22,9 +21,15 @@ import Products from "./pages/Products";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import FloatingButton from "./components/FloatingButton";
-import AdminLoginPage from "./pages/Login";
-import AdminSignupPage from "./pages/Signup";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Chat from "./pages/Chat";
+import AdminChat from "./pages/AdminChat";
+import AdminChatList from "./components/AdminChatList";
+import PrivateRoute from "./utils/PrivateRoute";
+import AdminRoute from "./utils/AdminRoute"; // Import AdminRoute
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminOverview from "./components/AdminOverview";
 import ProductsPage from "./pages/ProductsPage";
 import UsersPage from "./pages/UsersPage";
 import MessagesPage from "./pages/MessagesPage";
@@ -248,26 +253,42 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/quotation" element={<QuotationForm />} />
             <Route path="/solar-calculation" element={<SolarCalculations />} />
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route path="/admin/signup" element={<AdminSignupPage />} />
-            <Route path="/admin" element={<AdminDashboard />}>
+            <Route path="/solar-results" element={<SolarResult />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <Chat />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminOverview />} />
               <Route path="products" element={<ProductsPage />} />
-              <Route path="categories" element={<CategoryPage />} />
-              <Route path="users" element={<UsersPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="contacts" element={<ContactsPage />} />
               <Route path="quotations" element={<QuotationsPage />} />
-              <Route path="solar-results" element={<SolarResult />} />
+              <Route path="categories" element={<CategoryPage />} />
+              <Route path="chat" element={<AdminChatList />} />
+              <Route path="chat/:userId" element={<AdminChat />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
-            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Content>
-        <FloatingButton />
         <Footer style={{ textAlign: "center" }}>
-          www.andonesolar.com ©2024 Powered by{" "}
-          <Link to="https://oluwayemi.vercel.app">Oyem Tech</Link>
+          ©{new Date().getFullYear()} Your Company. All rights reserved.
         </Footer>
       </Layout>
+      <FloatingButton />
     </Router>
   );
 };

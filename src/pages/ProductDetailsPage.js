@@ -42,7 +42,7 @@ const ProductDetailsPage = () => {
           <img
             alt={product.name}
             src={`http://localhost:5000/uploads/${product.image}`}
-            style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+            style={{ width: '100%', height: '300px', objectFit: 'cover' }}
           />
         </Col>
         <Col xs={24} md={12}>

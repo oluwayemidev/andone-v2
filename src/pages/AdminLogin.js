@@ -5,37 +5,30 @@ import axios from 'axios';
 
 const { Title } = Typography;
 
-const Signup = () => {
+const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const { data } = await axios.post('http://localhost:5000/api/users/register', values);
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/chat');
-    } catch (error) {
-      if (error.response && error.response.data.message) {  
-        message.error(error.response.data.message);
+      const { data } = await axios.post('http://localhost:5000/api/users/login', values);
+      if (data.isAdmin) {
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        navigate('/admin/overview');
       } else {
-        message.error('Something went wrong');
+        message.error('Not authorized as an admin');
       }
+    } catch (error) {
+      message.error('Invalid email or password');
     }
     setLoading(false);
   };
 
   return (
     <div style={{ maxWidth: 400, margin: 'auto', padding: '1rem' }}>
-      <Title level={2}>Sign Up</Title>
+      <Title level={2}>Admin Login</Title>
       <Form layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Please input your name!' }]}
-        >
-          <Input />
-        </Form.Item>
         <Form.Item
           name="email"
           label="Email"
@@ -52,7 +45,7 @@ const Signup = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Sign Up
+            Login
           </Button>
         </Form.Item>
       </Form>
@@ -60,4 +53,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default AdminLogin;

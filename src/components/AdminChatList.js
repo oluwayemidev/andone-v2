@@ -4,7 +4,7 @@ import { List, Button, Spin } from 'antd';
 import { getUsers } from '../actions/userActions';
 import { useNavigate } from 'react-router-dom';
 
-const ContactsPage = () => {
+const AdminChatList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,4 +41,4 @@ const ContactsPage = () => {
   );
 };
 
-export default ContactsPage;
+export default AdminChatList;
