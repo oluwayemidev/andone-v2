@@ -16,6 +16,7 @@ import {
 } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import Home from "./pages/Home";
+import FeaturedProductInfo from './components/FeaturedProductInfo';
 import About from "./pages/About";
 import Products from "./pages/Products";
 import Services from "./pages/Services";
@@ -246,6 +247,7 @@ const App = () => {
         <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/featured-product/:productId" element={<FeaturedProductInfo />} />
             <Route path="/about" element={<About />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetailsPage />} />

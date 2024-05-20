@@ -17,6 +17,7 @@
   .product-card {
     border-radius: 10px;
     padding: 0;
+    margin: 10px;
   }
   
   .product-image {
@@ -50,4 +51,17 @@
   .slick-prev:before, .slick-next:before {
     color: #3A3A8D;
   }
+/*   
+  .product-card {
+    
+  }
   
+  .product-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .buy-button {
+    margin-top: 10px;
+  } */

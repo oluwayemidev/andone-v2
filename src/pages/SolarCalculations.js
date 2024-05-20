@@ -114,9 +114,9 @@ const SolarCalculationPage = () => {
               <Table.Summary.Cell><b>{totalWattHours} Wh</b></Table.Summary.Cell>
             </Table.Summary.Row>
           )}
-          scroll={{ y: 240 }}
+          scroll={{ x: 600, y: 240 }}
         />
-        <Form layout="inline" onFinish={onFinish} style={{ marginTop: '20px' }}>
+        <Form layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
           <Form.Item name="item" rules={[{ required: true, message: 'Please input the item!' }]}>
             <AutoComplete
               style={{ width: '200px' }}
