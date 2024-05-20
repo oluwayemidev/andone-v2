@@ -87,7 +87,12 @@ const ProductPage = () => {
           collapsedWidth="0"
         >
           <Filters
-            categories={categories && categories.map((category) => category.name)}
+            categories={[
+              "All",
+              ...(categories
+                ? categories.map((category) => category.name)
+                : []),
+            ]}
             onCategoryChange={handleCategoryChange}
           />
         </Sider>

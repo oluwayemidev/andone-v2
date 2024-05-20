@@ -11,13 +11,12 @@
     padding: 0;
   }
   .featured-products-card .ant-card{
-    padding: 0
+    padding: 20px
   }
   
   .product-card {
-    background: transparent;
     border-radius: 10px;
-    padding: 0
+    padding: 0;
   }
   
   .product-image {

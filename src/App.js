@@ -253,7 +253,6 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/quotation" element={<QuotationForm />} />
             <Route path="/solar-calculation" element={<SolarCalculations />} />
-            <Route path="/solar-results" element={<SolarResult />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route
@@ -278,6 +277,7 @@ const App = () => {
               <Route path="contacts" element={<ContactsPage />} />
               <Route path="quotations" element={<QuotationsPage />} />
               <Route path="categories" element={<CategoryPage />} />
+              <Route path="solar-results" element={<SolarResult />} />
               <Route path="chat" element={<AdminChatList />} />
               <Route path="chat/:userId" element={<AdminChat />} />
               <Route path="*" element={<NotFoundPage />} />

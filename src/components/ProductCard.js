@@ -28,12 +28,16 @@ const ProductCard = ({ product }) => {
         <img
           alt={product.name}
           src={`http://localhost:5000/uploads/${product.image}`}
-          style={{ height: 200, objectFit: 'cover'}}
+          style={{ height: 200, objectFit: "cover" }}
         />
       }
       actions={[
-        <Button type="primary">Add to Cart</Button>,
-        <Link to={`/products/${product._id}`}>Details</Link>, // Navigate to product details page
+        <Button type="primary" disabled>
+          Add to Cart
+        </Button>,
+        <Link to={`/products/${product._id}`}>
+          <Button type="default">Details</Button>
+        </Link>, // Navigate to product details page
       ]}
     >
       <Title level={4}>{product.name}</Title>

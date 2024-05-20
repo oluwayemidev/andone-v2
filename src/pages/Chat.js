@@ -14,14 +14,21 @@ const Chat = () => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    dispatch(getMessages(userId));
-    const socket = socketIOClient();
+    // Connect to Socket.IO server
+    const socket = socketIOClient('http://localhost:5000');
+
+    // Join the chat room
     socket.emit('join', { userId: userInfo._id });
 
+    // Fetch existing messages
+    dispatch(getMessages(userId));
+
+    // Listen for incoming messages
     socket.on('message', (newMessage) => {
-      setMessages((messages) => [...messages, newMessage]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
+    // Clean up socket connection
     return () => {
       socket.disconnect();
     };
@@ -29,7 +36,9 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     if (message.trim()) {
+      // Dispatch action to send message
       dispatch(sendMessage(userId, message));
+      // Clear message input
       setMessage('');
     }
   };
