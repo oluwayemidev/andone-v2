@@ -6,7 +6,11 @@ import {
   CHAT_SEND_MESSAGE_REQUEST,
   CHAT_SEND_MESSAGE_SUCCESS,
   CHAT_SEND_MESSAGE_FAIL,
+  RECEIVE_MESSAGE,
 } from '../constants/chatConstants';
+import { io } from 'socket.io-client';
+
+let socket;
 
 export const getMessages = (userId) => async (dispatch, getState) => {
   try {
@@ -49,6 +53,10 @@ export const sendMessage = (receiverId, content) => async (dispatch, getState) =
     const { data } = await axios.post(`http://localhost:5000/api/chat/${receiverId}`, { content }, config);
 
     dispatch({ type: CHAT_SEND_MESSAGE_SUCCESS, payload: data });
+
+    if (socket) {
+      socket.emit('sendMessage', data);
+    }
   } catch (error) {
     dispatch({
       type: CHAT_SEND_MESSAGE_FAIL,
@@ -57,4 +65,12 @@ export const sendMessage = (receiverId, content) => async (dispatch, getState) =
         : error.message,
     });
   }
+};
+
+export const initializeSocket = () => (dispatch) => {
+  socket = io('http://localhost:5000');
+
+  socket.on('message', (newMessage) => {
+    dispatch({ type: RECEIVE_MESSAGE, payload: newMessage });
+  });
 };

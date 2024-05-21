@@ -25,7 +25,7 @@ const Login = () => {
       if (userInfo.role === 'admin') {
         navigate('/admin');
       } else {
-        navigate('/chat');
+        navigate(`/chat/${userInfo._id}`);
       }
     }
   }, [userInfo, navigate]);

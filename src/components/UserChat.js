@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMessages, sendMessage, initializeSocket } from '../actions/chatActions';
 import { useParams } from 'react-router-dom';
 import { List, Input, Button, Spin } from 'antd';
+import { getMessages, sendMessage, initializeSocket } from '../actions/chatActions';
 
-const Chat = ({ isAdmin }) => {
+const UserChat = () => {
   const [message, setMessage] = useState('');
-  const dispatch = useDispatch();
   const { userId } = useParams();
+  const dispatch = useDispatch();
 
   const chatMessages = useSelector((state) => state.chatMessages);
   const { loading, error, messages } = chatMessages;
@@ -42,7 +42,7 @@ const Chat = ({ isAdmin }) => {
           renderItem={(msg) => (
             <List.Item>
               <List.Item.Meta
-                title={msg.sender._id === userInfo._id ? (isAdmin ? 'Admin' : 'You') : 'Admin'}
+                title={msg.sender._id === userInfo._id ? 'You' : 'Admin'}
                 description={msg.content}
               />
             </List.Item>
@@ -61,4 +61,4 @@ const Chat = ({ isAdmin }) => {
   );
 };
 
-export default Chat;
+export default UserChat;

@@ -23,36 +23,155 @@ const SolarCalculationPage = () => {
     { key: '1', item: 'Demo Item', quantity: 1, watts: 100, hours: 1, wattHour: 100 },
   ]);
   const [count, setCount] = useState(2);
+  const [editingKey, setEditingKey] = useState('');
+  const [form] = Form.useForm();  // Create form instance for table editing
+  const [inputForm] = Form.useForm();  // Create form instance for new item inputs
+
+  const isEditing = (record) => record.key === editingKey;
+
+  const edit = (record) => {
+    form.setFieldsValue({
+      item: '',
+      quantity: '',
+      watts: '',
+      hours: '',
+      ...record,
+    });
+    setEditingKey(record.key);
+  };
+
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...dataSource];
+      const index = newData.findIndex((item) => key === item.key);
+
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        setDataSource(newData);
+        setEditingKey('');
+      } else {
+        newData.push(row);
+        setDataSource(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
 
   const columns = [
     {
       title: 'Item',
       dataIndex: 'item',
       key: 'item',
+      editable: true,
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      editable: true,
     },
     {
       title: 'Watts',
       dataIndex: 'watts',
       key: 'watts',
+      editable: true,
     },
     {
       title: 'Hours',
       dataIndex: 'hours',
       key: 'hours',
+      editable: true,
     },
     {
       title: 'Watt Hour',
       dataIndex: 'wattHour',
       key: 'wattHour',
     },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <span>
+            <Button
+              onClick={() => save(record.key)}
+              style={{ marginRight: 8 }}
+            >
+              Save
+            </Button>
+            <Button onClick={cancel}>Cancel</Button>
+          </span>
+        ) : (
+          <Button disabled={editingKey !== ''} onClick={() => edit(record)}>
+            Edit
+          </Button>
+        );
+      },
+    },
   ];
 
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        inputType: col.dataIndex === 'quantity' || col.dataIndex === 'watts' || col.dataIndex === 'hours' ? 'number' : 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
+  const EditableCell = ({
+    editing,
+    dataIndex,
+    title,
+    inputType,
+    record,
+    index,
+    children,
+    ...restProps
+  }) => {
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={dataIndex}
+            style={{ margin: 0 }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+          >
+            <Input type={inputType} />
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
+
   const onFinish = (values) => {
+    // Remove demo item if it exists
+    const filteredDataSource = dataSource.filter(item => item.item !== 'Demo Item');
+
     const newData = {
       key: count.toString(),
       item: values.item,
@@ -61,8 +180,10 @@ const SolarCalculationPage = () => {
       hours: values.hours,
       wattHour: values.quantity * values.watts * values.hours,
     };
-    setDataSource([...dataSource, newData]);
+
+    setDataSource([newData, ...filteredDataSource]); // Add new item at the top
     setCount(count + 1);
+    inputForm.resetFields(); // Clear form inputs
   };
 
   const totalWatts = dataSource.reduce((acc, item) => acc + item.watts * item.quantity, 0);
@@ -103,20 +224,31 @@ const SolarCalculationPage = () => {
         <Paragraph>
           Use this calculator to estimate your solar power needs. Add items, their quantities, and power ratings below.
         </Paragraph>
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          pagination={false}
-          summary={() => (
-            <Table.Summary.Row>
-              <Table.Summary.Cell colSpan={3}><b>Total</b></Table.Summary.Cell>
-              <Table.Summary.Cell><b>{totalWatts} W</b></Table.Summary.Cell>
-              <Table.Summary.Cell><b>{totalWattHours} Wh</b></Table.Summary.Cell>
-            </Table.Summary.Row>
-          )}
-          scroll={{ x: 600, y: 240 }}
-        />
-        <Form layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
+        <Form form={form} component={false}>
+          <Table
+            dataSource={dataSource}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={false}
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            summary={() => (
+              <Table.Summary fixed>
+                <Table.Summary.Row>
+                  <Table.Summary.Cell colSpan={3}><b>Total</b></Table.Summary.Cell>
+                  <Table.Summary.Cell><b>{totalWatts} W</b></Table.Summary.Cell>
+                  <Table.Summary.Cell><b>{totalWattHours} Wh</b></Table.Summary.Cell>
+                  <Table.Summary.Cell />
+                </Table.Summary.Row>
+              </Table.Summary>
+            )}
+            scroll={{ x: 600, y: 240 }}
+          />
+        </Form>
+        <Form form={inputForm} layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
           <Form.Item name="item" rules={[{ required: true, message: 'Please input the item!' }]}>
             <AutoComplete
               style={{ width: '200px' }}
@@ -140,7 +272,7 @@ const SolarCalculationPage = () => {
             <Button type="primary" htmlType="submit">Add Item</Button>
           </Form.Item>
         </Form>
-        <Form onFinish={handleSubmit} style={{ marginTop: '40px' }}>
+        <Form onFinish={handleSubmit} style={{ marginTop: '40px', maxWidth: '500px' }}>
           <Title level={4}>Submit Your Calculation</Title>
           <Form.Item name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
             <Input placeholder="Your Name" />

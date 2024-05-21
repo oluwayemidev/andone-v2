@@ -24,8 +24,8 @@ import Contact from "./pages/Contact";
 import FloatingButton from "./components/FloatingButton";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import Chat from "./pages/Chat";
-import AdminChat from "./pages/AdminChat";
+import AdminChat from './pages/AdminChat';
+import UserChat from './components/UserChat';
 import AdminChatList from "./components/AdminChatList";
 import PrivateRoute from "./utils/PrivateRoute";
 import AdminRoute from "./utils/AdminRoute"; // Import AdminRoute
@@ -257,14 +257,15 @@ const App = () => {
             <Route path="/solar-calculation" element={<SolarCalculations />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route
+            {/* <Route
               path="/chat"
               element={
                 <PrivateRoute>
                   <Chat />
                 </PrivateRoute>
               }
-            />
+            /> */}
+            <Route path="/chat/:userId" element={<PrivateRoute><UserChat /></PrivateRoute>} />
             <Route
               path="/admin"
               element={
