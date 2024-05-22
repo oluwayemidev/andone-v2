@@ -1,8 +1,9 @@
-import React from 'react';
-import { Layout, Row, Col, Form, Input, Button, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Row, Col, Form, Input, Button, Typography, message } from 'antd';
 import { MailOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
+import axios from 'axios'
 import '../styles/Contact.css';
 
 const { Header, Content } = Layout;
@@ -10,10 +11,17 @@ const { Title, Paragraph } = Typography;
 
 const ContactPage = () => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values) => {
-    console.log('Form values: ', values);
-    // Here you can handle form submission, e.g., sending the data to an API
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      await axios.post('http://localhost:5000/api/contacts', values);
+      message.success('Message sent successfully!');
+    } catch (error) {
+      message.error('Failed to send message.');
+    }
+    setLoading(false);
   };
 
   // Animation for form
@@ -43,7 +51,7 @@ const ContactPage = () => {
         <Row gutter={[16, 16]}>
           <Col xs={24} md={12}>
             <animated.div style={formAnimation}>
-              <Form form={form} layout="vertical" onFinish={handleSubmit} className="contact-form">
+              <Form form={form} name="contact" layout="vertical" onFinish={handleSubmit} className="contact-form">
                 <Form.Item
                   name="name"
                   label="Name"
@@ -73,7 +81,7 @@ const ContactPage = () => {
                   <Input.TextArea rows={4} placeholder="Your Message" />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="primary" htmlType="submit" block>
+                  <Button type="primary" htmlType="submit" loading={loading} block>
                     Send Message
                   </Button>
                 </Form.Item>

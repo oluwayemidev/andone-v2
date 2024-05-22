@@ -12,14 +12,14 @@ import projectH from '../images/projectH.jpg';
 import '../styles/RecentProjectsWidget.css';
 
 const projects = [
-  { title: 'Project A', description: 'Installed 100 solar panels in City A', imgSrc: projectA },
-  { title: 'Project B', description: 'Set up a solar farm in City B', imgSrc: projectB },
-  { title: 'Project C', description: 'Residential solar panel installation in City C', imgSrc: projectC },
-  { title: 'Project D', description: 'Commercial rooftop solar panels in City D', imgSrc: projectD },
-  { title: 'Project E', description: 'Solar power plant in City E', imgSrc: projectE },
-  { title: 'Project F', description: 'Installed solar water heaters in City F', imgSrc: projectF },
-  { title: 'Project G', description: 'Off-grid solar system in City G', imgSrc: projectG },
-  { title: 'Project H', description: 'Community solar project in City H', imgSrc: projectH }
+  { title: 'Installations', description: 'Installed 100 solar panels in Lagos Nigeria', imgSrc: projectB },
+  { title: 'Solar Farm', description: 'Set up a solar farm in South Africa', imgSrc: projectA },
+  { title: 'Residential', description: 'Residential solar panel installation in Lagos Nigeria', imgSrc: projectC },
+  { title: 'Commercial', description: 'Commercial rooftop solar panels in Lagos Nigeria', imgSrc: projectD },
+  // { title: 'Project E', description: 'Solar power plant in City E', imgSrc: projectE },
+  { title: 'Installation', description: 'Installed solar water heaters in South Africa', imgSrc: projectF },
+  { title: 'Off-grid System', description: 'Off-grid solar system in Lagos Nigeria', imgSrc: projectG },
+  // { title: 'Project H', description: 'Community solar project in City H', imgSrc: projectH }
 ];
 
 const RecentProjectsWidget = () => (

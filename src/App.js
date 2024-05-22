@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Layout, Menu, Drawer, Button, Grid, Image, Dropdown } from "antd";
+import { Layout, Menu, Drawer, Button, Grid, Image, Dropdown, Row, Col, Divider, Space } from "antd";
 import {
   MenuUnfoldOutlined,
   HomeOutlined,
@@ -13,10 +13,14 @@ import {
   FileSearchOutlined,
   GlobalOutlined,
   SunOutlined,
+  FacebookOutlined,
+  TwitterOutlined,
+  InstagramOutlined,
+  LinkedinOutlined,
 } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import Home from "./pages/Home";
-import FeaturedProductInfo from './components/FeaturedProductInfo';
+import FeaturedProductInfo from "./components/FeaturedProductInfo";
 import About from "./pages/About";
 import Products from "./pages/Products";
 import Services from "./pages/Services";
@@ -24,8 +28,8 @@ import Contact from "./pages/Contact";
 import FloatingButton from "./components/FloatingButton";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import AdminChat from './pages/AdminChat';
-import UserChat from './components/UserChat';
+import AdminChat from "./pages/AdminChat";
+import UserChat from "./components/UserChat";
 import AdminChatList from "./components/AdminChatList";
 import PrivateRoute from "./utils/PrivateRoute";
 import AdminRoute from "./utils/AdminRoute"; // Import AdminRoute
@@ -247,7 +251,10 @@ const App = () => {
         <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/featured-product/:productId" element={<FeaturedProductInfo />} />
+            <Route
+              path="/featured-product/:productId"
+              element={<FeaturedProductInfo />}
+            />
             <Route path="/about" element={<About />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/:id" element={<ProductDetailsPage />} />
@@ -265,7 +272,14 @@ const App = () => {
                 </PrivateRoute>
               }
             /> */}
-            <Route path="/chat/:userId" element={<PrivateRoute><UserChat /></PrivateRoute>} />
+            <Route
+              path="/chat/:userId"
+              element={
+                <PrivateRoute>
+                  <UserChat />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/admin"
               element={
@@ -287,9 +301,34 @@ const App = () => {
             </Route>
           </Routes>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          ©{new Date().getFullYear()} Your Company. All rights reserved.
-        </Footer>
+        <Footer style={{ backgroundColor: '#f0f2f5', textAlign: 'center', padding: '2rem 0' }}>
+      <Row justify="center">
+        <Col span={24}>
+          <Divider />
+          <h2>Connect with Us</h2>
+          <Space size="large">
+            <a href="https://www.facebook.com/andonesolar" target="_blank" rel="noopener noreferrer">
+              <FacebookOutlined style={{ fontSize: '24px', color: '#3b5998' }} />
+            </a>
+            <a href="https://twitter.com/andonesolar" target="_blank" rel="noopener noreferrer">
+              <TwitterOutlined style={{ fontSize: '24px', color: '#00acee' }} />
+            </a>
+            <a href="https://www.instagram.com/andonesolar" target="_blank" rel="noopener noreferrer">
+              <InstagramOutlined style={{ fontSize: '24px', color: '#c32aa3' }} />
+            </a>
+            <a href="https://www.linkedin.com/company/andonesolar" target="_blank" rel="noopener noreferrer">
+              <LinkedinOutlined style={{ fontSize: '24px', color: '#0077b5' }} />
+            </a>
+          </Space>
+          <Divider />
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col span={24}>
+          <p>www.andonesolar.com ©2008 - {new Date().getFullYear()}. All rights reserved.</p>
+        </Col>
+      </Row>
+    </Footer>
       </Layout>
       <FloatingButton />
     </Router>

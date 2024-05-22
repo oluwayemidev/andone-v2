@@ -69,20 +69,20 @@ const Home = () => (
         <VideoGalleryWidget className="glass-widget" />
       </Col>
     </Row>
-    <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+    {/* <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} sm={12} md={8}>
         <InteractiveMapWidget className="glass-widget" />
       </Col>
       <Col xs={24} sm={12} md={8}>
         <SocialMediaFeedWidget className="glass-widget" />
       </Col>
-      {/* <Col xs={24} sm={12} md={8}>
+      <Col xs={24} sm={12} md={8}>
         <LiveChatWidget className="glass-widget" />
-      </Col> */}
+      </Col>
       <Col xs={24} sm={12} md={8}>
         <NewsletterSignupWidget className="glass-widget" />
       </Col>
-    </Row>
+    </Row> */}
   </div>
 );
 

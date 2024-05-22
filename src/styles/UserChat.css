@@ -1,0 +1,56 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #e5ddd5;
+    padding: 10px;
+  }
+  
+  .chat-messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  
+  .chat-messages .ant-list-item {
+    border-bottom: none;
+  }
+  
+  .user-message {
+    text-align: right;
+    margin: 5px 0;
+  }
+  
+  .admin-message {
+    text-align: left;
+    margin: 5px 0;
+  }
+  
+  .user-message .ant-list-item-meta-description {
+    background-color: #DCF8C6;
+    display: inline-block;
+    padding: 8px;
+    border-radius: 10px;
+  }
+  
+  .admin-message .ant-list-item-meta-description {
+    background-color: #fff;
+    display: inline-block;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .chat-input {
+    display: flex;
+    align-items: center;
+  }
+  
+  .chat-input .ant-input-textarea {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  

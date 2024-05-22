@@ -1,44 +1,64 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { List, Button, Spin } from 'antd';
-import { getUsers } from '../actions/userActions';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Table, Spin, message } from 'antd';
+import axios from 'axios';
 
-const ContactsPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const userList = useSelector((state) => state.userList);
-  const { loading, error, users } = userList;
+const ContactMessages = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/contacts');
+        setData(response.data);
+      } catch (error) {
+        message.error('Failed to fetch messages');
+      }
+      setLoading(false);
+    };
 
-  const handleChat = (userId) => {
-    navigate(`/admin/chat/${userId}`);
-  };
+    fetchMessages();
+  }, []);
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Subject',
+      dataIndex: 'subject',
+      key: 'subject',
+    },
+    {
+      title: 'Message',
+      dataIndex: 'message',
+      key: 'message',
+    },
+    {
+      title: 'Date',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text) => new Date(text).toLocaleString(),
+    },
+  ];
 
   return (
-    <div>
+    <div style={{ padding: '20px' }}>
+      <h2>Contact Messages</h2>
       {loading ? (
         <Spin size="large" />
-      ) : error ? (
-        <div>{error}</div>
       ) : (
-        <List
-          itemLayout="horizontal"
-          dataSource={users}
-          renderItem={(user) => (
-            <List.Item>
-              <List.Item.Meta title={user.name} />
-              <Button onClick={() => handleChat(user._id)}>Chat</Button>
-            </List.Item>
-          )}
-        />
+        <Table scroll={{ x: 600}} dataSource={data} columns={columns} rowKey="_id" />
       )}
     </div>
   );
 };
 
-export default ContactsPage;
+export default ContactMessages;

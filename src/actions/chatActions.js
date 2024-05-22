@@ -67,10 +67,18 @@ export const sendMessage = (receiverId, content) => async (dispatch, getState) =
   }
 };
 
-export const initializeSocket = () => (dispatch) => {
+export const initializeSocket = (userId) => (dispatch) => {
   socket = io('http://localhost:5000');
+
+  socket.on('connect', () => {
+    socket.emit('join', { userId });
+  });
 
   socket.on('message', (newMessage) => {
     dispatch({ type: RECEIVE_MESSAGE, payload: newMessage });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected');
   });
 };

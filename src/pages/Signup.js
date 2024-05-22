@@ -14,7 +14,7 @@ const Signup = () => {
     try {
       const { data } = await axios.post('http://localhost:5000/api/users/register', values);
       localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/chat');
+      navigate('/login');
     } catch (error) {
       if (error.response && error.response.data.message) {  
         message.error(error.response.data.message);

@@ -15,7 +15,7 @@ const videos = [
 
 const VideoGalleryWidget = () => {
   return (
-    <Card title="At the Factory" bordered={false} className="video-gallery-card">
+    <Card title="Video Gallery" bordered={false} className="video-gallery-card">
       <Row gutter={[16, 16]}>
         {videos.slice(0, 1).map((video, index) => (
           <Col xs={24} key={index}>
