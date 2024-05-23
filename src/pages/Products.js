@@ -85,6 +85,7 @@ const ProductPage = () => {
           className="site-layout-background"
           breakpoint="lg"
           collapsedWidth="0"
+          style={{ marginTop: 50 }}
         >
           <Filters
             categories={[

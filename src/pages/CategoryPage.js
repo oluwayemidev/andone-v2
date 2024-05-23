@@ -1,12 +1,12 @@
-// src/pages/CategoryPage.js
-
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Form, Input, Table, Popconfirm, message } from 'antd';
+import { Card, Button, Form, Input, Table, Popconfirm, message, Row, Col } from 'antd';
 import axios from 'axios';
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
   const [form] = Form.useForm();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -16,6 +16,7 @@ const CategoryPage = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/categories');
       setCategories(response.data);
+      setFilteredCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -24,9 +25,7 @@ const CategoryPage = () => {
   const handleAddCategory = async (values) => {
     try {
       await axios.post('http://localhost:5000/api/categories', values);
-      // Optionally, you can fetch categories again to update the list
       fetchCategories();
-      // Clear the input field
       form.resetFields();
       message.success('Category added successfully');
     } catch (error) {
@@ -37,12 +36,20 @@ const CategoryPage = () => {
   const handleDeleteCategory = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/categories/${id}`);
-      // Fetch categories again after deletion
       fetchCategories();
       message.success('Category deleted successfully');
     } catch (error) {
       console.error('Error deleting category:', error);
     }
+  };
+
+  const handleSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filteredData = categories.filter(category =>
+      category.name.toLowerCase().includes(value)
+    );
+    setFilteredCategories(filteredData);
   };
 
   const columns = [
@@ -70,15 +77,26 @@ const CategoryPage = () => {
 
   return (
     <Card title="Categories" bordered={false}>
-      <Form form={form} onFinish={handleAddCategory} layout="inline">
-        <Form.Item label="New Category" name="name">
-          <Input />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">Add Category</Button>
-        </Form.Item>
-      </Form>
-      <Table dataSource={categories} columns={columns} rowKey="_id" />
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={8}>
+          <Input
+            placeholder="Search Categories"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </Col>
+        <Col span={16} style={{ textAlign: 'right' }}>
+          <Form form={form} onFinish={handleAddCategory} layout="inline">
+            <Form.Item label="New Category" name="name">
+              <Input />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">Add Category</Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+      <Table dataSource={filteredCategories} columns={columns} rowKey="_id" />
     </Card>
   );
 };

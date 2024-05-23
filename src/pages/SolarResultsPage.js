@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Table, Typography, Spin, Alert, Modal } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -20,7 +21,11 @@ const SolarResultsPage = () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:5000/api/solarCalculations');
-      setResults(response.data);
+      // Sort results by createdAt in descending order
+      const sortedResults = response.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setResults(sortedResults);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -45,9 +50,10 @@ const SolarResultsPage = () => {
       key: 'email',
     },
     {
-      title: 'Message',
-      dataIndex: 'message',
-      key: 'message',
+      title: 'Date Added',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm'),
     },
   ];
 
@@ -76,6 +82,7 @@ const SolarResultsPage = () => {
       title: 'Watt Hour',
       dataIndex: 'wattHour',
       key: 'wattHour',
+      render: (_, record) => record.quantity * record.watts * record.hours,
     },
   ];
 
@@ -91,9 +98,28 @@ const SolarResultsPage = () => {
         ) : error ? (
           <Alert message={error} type="error" />
         ) : (
-          <Table dataSource={results} columns={columns} onRow={(record) => ({
-            onClick: () => handleResultClick(record),
-          })} />
+          <Table
+            dataSource={results}
+            columns={columns}
+            rowKey="_id"
+            expandable={{
+              expandedRowRender: (record) => (
+                <div>
+                  <p><b>Message: </b> {record.message}</p>
+                  <Table
+                    dataSource={record.dataSource}
+                    columns={dataSourceColumns}
+                    pagination={false}
+                    rowKey="item"
+                  />
+                  <p>Total Watt Hours: {record.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
+                </div>
+              ),
+            }}
+            onRow={(record) => ({
+              onClick: () => handleResultClick(record),
+            })}
+          />
         )}
         <Modal
           title="Result Details"
@@ -103,8 +129,13 @@ const SolarResultsPage = () => {
         >
           {selectedResult && (
             <>
-              <Table dataSource={selectedResult.dataSource} columns={dataSourceColumns} />
-              <p>Total Watt Hours: {selectedResult.totalWattHours}</p>
+              <Table
+                dataSource={selectedResult.dataSource}
+                columns={dataSourceColumns}
+                pagination={false}
+                rowKey="item"
+              />
+              <p>Total Watt Hours: {selectedResult.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
             </>
           )}
         </Modal>

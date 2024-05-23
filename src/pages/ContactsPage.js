@@ -10,7 +10,9 @@ const ContactMessages = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/contacts');
-        setData(response.data);
+        // Sort messages by createdAt date in descending order
+        const sortedData = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setData(sortedData);
       } catch (error) {
         message.error('Failed to fetch messages');
       }
@@ -37,11 +39,6 @@ const ContactMessages = () => {
       key: 'subject',
     },
     {
-      title: 'Message',
-      dataIndex: 'message',
-      key: 'message',
-    },
-    {
       title: 'Date',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -55,7 +52,16 @@ const ContactMessages = () => {
       {loading ? (
         <Spin size="large" />
       ) : (
-        <Table scroll={{ x: 600}} dataSource={data} columns={columns} rowKey="_id" />
+        <Table
+          dataSource={data}
+          columns={columns}
+          rowKey="_id"
+          expandable={{
+            expandedRowRender: record => <p style={{ margin: 0 }}><b>Message: </b> {record.message}</p>,
+            rowExpandable: record => record.message !== null,
+          }}
+          scroll={{ x: 600 }}
+        />
       )}
     </div>
   );

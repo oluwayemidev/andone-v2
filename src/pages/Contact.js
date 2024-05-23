@@ -3,7 +3,7 @@ import { Layout, Row, Col, Form, Input, Button, Typography, message } from 'antd
 import { MailOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
-import axios from 'axios'
+import axios from 'axios';
 import '../styles/Contact.css';
 
 const { Header, Content } = Layout;
@@ -18,6 +18,7 @@ const ContactPage = () => {
     try {
       await axios.post('http://localhost:5000/api/contacts', values);
       message.success('Message sent successfully!');
+      form.resetFields(); // Reset the form fields
     } catch (error) {
       message.error('Failed to send message.');
     }
@@ -34,9 +35,9 @@ const ContactPage = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className="contact-header">
-      <Title
+        <Title
           level={2}
-          style={{ color: "white", lineHeight: "64px", textAlign: "center" }}
+          style={{ color: 'white', lineHeight: '64px', textAlign: 'center' }}
         >
           Contact Us
         </Title>
@@ -62,7 +63,10 @@ const ContactPage = () => {
                 <Form.Item
                   name="email"
                   label="Email"
-                  rules={[{ required: true, message: 'Please enter your email' }, { type: 'email', message: 'Please enter a valid email' }]}
+                  rules={[
+                    { required: true, message: 'Please enter your email' },
+                    { type: 'email', message: 'Please enter a valid email' },
+                  ]}
                 >
                   <Input placeholder="Your Email" />
                 </Form.Item>

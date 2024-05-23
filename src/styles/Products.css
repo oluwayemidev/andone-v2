@@ -28,11 +28,10 @@
     width: 10px;
   }
   .filtered-products::-webkit-scrollbar-track{
-    background-color: #40a9ff67;
-  }
-  .filtered-products::-webkit-scrollbar-button{
-    background-color: #3a3a8d7c;
+    background-color: #d4d4d467;
+    border-radius: 10px;
   }
   .filtered-products::-webkit-scrollbar-thumb{
-    background-color: #3a3a8da4;
+    background-color: #949494a4;
+    border-radius: 10px;
   }

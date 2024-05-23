@@ -171,7 +171,7 @@ const ProductsPage = () => {
         rowKey="_id"
         columns={columns}
         expandable={{
-          expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+          expandedRowRender: record => <p style={{ margin: 0 }}><b>Description: </b> {record.description}</p>,
           rowExpandable: record => record.description !== null,
         }}
       />

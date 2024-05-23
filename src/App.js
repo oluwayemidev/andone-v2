@@ -369,7 +369,7 @@ const App = () => {
           <Row justify="center">
             <Col span={24}>
               <p style={{ padding: '1rem 2rem' }}>
-                www.andonesolar.com ©2008 - {new Date().getFullYear()}. All
+                ©{new Date().getFullYear()}. www.andonesolar.com - All
                 rights reserved.
               </p>
             </Col>
