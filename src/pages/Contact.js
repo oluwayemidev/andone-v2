@@ -98,7 +98,7 @@ const ContactPage = () => {
                 </Paragraph>
                 <Paragraph>
                   <PhoneOutlined style={{ marginRight: 8 }} />
-                  (123) 456-7890
+                  (+234) 802-141-6820
                 </Paragraph>
                 <Paragraph>
                   <MailOutlined style={{ marginRight: 8 }} />

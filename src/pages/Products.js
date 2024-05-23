@@ -96,7 +96,7 @@ const ProductPage = () => {
             onCategoryChange={handleCategoryChange}
           />
         </Sider>
-        <Layout style={{ padding: "0 24px 24px" }}>
+        <Layout style={{ padding: "" }}>
           <Content
             style={{
               padding: 24,

@@ -46,7 +46,6 @@ const AdminDashboard = () => {
           bottom: 0,
         }}
       >
-        <div className="logo" />
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           <Menu.Item key="1" icon={<DashboardOutlined />}>
             <Link to="/admin/">Overview</Link>
@@ -57,22 +56,19 @@ const AdminDashboard = () => {
           <Menu.Item key="3" icon={<ContainerOutlined />}>
             <Link to="/admin/categories">Categories</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<UserOutlined />}>
-            <Link to="/admin/chat">Users</Link>
+          <Menu.Item key="4" icon={<MessageOutlined />}>
+            <Link to="/admin/chat">Messages</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<MessageOutlined />}>
-            <Link to="/admin/messages">Messages</Link>
-          </Menu.Item>
-          <Menu.Item key="6" icon={<ContactsOutlined />}>
+          <Menu.Item key="5" icon={<ContactsOutlined />}>
             <Link to="/admin/contacts">Contacts</Link>
           </Menu.Item>
-          <Menu.Item key="7" icon={<FileTextOutlined />}>
+          <Menu.Item key="6" icon={<FileTextOutlined />}>
             <Link to="/admin/quotations">Quotations</Link>
           </Menu.Item>
-          <Menu.Item key="8" icon={<BulbOutlined />}>
+          <Menu.Item key="7" icon={<BulbOutlined />}>
             <Link to="/admin/solar-results">Solar Results</Link>
           </Menu.Item>
-          <Menu.Item key="9" icon={<FormOutlined />}>
+          <Menu.Item key="8" icon={<FormOutlined />}>
             <Link to="/quotation">Request Quotation</Link>
           </Menu.Item>
         </Menu>

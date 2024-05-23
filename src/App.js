@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Layout, Menu, Drawer, Button, Grid, Image, Dropdown, Row, Col, Divider, Space } from "antd";
+import {
+  Layout,
+  Menu,
+  Drawer,
+  Button,
+  Grid,
+  Image,
+  Dropdown,
+  Row,
+  Col,
+  Divider,
+  Space,
+} from "antd";
 import {
   MenuUnfoldOutlined,
   HomeOutlined,
@@ -153,7 +165,7 @@ const App = () => {
           style={{
             position: "sticky",
             top: 0,
-            zIndex: 1,
+            zIndex: 10,
             width: "100%",
             display: "flex",
             alignItems: "center",
@@ -236,6 +248,7 @@ const App = () => {
               style={{ right: "16px" }}
               icon={<MenuOutlined />}
               onClick={showDrawer}
+              className="nav-icon"
             />
           )}
         </Header>
@@ -301,34 +314,67 @@ const App = () => {
             </Route>
           </Routes>
         </Content>
-        <Footer style={{ backgroundColor: '#f0f2f5', textAlign: 'center', padding: '2rem 0' }}>
-      <Row justify="center">
-        <Col span={24}>
-          <Divider />
-          <h2>Connect with Us</h2>
-          <Space size="large">
-            <a href="https://www.facebook.com/andonesolar" target="_blank" rel="noopener noreferrer">
-              <FacebookOutlined style={{ fontSize: '24px', color: '#3b5998' }} />
-            </a>
-            <a href="https://twitter.com/andonesolar" target="_blank" rel="noopener noreferrer">
-              <TwitterOutlined style={{ fontSize: '24px', color: '#00acee' }} />
-            </a>
-            <a href="https://www.instagram.com/andonesolar" target="_blank" rel="noopener noreferrer">
-              <InstagramOutlined style={{ fontSize: '24px', color: '#c32aa3' }} />
-            </a>
-            <a href="https://www.linkedin.com/company/andonesolar" target="_blank" rel="noopener noreferrer">
-              <LinkedinOutlined style={{ fontSize: '24px', color: '#0077b5' }} />
-            </a>
-          </Space>
-          <Divider />
-        </Col>
-      </Row>
-      <Row justify="center">
-        <Col span={24}>
-          <p>www.andonesolar.com ©2008 - {new Date().getFullYear()}. All rights reserved.</p>
-        </Col>
-      </Row>
-    </Footer>
+        <Footer
+          style={{
+            backgroundColor: "#f0f2f5",
+            textAlign: "center",
+            padding: "0",
+          }}
+        >
+          <Row justify="center">
+            <Col span={24}>
+              <Divider />
+              <h2>Connect with Us</h2>
+              <Space size="large">
+                <a
+                  href="https://www.facebook.com/andonesolar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FacebookOutlined
+                    style={{ fontSize: "24px", color: "#3b5998" }}
+                  />
+                </a>
+                <a
+                  href="https://twitter.com/andonesolar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <TwitterOutlined
+                    style={{ fontSize: "24px", color: "#00acee" }}
+                  />
+                </a>
+                <a
+                  href="https://www.instagram.com/andonesolar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <InstagramOutlined
+                    style={{ fontSize: "24px", color: "#c32aa3" }}
+                  />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/andonesolar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <LinkedinOutlined
+                    style={{ fontSize: "24px", color: "#0077b5" }}
+                  />
+                </a>
+              </Space>
+              <Divider />
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={24}>
+              <p style={{ padding: '1rem 2rem' }}>
+                www.andonesolar.com ©2008 - {new Date().getFullYear()}. All
+                rights reserved.
+              </p>
+            </Col>
+          </Row>
+        </Footer>
       </Layout>
       <FloatingButton />
     </Router>

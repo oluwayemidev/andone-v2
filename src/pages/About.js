@@ -31,18 +31,18 @@ const AboutPage = () => {
 
   const teamMembers = [
     {
-      name: 'John Doe',
-      position: 'CEO',
+      name: 'Nwachukwu Joseph Louis',
+      position: 'DIRECTOR',
       avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
     },
     {
-      name: 'Jane Smith',
-      position: 'CTO',
+      name: 'Mr. Luck',
+      position: 'ENGINEER',
       avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
     },
     {
-      name: 'Bob Johnson',
-      position: 'CFO',
+      name: 'Anyanwu Judith',
+      position: 'SALES MANAGER',
       avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
     },
   ];

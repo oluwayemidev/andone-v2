@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Card, Upload, Select } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, Form, Input, Card, Upload, Select, message, Popconfirm, Row, Col } from 'antd';
+import { UploadOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import moment from 'moment';
 
 const { Option } = Select;
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [categories, setCategories] = useState([]);
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -19,13 +22,23 @@ const ProductsPage = () => {
   }, []);
 
   const fetchProducts = async () => {
-    const response = await axios.get('http://localhost:5000/api/products');
-    setProducts(response.data);
+    try {
+      const response = await axios.get('http://localhost:5000/api/products');
+      const sortedProducts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setProducts(sortedProducts);
+      setFilteredProducts(sortedProducts);
+    } catch (error) {
+      message.error('Failed to load products');
+    }
   };
 
   const fetchCategories = async () => {
-    const response = await axios.get('http://localhost:5000/api/categories');
-    setCategories(response.data);
+    try {
+      const response = await axios.get('http://localhost:5000/api/categories');
+      setCategories(response.data);
+    } catch (error) {
+      message.error('Failed to load categories');
+    }
   };
 
   const handleAddProduct = () => {
@@ -43,8 +56,13 @@ const ProductsPage = () => {
   };
 
   const handleDeleteProduct = async (id) => {
-    await axios.delete(`http://localhost:5000/api/products/${id}`);
-    fetchProducts();
+    try {
+      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      fetchProducts();
+      message.success('Product deleted successfully');
+    } catch (error) {
+      message.error('Failed to delete product');
+    }
   };
 
   const handleOk = async (values) => {
@@ -53,8 +71,6 @@ const ProductsPage = () => {
     formData.append('category', values.category);
     formData.append('price', values.price);
     formData.append('description', values.description);
-    formData.append('img', values.image);
-    console.log(values.image)
 
     if (fileList.length > 0) {
       formData.append('image', values.image.fileList[0].originFileObj);
@@ -72,15 +88,14 @@ const ProductsPage = () => {
       }
       setIsModalVisible(false);
       fetchProducts();
+      message.success('Product saved successfully');
     } catch (error) {
-      console.error('Error uploading product:', error);
+      message.error('Error uploading product');
     }
   };
 
   const uploadProps = {
-    onRemove: (file) => {
-      setFileList([]);
-    },
+    onRemove: () => setFileList([]),
     beforeUpload: (file) => {
       setFileList([file]);
       return false;
@@ -88,21 +103,78 @@ const ProductsPage = () => {
     fileList,
   };
 
+  const handleSearch = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filteredData = products.filter(product =>
+      product.name.toLowerCase().includes(value) ||
+      product.category.toLowerCase().includes(value) ||
+      product.description.toLowerCase().includes(value)
+    );
+    setFilteredProducts(filteredData);
+  };
+
+  const columns = [
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Category', dataIndex: 'category', key: 'category' },
+    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { 
+      title: 'Date Added', 
+      dataIndex: 'createdAt', 
+      key: 'createdAt',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm'),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (text, record) => (
+        <span>
+          <Button 
+            type="link" 
+            icon={<EditOutlined />} 
+            onClick={() => handleEditProduct(record)}
+          />
+          <Popconfirm
+            title="Are you sure you want to delete this product?"
+            onConfirm={() => handleDeleteProduct(record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button 
+              type="link" 
+              icon={<DeleteOutlined />} 
+              danger
+            />
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
+
   return (
     <Card title="Products" bordered={false}>
-      <Button type="primary" onClick={handleAddProduct}>Add Product</Button>
-      <Table dataSource={products} rowKey="_id">
-        <Table.Column title="Name" dataIndex="name" key="name" />
-        <Table.Column title="Category" dataIndex="category" key="category" />
-        <Table.Column title="Price" dataIndex="price" key="price" />
-        <Table.Column title="Description" dataIndex="description" key="description" />
-        <Table.Column title="Actions" key="actions" render={(text, record) => (
-          <span>
-            <Button onClick={() => handleEditProduct(record)}>Edit</Button>
-            <Button danger onClick={() => handleDeleteProduct(record._id)}>Delete</Button>
-          </span>
-        )} />
-      </Table>
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col span={8}>
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="Search Products"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </Col>
+        <Col span={16} style={{ textAlign: 'right' }}>
+          <Button type="primary" onClick={handleAddProduct}>Add Product</Button>
+        </Col>
+      </Row>
+      <Table 
+        dataSource={filteredProducts} 
+        rowKey="_id"
+        columns={columns}
+        expandable={{
+          expandedRowRender: record => <p style={{ margin: 0 }}>{record.description}</p>,
+          rowExpandable: record => record.description !== null,
+        }}
+      />
       <Modal
         title={editingProduct ? "Edit Product" : "Add Product"}
         visible={isModalVisible}

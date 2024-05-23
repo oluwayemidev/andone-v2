@@ -1,0 +1,9 @@
+@media print {
+    body header, body footer, body .nav-icon, body .floating-button, body .logo, .submit-form, .addup-form{
+        display: none;
+        visibility: hidden;
+    }
+    .solar-calcualtions-table{
+        display: block;
+    }
+}

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Layout, Table, Input, Button, Form, Typography, notification, AutoComplete } from 'antd';
+import { PrinterFilled } from '@ant-design/icons'
+import '../styles/SolarCalculations.css'
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -17,6 +19,7 @@ const suggestedItems = [
   'Water Heater',
   'Solar Inverter',
 ];
+
 
 const SolarCalculationPage = () => {
   const [dataSource, setDataSource] = useState([
@@ -214,17 +217,21 @@ const SolarCalculationPage = () => {
     }
   };
 
+  const handlePrint = () => {
+    window.print();
+  }
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className='calculations-container' style={{ minHeight: '100vh' }}>
       <Header style={{ backgroundColor: '#001529', padding: '0 50px', textAlign: 'center' }}>
         <Title level={2} style={{ color: 'white', lineHeight: '64px' }}>Solar Calculation</Title>
       </Header>
-      <Content style={{ padding: '50px' }}>
+      <Content className='calculations-content' style={{ padding: '50px' }}>
         <Title level={3}>Solar Power Consumption Calculator</Title>
         <Paragraph>
           Use this calculator to estimate your solar power needs. Add items, their quantities, and power ratings below.
         </Paragraph>
-        <Form form={form} component={false}>
+        <Form className='solar-calcualtions-table' form={form} component={false}>
           <Table
             dataSource={dataSource}
             columns={mergedColumns}
@@ -248,7 +255,8 @@ const SolarCalculationPage = () => {
             scroll={{ x: 600, y: 240 }}
           />
         </Form>
-        <Form form={inputForm} layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
+        
+        <Form className='addup-form' form={inputForm} layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
           <Form.Item name="item" rules={[{ required: true, message: 'Please input the item!' }]}>
             <AutoComplete
               style={{ width: '200px' }}
@@ -272,7 +280,21 @@ const SolarCalculationPage = () => {
             <Button type="primary" htmlType="submit">Add Item</Button>
           </Form.Item>
         </Form>
-        <Form onFinish={handleSubmit} style={{ marginTop: '40px', maxWidth: '500px' }}>
+
+        <Paragraph style={{ padding: '2rem 0' }}>
+          This is just a simple Calculator to help you estimate the solar you
+          need. This is not a guarantee that the solar you calculate will be
+          perfect for your situation.
+        </Paragraph>
+
+        <Paragraph style={{ fontWeight: "bold" }}>
+          Print Result: &nbsp;
+          <Button>
+            <PrinterFilled />
+          </Button>
+        </Paragraph>
+
+        <Form className='submit-form' onFinish={handleSubmit} style={{ marginTop: '40px', maxWidth: '500px' }}>
           <Title level={4}>Submit Your Calculation</Title>
           <Form.Item name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
             <Input placeholder="Your Name" />

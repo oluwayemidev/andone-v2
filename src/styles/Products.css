@@ -20,4 +20,19 @@
     transform: scale(1.05);
   }
   
-  
+  .filtered-products{
+    overflow-y: auto;
+    height: calc(100vh - 150px);
+  }
+  .filtered-products::-webkit-scrollbar{
+    width: 10px;
+  }
+  .filtered-products::-webkit-scrollbar-track{
+    background-color: #40a9ff67;
+  }
+  .filtered-products::-webkit-scrollbar-button{
+    background-color: #3a3a8d7c;
+  }
+  .filtered-products::-webkit-scrollbar-thumb{
+    background-color: #3a3a8da4;
+  }

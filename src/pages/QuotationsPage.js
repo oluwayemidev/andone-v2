@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Card, Modal, Form, Input, Select, message } from 'antd';
+import { Table, Button, Card, Modal, Form, Select, message } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 
 const { Option } = Select;
 
@@ -18,7 +19,9 @@ const QuotationsPage = () => {
     setLoading(true);
     try {
       const response = await axios.get('http://localhost:5000/api/quotations');
-      setQuotations(response.data);
+      // Sort quotations by createdAt in descending order
+      const sortedQuotations = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setQuotations(sortedQuotations);
       setLoading(false);
     } catch (error) {
       message.error('Failed to load quotations');
@@ -46,6 +49,12 @@ const QuotationsPage = () => {
     { title: 'Phone', dataIndex: 'phone', key: 'phone' },
     { title: 'Details', dataIndex: 'details', key: 'details' },
     { title: 'Status', dataIndex: 'status', key: 'status' },
+    { 
+      title: 'Date Added', 
+      dataIndex: 'createdAt', 
+      key: 'createdAt',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm'),
+    },
     {
       title: 'Action',
       key: 'action',
