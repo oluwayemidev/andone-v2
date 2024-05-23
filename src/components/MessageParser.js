@@ -1,19 +1,35 @@
-// src/components/MessageParser.js
-class MessageParser {
-    constructor(actionProvider) {
-      this.actionProvider = actionProvider;
+// in MessageParser.jsx
+import React from 'react';
+
+const MessageParser = ({ children, actions }) => {
+  const parse = (message) => {
+    const greetings = ['hello', 'hi', 'hey', 'greetings'];
+    const roboWhat = ['what are you', 'are you', 'who are you', 'is you'];
+    const solar = ['solar', 'solar panel', 'panel'];
+
+    if (greetings.some(greeting => message.toLowerCase().includes(greeting))) {
+        actions.handleHello();
     }
-  
-    parse(message) {
-      const lowerCaseMessage = message.toLowerCase();
-  
-      if (lowerCaseMessage.includes('hello')) {
-        this.actionProvider.greet();
-      }
-  
-      // Add more parsing logic here
+
+    if (roboWhat.some(greeting => message.toLowerCase().includes(greeting))) {
+        actions.roboWhatFunc();
     }
-  }
-  
-  export default MessageParser;
-  
+
+    if (solar.some(greeting => message.toLowerCase().includes(greeting))) {
+        actions.solarPanelFunc();
+    }
+  };
+
+  return (
+    <div>
+      {React.Children.map(children, (child) => {
+        return React.cloneElement(child, {
+          parse: parse,
+          actions,
+        });
+      })}
+    </div>
+  );
+};
+
+export default MessageParser;

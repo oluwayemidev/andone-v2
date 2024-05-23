@@ -6,7 +6,7 @@
   
   .contact-content {
     padding: 50px;
-    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    background: linear-gradient(135deg, #e0f7fa, #7dabb1);
     animation: backgroundAnimation 10s infinite alternate;
   }
   

@@ -1,0 +1,14 @@
+.intro {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.intro-button {
+    margin: 10px;
+}
+
+.intro-tooltip {
+    max-width: 200px;
+}

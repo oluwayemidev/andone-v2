@@ -1,6 +1,7 @@
+// src/pages/ContactPage.js
 import React, { useState } from 'react';
 import { Layout, Row, Col, Form, Input, Button, Typography, message } from 'antd';
-import { MailOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { MailOutlined, PhoneOutlined, EnvironmentOutlined, UserOutlined, FileTextOutlined } from '@ant-design/icons';
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
 import axios from 'axios';
@@ -58,7 +59,7 @@ const ContactPage = () => {
                   label="Name"
                   rules={[{ required: true, message: 'Please enter your name' }]}
                 >
-                  <Input placeholder="Your Name" />
+                  <Input prefix={<UserOutlined />} placeholder="Your Name" />
                 </Form.Item>
                 <Form.Item
                   name="email"
@@ -68,21 +69,21 @@ const ContactPage = () => {
                     { type: 'email', message: 'Please enter a valid email' },
                   ]}
                 >
-                  <Input placeholder="Your Email" />
+                  <Input prefix={<MailOutlined />} placeholder="Your Email" />
                 </Form.Item>
                 <Form.Item
                   name="subject"
                   label="Subject"
                   rules={[{ required: true, message: 'Please enter the subject' }]}
                 >
-                  <Input placeholder="Subject" />
+                  <Input prefix={<FileTextOutlined />} placeholder="Subject" />
                 </Form.Item>
                 <Form.Item
                   name="message"
                   label="Message"
                   rules={[{ required: true, message: 'Please enter your message' }]}
                 >
-                  <Input.TextArea rows={4} placeholder="Your Message" />
+                  <Input.TextArea rows={4} prefix={<FileTextOutlined />} placeholder="Your Message" />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" htmlType="submit" loading={loading} block>

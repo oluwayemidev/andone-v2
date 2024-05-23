@@ -1,0 +1,11 @@
+.solar-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.question-button {
+    width: 100%;
+    text-wrap: wrap;
+    height: fit-content;
+}

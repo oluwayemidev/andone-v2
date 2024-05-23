@@ -1,6 +1,7 @@
 // src/pages/QuotationForm.js
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, Select, DatePicker, Card, Layout, Typography } from "antd";
+import { UserOutlined, MailOutlined, PhoneOutlined, CalendarOutlined, MessageOutlined, EnvironmentOutlined } from '@ant-design/icons'; // Import Ant Design icons
 import { submitQuotation } from "../utils/api";
 import "../styles/QuotationForm.css";
 
@@ -10,9 +11,16 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const QuotationForm = () => {
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+
   const onFinish = async (values) => {
-    await submitQuotation(values);
+    form.resetFields()
+    setLoading(true)
+    await submitQuotation(values)
+    setLoading(false)
   };
+
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -23,18 +31,25 @@ const QuotationForm = () => {
       </Header>
       <Content style={{ padding: 24, margin: 0, minHeight: 280 }}>
         <Card title="Request a Quotation" className="quotation-form-card">
-          <Form name="quotation_form" layout="vertical" onFinish={onFinish} className="quotation-form">
+          <Form form={form} name="quotation_form" layout="vertical" onFinish={onFinish} className="quotation-form">
             <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please input your name!" }]}>
-              <Input />
+              <Input prefix={<UserOutlined />} placeholder="Enter your name" />
             </Form.Item>
-            <Form.Item name="email" label="Email" rules={[
+            <Form.Item name="email" label="Email address" rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "Please enter a valid email!" }
             ]}>
-              <Input />
+              <Input prefix={<MailOutlined />} type="email" placeholder="Enter your email" />
             </Form.Item>
             <Form.Item name="phone" label="Phone Number" rules={[{ required: true, message: "Please input your phone number!" }]}>
-              <Input />
+              <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
+            </Form.Item>
+            <Form.Item
+                name="location"
+                label="Location"
+                rules={[{ required: true, message: 'Please input your location!' }]}
+            >
+                <Input prefix={<EnvironmentOutlined />} placeholder="Location" />
             </Form.Item>
             <Form.Item name="product" label="Product" rules={[{ required: true, message: "Please select a product!" }]}>
               <Select placeholder="Select a product">
@@ -45,13 +60,13 @@ const QuotationForm = () => {
               </Select>
             </Form.Item>
             <Form.Item name="installation_date" label="Preferred Installation Date" rules={[{ required: true, message: "Please select a date!" }]}>
-              <DatePicker />
+              <DatePicker style={{ width: '100%' }} prefix={<CalendarOutlined />} />
             </Form.Item>
             <Form.Item name="message" label="Additional Message">
-              <TextArea rows={4} />
+              <TextArea rows={4} placeholder="Enter your message" prefix={<MessageOutlined />} />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
+              <Button type="primary" htmlType="submit" loading={loading}>Submit</Button>
             </Form.Item>
           </Form>
         </Card>

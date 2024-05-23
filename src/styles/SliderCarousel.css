@@ -66,8 +66,9 @@
 
 .cta-container{
   position: absolute;
-  right: 20px;
-  top: 30px;
+  right: 10px;
+  top: 10px;
+  z-index: 1000;
 }
 
 @media screen and (max-width: 770px) {

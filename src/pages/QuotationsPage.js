@@ -92,6 +92,9 @@ const QuotationsPage = () => {
               <Paragraph>
                 <Text strong>Installation Date:</Text> {moment(record.installation_date).format("YYYY-MM-DD")}
               </Paragraph>
+              <Paragraph>
+                <Text strong>Location:</Text> {record.location}
+              </Paragraph>
             </div>
           ),
         }}

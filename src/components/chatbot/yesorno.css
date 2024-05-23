@@ -1,0 +1,17 @@
+.yes-no-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.yes-no-buttons .ant-btn {
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.yes-button {
+    color: #1890ff; /* primary color */
+}
+
+.no-button {
+    color: #1890ff; /* primary color */
+}

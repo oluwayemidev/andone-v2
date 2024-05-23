@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Layout, Table, Input, Button, Form, Typography, notification, AutoComplete } from 'antd';
-import { PrinterFilled } from '@ant-design/icons'
+import { Layout, Table, Input, Button, Form, Typography, notification, AutoComplete, Popconfirm } from 'antd';
+import { PrinterFilled, EditOutlined, DeleteOutlined, UserOutlined, MailOutlined, MessageOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import '../styles/SolarCalculations.css'
 
 const { Header, Content } = Layout;
@@ -19,7 +19,6 @@ const suggestedItems = [
   'Water Heater',
   'Solar Inverter',
 ];
-
 
 const SolarCalculationPage = () => {
   const [dataSource, setDataSource] = useState([
@@ -68,6 +67,11 @@ const SolarCalculationPage = () => {
     }
   };
 
+  const deleteRow = (key) => {
+    const newData = dataSource.filter(item => item.key !== key);
+    setDataSource(newData);
+  };
+
   const columns = [
     {
       title: 'Item',
@@ -108,15 +112,29 @@ const SolarCalculationPage = () => {
             <Button
               onClick={() => save(record.key)}
               style={{ marginRight: 8 }}
+              icon={<SaveOutlined />}
             >
-              Save
             </Button>
-            <Button onClick={cancel}>Cancel</Button>
+            <Button onClick={cancel} icon={<CloseOutlined />}></Button>
           </span>
         ) : (
-          <Button disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Edit
-          </Button>
+          <span>
+            <Button 
+              disabled={editingKey !== ''} 
+              onClick={() => edit(record)} 
+              icon={<EditOutlined />}
+              style={{ marginRight: 8 }}
+            >
+            </Button>
+            <Popconfirm title="Sure to delete?" onConfirm={() => deleteRow(record.key)}>
+              <Button 
+                disabled={editingKey !== ''} 
+                icon={<DeleteOutlined />} 
+                danger
+              >
+              </Button>
+            </Popconfirm>
+          </span>
         );
       },
     },
@@ -289,20 +307,31 @@ const SolarCalculationPage = () => {
 
         <Paragraph style={{ fontWeight: "bold" }}>
           Print Result: &nbsp;
-          <Button>
+          <Button onClick={handlePrint}>
             <PrinterFilled />
           </Button>
         </Paragraph>
 
         <Form className='submit-form' onFinish={handleSubmit} style={{ marginTop: '40px', maxWidth: '500px' }}>
           <Title level={4}>Submit Your Calculation</Title>
-          <Form.Item name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
+          <Form.Item 
+            name="name" 
+            rules={[{ required: true, message: 'Please input your name!' }]}
+            prefix={<UserOutlined />}
+          >
             <Input placeholder="Your Name" />
           </Form.Item>
-          <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
+          <Form.Item 
+            name="email" 
+            rules={[{ required: true, message: 'Please input your email!' }]}
+            prefix={<MailOutlined />}
+          >
             <Input placeholder="Your Email" />
           </Form.Item>
-          <Form.Item name="message">
+          <Form.Item 
+            name="message"
+            prefix={<MessageOutlined />}
+          >
             <Input.TextArea rows={4} placeholder="Additional Message" />
           </Form.Item>
           <Form.Item>
