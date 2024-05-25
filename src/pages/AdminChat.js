@@ -1,77 +1,102 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { List, Input, Button, Spin } from 'antd';
-import { getMessages, sendMessage, initializeSocket } from '../actions/chatActions';
-import '../styles/AdminChat.css';  // Ensure to create and import the CSS file
+import React, { useState, useEffect } from 'react';
+import { Layout, Menu, Input, List, Avatar } from 'antd';
+import io from 'socket.io-client';
+import axios from 'axios';
 
-const AdminChat = () => {
+const { Header, Sider, Content } = Layout;
+const { TextArea } = Input;
+
+const socket = io('http://localhost:5000');
+
+const AdminChat = ({ token }) => {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const { userId } = useParams();
-  const dispatch = useDispatch();
-  const chatEndRef = useRef(null);
-
-  const chatMessages = useSelector((state) => state.chatMessages);
-  const { loading, error, messages } = chatMessages;
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userId && userInfo) {
-      dispatch(getMessages(userId));
-      dispatch(initializeSocket(userInfo._id));
-    }
-  }, [dispatch, userId, userInfo]);
+    const fetchUsers = async () => {
+      const response = await axios.get('http://localhost:5000/api/users', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUsers(response.data.filter(user => user.role === 'user'));
+    };
+    
+    fetchUsers();
+    
+    socket.on('message', (data) => {
+      if (data.to === selectedUser || data.from === selectedUser) {
+        setMessages((prevMessages) => [...prevMessages, data]);
+      }
+    });
+
+    return () => {
+      socket.off('message');
+    };
+  }, [selectedUser, token]);
 
   useEffect(() => {
-    if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (selectedUser) {
+      const fetchMessages = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/api/chatMessages/get', {
+            params: { from: 'admin', to: selectedUser },
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setMessages(response.data);
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+        }
+      };
+      fetchMessages();
     }
-  }, [messages]);
+  }, [selectedUser, token]);
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      dispatch(sendMessage(userId, message));
-      setMessage('');
-    }
+    const data = { from: 'admin', to: selectedUser, message };
+    socket.emit('sendMessage', data);
+    setMessages((prevMessages) => [...prevMessages, data]);
+    setMessage('');
   };
 
   return (
-    <div className="chat-container">
-      {loading ? (
-        <Spin size="large" />
-      ) : error ? (
-        <div>{error}</div>
-      ) : (
-        <div className="chat-messages-container">
+    <Layout style={{ height: '100vh' }}>
+      <Sider theme="light" width={250}>
+        <Menu mode="inline">
+          {users.map(user => (
+            <Menu.Item key={user._id} onClick={() => setSelectedUser(user.username)}>
+              {user.username}
+            </Menu.Item>
+          ))}
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{ background: '#fff', padding: 0 }}>
+          <h2>Chat with {selectedUser}</h2>
+        </Header>
+        <Content style={{ padding: '24px', overflow: 'auto' }}>
           <List
-            className="chat-messages"
             itemLayout="horizontal"
             dataSource={messages}
-            renderItem={(msg) => (
-              <List.Item className={msg.sender._id === userInfo._id ? 'admin-message' : 'user-message'}>
+            renderItem={item => (
+              <List.Item>
                 <List.Item.Meta
-                  title={msg.sender._id === userInfo._id ? 'Admin' : userInfo.name}
-                  description={msg.content}
+                  avatar={<Avatar>{item.from.charAt(0).toUpperCase()}</Avatar>}
+                  title={item.from}
+                  description={item.message}
                 />
               </List.Item>
             )}
           />
-          <div ref={chatEndRef}></div>
-        </div>
-      )}
-      <div className="chat-input">
-        <Input.TextArea
-          rows={2}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <Button onClick={handleSendMessage} type="primary">
-          Send
-        </Button>
-      </div>
-    </div>
+          <TextArea
+            rows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onPressEnter={handleSendMessage}
+          />
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 

@@ -1,63 +1,35 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Typography, message } from 'antd';
+import React from 'react';
+import { Form, Input, Button, Card } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const { Title } = Typography;
-
-const Signup = () => {
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
+const SignUp = () => {
+  const [form] = Form.useForm();
+  
   const onFinish = async (values) => {
-    setLoading(true);
     try {
-      const { data } = await axios.post('http://localhost:5000/api/users/register', values);
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/login');
+      await axios.post('http://localhost:5000/auth/signup', values);
+      alert('Registration successful!');
     } catch (error) {
-      if (error.response && error.response.data.message) {  
-        message.error(error.response.data.message);
-      } else {
-        message.error('Something went wrong');
-      }
+      alert('Registration failed!');
     }
-    setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', padding: '1rem' }}>
-      <Title level={2}>Sign Up</Title>
-      <Form layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: 'Please input your name!' }]}
-        >
-          <Input />
+    <Card title="Sign Up" style={{ width: 300, margin: '0 auto', marginTop: '100px' }}>
+      <Form form={form} onFinish={onFinish}>
+        <Form.Item name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
+          <Input prefix={<UserOutlined />} placeholder="Username" />
         </Form.Item>
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password />
+        <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Sign Up
-          </Button>
+          <Button type="primary" htmlType="submit">Sign Up</Button>
         </Form.Item>
       </Form>
-    </div>
+    </Card>
   );
 };
 
-export default Signup;
+export default SignUp;

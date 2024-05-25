@@ -1,61 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../actions/userActions';
-import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Typography, Alert } from 'antd';
+import React from 'react';
+import { Form, Input, Button, Card } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
-const { Title } = Typography;
-
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(login(email, password));
+const Login = ({ setToken }) => {
+  const [form] = Form.useForm();
+  
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', values);
+      setToken(response.data.token);
+      localStorage.setItem('token', response.data.token);
+      alert('Login successful!');
+    } catch (error) {
+      alert('Login failed!');
+    }
   };
 
-  useEffect(() => {
-    if (userInfo) {
-      if (userInfo.role === 'admin') {
-        navigate('/admin');
-      } else {
-        navigate(`/chat/${userInfo._id}`);
-      }
-    }
-  }, [userInfo, navigate]);
-
   return (
-    <div style={{ maxWidth: 600, margin: 'auto', padding: '1rem' }}>
-      <Title level={3}>Login</Title>
-      {error && <Alert message={error} type="error" showIcon />}
-      <Form onSubmitCapture={submitHandler}>
-        <Form.Item label="Email">
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+    <Card title="Login" style={{ width: 300, margin: '0 auto', marginTop: '100px' }}>
+      <Form form={form} onFinish={onFinish}>
+        <Form.Item name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
+          <Input prefix={<UserOutlined />} placeholder="Username" />
         </Form.Item>
-        <Form.Item label="Password">
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Login
-          </Button>
+          <Button type="primary" htmlType="submit">Login</Button>
         </Form.Item>
       </Form>
-    </div>
+    </Card>
   );
 };
 
