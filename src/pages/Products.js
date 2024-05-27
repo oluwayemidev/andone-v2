@@ -1,6 +1,6 @@
 // src/components/Products.js
 import React, { useState, useEffect } from "react";
-import { Layout, Input, Select, Typography, Row, Col } from "antd";
+import { Layout, Input, Select, Typography, Row, Col, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import axios from "axios";
 import ProductList from "../components/ProductList";
@@ -17,6 +17,7 @@ const ProductPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -25,7 +26,7 @@ const ProductPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/categories");
+      const response = await axios.get("https://andonesolar.onrender.com/api/categories");
       setCategories(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -33,13 +34,15 @@ const ProductPage = () => {
   };
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/products");
+      const response = await axios.get("https://andonesolar.onrender.com/api/products");
       setProducts(response.data);
       setFilteredProducts(response.data);
     } catch (error) {
       console.error("Error fetching products!", error);
     }
+    setLoading(false);
   };
 
   const handleSearch = (value) => {
@@ -97,7 +100,7 @@ const ProductPage = () => {
             onCategoryChange={handleCategoryChange}
           />
         </Sider>
-        <Layout style={{ padding: "" }}>
+        <Layout>
           <Content
             style={{
               padding: 24,
@@ -132,7 +135,13 @@ const ProductPage = () => {
                 </Col>
               </Row>
             </div>
-            <ProductList products={filteredProducts} />
+            {loading ? (
+              <div className="loading-container">
+                <Spin size="large" />
+              </div>
+            ) : (
+              <ProductList products={filteredProducts} />
+            )}
           </Content>
         </Layout>
       </Layout>

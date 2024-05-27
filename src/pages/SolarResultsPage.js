@@ -20,7 +20,7 @@ const SolarResultsPage = () => {
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/solarCalculations');
+      const response = await axios.get('https://andonesolar.onrender.com/api/solarCalculations');
       // Sort results by createdAt in descending order
       const sortedResults = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -93,15 +93,14 @@ const SolarResultsPage = () => {
       </Header>
       <Content style={{ padding: '50px' }}>
         <Title level={3}>All Results</Title>
-        {loading ? (
-          <Spin size="large" />
-        ) : error ? (
+        {error ? (
           <Alert message={error} type="error" />
         ) : (
           <Table
             dataSource={results}
             columns={columns}
             rowKey="_id"
+            loading={loading}
             expandable={{
               expandedRowRender: (record) => (
                 <div>

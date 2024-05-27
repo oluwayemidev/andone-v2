@@ -3,28 +3,26 @@ import { Form, Input, Button, Typography, notification } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../styles/Login.css'; // Ensure you have this CSS file for custom styles
 
 const { Title } = Typography;
 
 const Login = () => {
     const [form] = Form.useForm();
-    const { user, login } = useAuth();
+    // const { user, login } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (user) {
-            navigate('/admin'); // If user is already logged in, navigate to /admin
-        }
-    }, [user, navigate]);
+    const [user, setUser] = useState(null);
 
     const onFinish = async (values) => {
         setLoading(true);
         try {
-            await login(values.emailOrPhone, values.password)
-                .then (() => setLoading(false))
-                .then (() => navigate('/admin')); // Navigate after successful login
+            const response = await axios.post('https://andonesolar.onrender.com/api/auth/login', values)
+            localStorage.setItem('token', response.data.token)
+            setUser(response.data)
+            setLoading(false)
+            navigate('/admin'); // Navigate after successful login
         } catch (error) {
             console.error('Login failed:', error);
             setLoading(false);
@@ -32,6 +30,12 @@ const Login = () => {
             // Handle login error, such as displaying error message to user
         }
     };
+    
+    useEffect(() => {
+        if (user) {
+            navigate('/admin'); // If user is already logged in, navigate to /admin
+        }
+    }, [user, navigate]);
 
     return (
         <div className="login-container">

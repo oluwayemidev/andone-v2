@@ -8,7 +8,7 @@ const SignUp = () => {
   
   const onFinish = async (values) => {
     try {
-      await axios.post('http://localhost:5000/auth/signup', values);
+      await axios.post('https://andonesolar.onrender.com/auth/signup', values);
       alert('Registration successful!');
     } catch (error) {
       alert('Registration failed!');

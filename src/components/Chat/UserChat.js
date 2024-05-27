@@ -7,7 +7,7 @@ const UserChat = () => {
     const { user } = useAuth();
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState('');
-    const socket = io('http://localhost:5000');
+    const socket = io('https://andonesolar.onrender.com/');
 
     useEffect(() => {
         socket.on('message', (message) => {

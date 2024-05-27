@@ -1,7 +1,8 @@
 // src/components/AdminDashboard.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu, Badge } from "antd";
-import { Outlet, Link } from "react-router-dom";
+import axios from "axios";
+import { Outlet, Link, Navigate } from "react-router-dom";
 import {
   BulbOutlined,
   ContainerOutlined,
@@ -15,6 +16,7 @@ import {
   FormOutlined,
   DashboardOutlined,
   BellOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import "../styles/AdminDashboard.css";
 
@@ -26,6 +28,36 @@ const AdminDashboard = () => {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const { data } = await axios.get(
+            "https://andonesolar.onrender.com/api/auth/profile",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUser(data);
+        } catch (error) {
+          console.error(error);
+          localStorage.removeItem("token");
+          setUser(null);
+        }
+      }
+    };
+    fetchUser();
+  }, []);
+
+  if (user === null) {
+    // You might want to show a loading indicator while fetching the user
+    <Navigate to="/pagenotfound" replace />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -70,6 +102,9 @@ const AdminDashboard = () => {
           </Menu.Item>
           <Menu.Item key="8" icon={<FormOutlined />}>
             <Link to="/quotation">Request Quotation</Link>
+          </Menu.Item>
+          <Menu.Item key="9" icon={<LogoutOutlined />}>
+            <Link to="/logout">Logout</Link>
           </Menu.Item>
         </Menu>
       </Sider>

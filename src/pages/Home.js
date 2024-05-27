@@ -46,12 +46,12 @@ const Home = () => (
       </Col>
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-      <Col xs={24} lg={16}>
+      <Col xs={24}>
         <AdvantagesWidget />
       </Col>
-      <Col xs={24} lg={8}>
+      {/* <Col xs={24} lg={8}>
         <SolarNewsWidget className="glass-widget" />
-      </Col>
+      </Col> */}
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} lg={6}>

@@ -13,7 +13,7 @@ const config = {
   botName: {botName},
   initialMessages: [
     createChatBotMessage(`Hi! I'm ${botName}. How can I assist you today?`),
-    createChatBotMessage('We specialize in high-quality solar panels and accessories.', {
+    createChatBotMessage('We specialize in high-quality solar panels, products and accessories.', {
       delay: 2000,
       widget: 'productInquiry'
   })

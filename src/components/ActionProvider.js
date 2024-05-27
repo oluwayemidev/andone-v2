@@ -2,7 +2,7 @@ import React from 'react';
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const handleHello = () => {
-    const botMessage = createChatBotMessage('Hello. Nice to meet you.');
+    const botMessage = createChatBotMessage('Hello! Nice to meet you. Need help with our products and services?');
 
     setState((prev) => ({
       ...prev,
@@ -11,7 +11,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   };
 
   const roboWhatFunc = () => {
-    const botMessage = createChatBotMessage('I\'m Joseph, a bot and i\'m here to assist you.');
+    const botMessage = createChatBotMessage('I\'m SolarBot and i\'m here to assist you.');
 
     setState((prev) => ({
       ...prev,

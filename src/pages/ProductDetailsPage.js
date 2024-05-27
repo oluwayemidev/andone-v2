@@ -17,7 +17,7 @@ const ProductDetailsPage = () => {
     // Fetch product details by ID
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const response = await axios.get(`https://andonesolar.onrender.com/api/products/${id}`);
         setProduct(response.data);
       } catch (err) {
         setError('Error fetching product details');
@@ -41,7 +41,7 @@ const ProductDetailsPage = () => {
         <Col xs={24} md={12}>
           <img
             alt={product.name}
-            src={`http://localhost:5000/uploads/${product.image}`}
+            src={`https://andonesolar.onrender.com/uploads/${product.image}`}
             style={{ width: '100%', height: '300px', objectFit: 'cover' }}
           />
         </Col>

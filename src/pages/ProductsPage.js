@@ -15,6 +15,7 @@ const ProductsPage = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchProducts();
@@ -22,19 +23,21 @@ const ProductsPage = () => {
   }, []);
 
   const fetchProducts = async () => {
+    setLoading(true)
     try {
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await axios.get('https://andonesolar.onrender.com/api/products');
       const sortedProducts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setProducts(sortedProducts);
       setFilteredProducts(sortedProducts);
     } catch (error) {
       message.error('Failed to load products');
     }
+    setLoading(false)
   };
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/categories');
+      const response = await axios.get('https://andonesolar.onrender.com/api/categories');
       setCategories(response.data);
     } catch (error) {
       message.error('Failed to load categories');
@@ -52,17 +55,19 @@ const ProductsPage = () => {
     setEditingProduct(record);
     setIsModalVisible(true);
     form.setFieldsValue(record);
-    setFileList(record.image ? [{ url: `http://localhost:5000/uploads/${record.image}`, name: record.image }] : []);
+    setFileList(record.image ? [{ url: `https://andonesolar.onrender.com/uploads/${record.image}`, name: record.image }] : []);
   };
 
   const handleDeleteProduct = async (id) => {
+    setLoading(true)
     try {
-      await axios.delete(`http://localhost:5000/api/products/${id}`);
+      await axios.delete(`https://andonesolar.onrender.com/api/products/${id}`);
       fetchProducts();
       message.success('Product deleted successfully');
     } catch (error) {
       message.error('Failed to delete product');
     }
+    setLoading(false)
   };
 
   const handleOk = async (values) => {
@@ -78,11 +83,11 @@ const ProductsPage = () => {
 
     try {
       if (editingProduct) {
-        await axios.put(`http://localhost:5000/api/products/${editingProduct._id}`, formData, {
+        await axios.put(`https://andonesolar.onrender.com/api/products/${editingProduct._id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       } else {
-        await axios.post('http://localhost:5000/api/products', formData, {
+        await axios.post('https://andonesolar.onrender.com/api/products', formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
@@ -170,6 +175,7 @@ const ProductsPage = () => {
         dataSource={filteredProducts} 
         rowKey="_id"
         columns={columns}
+        loading={loading}
         expandable={{
           expandedRowRender: record => <p style={{ margin: 0 }}><b>Description: </b> {record.description}</p>,
           rowExpandable: record => record.description !== null,

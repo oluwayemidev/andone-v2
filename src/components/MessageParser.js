@@ -3,7 +3,7 @@ import React from 'react';
 
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
-    const greetings = ['hello', 'hi', 'hey', 'greetings'];
+    const greetings = ['hello', 'hi', 'hey', 'greetings', 'good day', 'goodday', 'how fa', 'good morning', 'good afternoon', 'good evening', 'what\'s up'];
     const roboWhat = ['what are you', 'are you', 'who are you', 'is you'];
     const solar = ['solar', 'solar panel', 'panel'];
 

@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const { data } = await axios.get('http://localhost:5000/api/auth/profile', {
+                    const { data } = await axios.get('https://andonesolar.onrender.com/api/auth/profile', {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -28,13 +28,13 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (emailOrPhone, password) => {
-        const { data } = await axios.post('http://localhost:5000/api/auth/login', { emailOrPhone, password });
+        const { data } = await axios.post('https://andonesolar.onrender.com/api/auth/login', { emailOrPhone, password });
         localStorage.setItem('token', data.token);
         setUser(data.user);
     };
 
     const register = async (name, email, phoneNumber, password) => {
-        const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, phoneNumber, password });
+        const { data } = await axios.post('https://andonesolar.onrender.com/api/auth/register', { name, email, phoneNumber, password });
         localStorage.setItem('token', data.token);
         setUser(data.user);
     };

@@ -1,0 +1,16 @@
+.not-found-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5; /* Light grey background */
+  }
+  
+  .ant-result-title {
+    font-size: 24px;
+  }
+  
+  .ant-result-subtitle {
+    font-size: 16px;
+  }
+  

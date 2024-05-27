@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
     // Fetch the list of uploaded images from the server
     const fetchImages = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/uploads"); // Replace with your endpoint
+        const response = await axios.get("https://andonesolar.onrender.com/api/uploads"); // Replace with your endpoint
         setImages(response.data); // Assuming the response data is an array of image URLs
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
       cover={
         <img
           alt={product.name}
-          src={`http://localhost:5000/uploads/${product.image}`}
+          src={`https://andonesolar.onrender.com/uploads/${product.image}`}
           style={{ height: 200, objectFit: "cover" }}
         />
       }

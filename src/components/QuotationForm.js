@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const QuotationForm = () => {
   const onFinish = async values => {
-    await axios.post('http://localhost:5000/api/quotations', values);
+    await axios.post('https://andonesolar.onrender.com/api/quotations', values);
     alert('Quotation submitted');
   };
 

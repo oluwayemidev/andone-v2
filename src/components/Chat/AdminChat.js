@@ -11,7 +11,7 @@ const AdminChat = () => {
     const [message, setMessage] = useState('');
     const [activeUser, setActiveUser] = useState(null);
     const [users, setUsers] = useState([]);
-    const socket = io('http://localhost:5000');
+    const socket = io('https://andonesolar.onrender.com/');
 
     useEffect(() => {
         socket.on('message', (message) => {

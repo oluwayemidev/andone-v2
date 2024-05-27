@@ -11,7 +11,7 @@ const MessagesPage = () => {
   }, []);
 
   const fetchMessages = async () => {
-    const response = await axios.get('http://localhost:5000/api/messages');
+    const response = await axios.get('https://andonesolar.onrender.com/api/messages');
     setMessages(response.data);
   };
 

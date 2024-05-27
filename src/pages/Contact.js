@@ -17,7 +17,7 @@ const ContactPage = () => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:5000/api/contacts', values);
+      await axios.post('https://andonesolar.onrender.com/api/contacts', values);
       message.success('Message sent successfully!');
       form.resetFields(); // Reset the form fields
     } catch (error) {

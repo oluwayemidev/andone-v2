@@ -46,6 +46,7 @@ import Contact from "./pages/Contact";
 import FloatingButton from "./components/FloatingButton";
 import Signup from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
+import AdminLogin from './components/Auth/AdminLogin'
 import UserChat from "./components/Chat/UserChat";
 import AdminChat from "./components/Chat/AdminChat";
 import ProtectRoute from "./components/ProtectRoutes";
@@ -114,35 +115,35 @@ const App = () => {
 
   const menu = (
     <Menu theme="light" mode="vertical" defaultSelectedKeys={["1"]}>
-      <Menu.Item key="1" icon={<HomeOutlined />}>
+      <Menu.Item key="1" icon={<HomeOutlined />} onClick={closeDrawer}>
         <Link to="/">{translatedTexts.home || textsToTranslate.home}</Link>
       </Menu.Item>
-      <Menu.Item key="2" icon={<InfoCircleOutlined />}>
+      <Menu.Item key="2" icon={<InfoCircleOutlined />} onClick={closeDrawer}>
         <Link to="/about">
           {translatedTexts.about || textsToTranslate.about}
         </Link>
       </Menu.Item>
-      <Menu.Item key="3" icon={<AppstoreOutlined />}>
+      <Menu.Item key="3" icon={<AppstoreOutlined />} onClick={closeDrawer}>
         <Link to="/products">
           {translatedTexts.products || textsToTranslate.products}
         </Link>
       </Menu.Item>
-      <Menu.Item key="4" icon={<ToolOutlined />}>
+      <Menu.Item key="4" icon={<ToolOutlined />} onClick={closeDrawer}>
         <Link to="/services">
           {translatedTexts.services || textsToTranslate.services}
         </Link>
       </Menu.Item>
-      <Menu.Item key="5" icon={<PhoneOutlined />}>
+      <Menu.Item key="5" icon={<PhoneOutlined />} onClick={closeDrawer}>
         <Link to="/contact">
           {translatedTexts.contact || textsToTranslate.contact}
         </Link>
       </Menu.Item>
-      <Menu.Item key="6" icon={<FileSearchOutlined />}>
+      <Menu.Item key="6" icon={<FileSearchOutlined />} onClick={closeDrawer}>
         <Link to="/quotation">
           {translatedTexts.getQuote || textsToTranslate.getQuote}
         </Link>
       </Menu.Item>
-      <Menu.Item key="7" icon={<SunOutlined />}>
+      <Menu.Item key="7" icon={<SunOutlined />} onClick={closeDrawer}>
         <Link to="/solar-calculation">
           {translatedTexts.getSolarCalculation ||
             textsToTranslate.getSolarCalculation}
@@ -285,8 +286,9 @@ const App = () => {
                 path="/solar-calculation"
                 element={<SolarCalculations />}
               />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
+              {/* <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} /> */}
+              <Route path="/xyz/admin" element={<AdminLogin />} />
               <Route path="/chat" element={<ProtectRoute />}>
                 <Route path="" element={<UserChat />} />
               </Route>
@@ -300,9 +302,10 @@ const App = () => {
                   <Route path="categories" element={<CategoryPage />} />
                   <Route path="solar-results" element={<SolarResult />} />
                   <Route path="chat" element={<AdminChat />} />
-                  <Route path="*" element={<NotFoundPage />} />
                 </Route>
               </Route>
+              <Route path="/pagenotfound" element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Content>
           <Footer

@@ -54,21 +54,25 @@ const carouselItems = [
 
 const SliderCarousel = () => {
   const [loading, setLoading] = useState(false);
+  const [inputForm] = Form.useForm();
 
   const onFinish = async (values) => {
+    setLoading(true)
     try {
-      await axios.post("http://localhost:5000/api/quotations", values);
+      await axios.post("https://andonesolar.onrender.com/api/quotations", values);
       notification.success({
         message: "Success",
         description: "Quotation request submitted successfully!",
       });
+      setLoading(false)
+      inputForm.resetFields();
     } catch (error) {
       notification.error({
         message: "Error",
         description: "Failed to submit quotation request. Please try again.",
       });
+      setLoading(false)
     }
-    setLoading(false)
   };
 
   return (
@@ -94,6 +98,7 @@ const SliderCarousel = () => {
           <div className="cta-form-container">
             <h2>Get a Quotation</h2>
             <Form
+              form={inputForm}
               layout="vertical"
               onFinish={onFinish}
               style={{ width: "100%" }}

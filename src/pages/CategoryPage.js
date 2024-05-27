@@ -7,40 +7,47 @@ const CategoryPage = () => {
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [form] = Form.useForm();
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
+    setLoading(true)
     try {
-      const response = await axios.get('http://localhost:5000/api/categories');
+      const response = await axios.get('https://andonesolar.onrender.com/api/categories');
       setCategories(response.data);
       setFilteredCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
+    setLoading(false)
   };
 
   const handleAddCategory = async (values) => {
+    setLoading(true)
     try {
-      await axios.post('http://localhost:5000/api/categories', values);
+      await axios.post('https://andonesolar.onrender.com/api/categories', values);
       fetchCategories();
       form.resetFields();
       message.success('Category added successfully');
     } catch (error) {
       console.error('Error adding category:', error);
     }
+    setLoading(false)
   };
 
   const handleDeleteCategory = async (id) => {
+    setLoading(true)
     try {
-      await axios.delete(`http://localhost:5000/api/categories/${id}`);
+      await axios.delete(`https://andonesolar.onrender.com/api/categories/${id}`);
       fetchCategories();
       message.success('Category deleted successfully');
     } catch (error) {
       console.error('Error deleting category:', error);
     }
+    setLoading(false)
   };
 
   const handleSearch = (event) => {
@@ -96,7 +103,7 @@ const CategoryPage = () => {
           </Form>
         </Col>
       </Row>
-      <Table dataSource={filteredCategories} columns={columns} rowKey="_id" />
+      <Table loading={loading} dataSource={filteredCategories} columns={columns} rowKey="_id" />
     </Card>
   );
 };

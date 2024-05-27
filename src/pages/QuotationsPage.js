@@ -19,7 +19,7 @@ const QuotationsPage = () => {
   const fetchQuotations = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/quotations");
+      const response = await axios.get("https://andonesolar.onrender.com/api/quotations");
       // Sort quotations by createdAt in descending order
       const sortedQuotations = response.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)

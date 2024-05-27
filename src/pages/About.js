@@ -3,6 +3,7 @@ import { Layout, Row, Col, Typography, Card, Avatar } from 'antd';
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
 import { TeamOutlined, SmileOutlined, GlobalOutlined } from '@ant-design/icons';
+import director from '../images/director.jpg'
 import '../styles/About.css';
 
 const { Header, Content } = Layout;
@@ -33,17 +34,17 @@ const AboutPage = () => {
     {
       name: 'Nwachukwu Joseph Louis',
       position: 'DIRECTOR',
-      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+      avatar: director,
     },
     {
       name: 'Mr. Luck',
       position: 'ENGINEER',
-      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+      avatar: director,
     },
     {
       name: 'Anyanwu Judith',
       position: 'SALES MANAGER',
-      avatar: 'https://lh3.googleusercontent.com/p/AF1QipNiwKtZblALi84k2UW3YBgdfwIvVd-tHt4KgzJ8=s680-w680-h510',
+      avatar: director,
     },
   ];
 

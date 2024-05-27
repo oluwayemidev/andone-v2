@@ -4,7 +4,7 @@ import { notification } from 'antd';
 
 export const submitQuotation = async (values) => {
   try {
-    const response = await axios.post('http://localhost:5000/api/quotations', values);
+    const response = await axios.post('https://andonesolar.com/api/quotations', values);
     notification.success({
       message: 'Success',
       description: 'Quotation request submitted successfully!',

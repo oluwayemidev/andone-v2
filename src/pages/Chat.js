@@ -6,7 +6,7 @@ import axios from 'axios';
 const { Header, Sider, Content } = Layout;
 const { TextArea } = Input;
 
-const socket = io('http://localhost:5000');
+const socket = io('https://andonesolar.com');
 
 const Chat = ({ token }) => {
   const [users, setUsers] = useState([]);
@@ -16,7 +16,7 @@ const Chat = ({ token }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get('https://andonesolar.onrender.com/api/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUsers(response.data);
@@ -38,7 +38,7 @@ const Chat = ({ token }) => {
   useEffect(() => {
     if (selectedUser) {
       const fetchMessages = async () => {
-        const response = await axios.get('http://localhost:5000/api/chatMessages/get', {
+        const response = await axios.get('https://andonesolar.onrender.com/api/chatMessages/get', {
           params: { from: 'admin', to: selectedUser },
           headers: { Authorization: `Bearer ${token}` }
         });

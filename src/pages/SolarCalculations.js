@@ -213,7 +213,7 @@ const SolarCalculationPage = () => {
   const handleSubmit = async (values) => {
     try {
       // Send the data to the backend
-      const response = await axios.post('http://localhost:5000/api/solarCalculations', {
+      const response = await axios.post('https://andonesolar.onrender.com/api/solarCalculations', {
         data: { dataSource, ...values },
       });
 
