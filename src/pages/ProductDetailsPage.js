@@ -1,4 +1,3 @@
-// src/pages/ProductDetailsPage.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -29,8 +28,21 @@ const ProductDetailsPage = () => {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <Spin size="large" />;
-  if (error) return <Alert message={error} type="error" />;
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Alert message={error} type="error" />
+      </div>
+    );
+  }
 
   return (
     <Card style={{ width: '90%', maxWidth: 1200, margin: 'auto', marginTop: '30px', padding: 12 }}>

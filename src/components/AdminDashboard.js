@@ -29,6 +29,11 @@ const AdminDashboard = () => {
     setCollapsed(!collapsed);
   };
 
+  const logout = () => {
+    localStorage.removeItem("token")
+    window.location.href = "/"
+  }
+
   const [user, setUser] = useState(null);
   useEffect(() => {
     const fetchUser = async () => {
@@ -103,8 +108,8 @@ const AdminDashboard = () => {
           <Menu.Item key="8" icon={<FormOutlined />}>
             <Link to="/quotation">Request Quotation</Link>
           </Menu.Item>
-          <Menu.Item key="9" icon={<LogoutOutlined />}>
-            <Link to="/logout">Logout</Link>
+          <Menu.Item key="9" onClick={logout} icon={<LogoutOutlined />}>
+            Logout
           </Menu.Item>
         </Menu>
       </Sider>
