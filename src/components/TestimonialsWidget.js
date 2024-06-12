@@ -1,30 +1,47 @@
 // src/components/TestimonialsWidget.js
-import React from 'react';
-import { Card, List } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, List, Skeleton } from 'antd';
+import { db, collection, getDocs } from '../pages/firebase';
 
-const testimonials = [
-  { name: 'Michael Johnson', text: 'Highly recommend AndOne solar products for their quality and efficiency.' },
-  { name: 'Emily Davis', text: 'Excellent customer support and reliable solar panels.' },
-  { name: 'David Wilson', text: 'The best investment we made for our home. Loving the savings on our electricity bill.' },
-  { name: 'Sarah Brown', text: 'The installation was smooth and the team was very professional.' },
-];
+const TestimonialsWidget = () => {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const testimonialsCollection = collection(db, 'testimonials');
+        const testimonialsSnapshot = await getDocs(testimonialsCollection);
+        const testimonialsData = testimonialsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setTestimonials(testimonialsData);
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const TestimonialsWidget = () => (
-  <Card title="Customer Testimonials" bordered={false} style={{ width: 300 }}>
-    <List
-      itemLayout="horizontal"
-      dataSource={testimonials}
-      renderItem={item => (
-        <List.Item>
-          <List.Item.Meta
-            title={item.name}
-            description={item.text}
-          />
-        </List.Item>
-      )}
-    />
-  </Card>
-);
+    fetchTestimonials();
+  }, []);
+
+  const loadingArray = Array.from({ length: 4 }, (_, index) => ({ id: index }));
+
+  return (
+    <Card title="Customer Testimonials" bordered={false} style={{ width: 300 }}>
+      <List
+        itemLayout="horizontal"
+        dataSource={loading ? loadingArray : testimonials}
+        renderItem={(item) => (
+          <List.Item key={item.id}>
+            <List.Item.Meta
+              title={loading ? <Skeleton.Input style={{ width: 100 }} active /> : item.name}
+              description={loading ? <Skeleton paragraph={{ rows: 1 }} active /> : item.text}
+            />
+          </List.Item>
+        )}
+      />
+    </Card>
+  );
+};
 
 export default TestimonialsWidget;

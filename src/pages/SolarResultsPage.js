@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Table, Typography, Spin, Alert, Modal } from 'antd';
-import axios from 'axios';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 import moment from 'moment';
 
 const { Header, Content } = Layout;
@@ -20,12 +21,24 @@ const SolarResultsPage = () => {
   const fetchResults = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('https://andonesolar.onrender.com/api/solarCalculations');
-      // Sort results by createdAt in descending order
-      const sortedResults = response.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setResults(sortedResults);
+      const querySnapshot = await getDocs(collection(db, 'submissions'));
+      // Map over each document to get the data and id, and format timestamps
+      const resultsData = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          name: data.data.name,
+          email: data.data.email,
+          createdAt: data.createdAt ? data.createdAt.toDate() : null,
+          updatedAt: data.updatedAt ? data.updatedAt.toDate() : null,
+        };
+      });
+
+      // Sort the results by createdAt in descending order
+      resultsData.sort((a, b) => b.createdAt - a.createdAt);
+
+      setResults(resultsData);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -53,7 +66,7 @@ const SolarResultsPage = () => {
       title: 'Date Added',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm'),
+      render: (text) => text ? moment(text).format('YYYY-MM-DD HH:mm') : 'N/A',
     },
   ];
 
@@ -99,19 +112,19 @@ const SolarResultsPage = () => {
           <Table
             dataSource={results}
             columns={columns}
-            rowKey="_id"
+            rowKey="id"
             loading={loading}
             expandable={{
               expandedRowRender: (record) => (
                 <div>
-                  <p><b>Message: </b> {record.message}</p>
+                  <p><b>Message: </b> {record.data.message}</p>
                   <Table
-                    dataSource={record.dataSource}
+                    dataSource={record.data.dataSource}
                     columns={dataSourceColumns}
                     pagination={false}
                     rowKey="item"
                   />
-                  <p>Total Watt Hours: {record.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
+                  <p>Total Watt Hours: {record.data.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
                 </div>
               ),
             }}
@@ -129,12 +142,12 @@ const SolarResultsPage = () => {
           {selectedResult && (
             <>
               <Table
-                dataSource={selectedResult.dataSource}
+                dataSource={selectedResult.data.dataSource}
                 columns={dataSourceColumns}
                 pagination={false}
                 rowKey="item"
               />
-              <p>Total Watt Hours: {selectedResult.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
+              <p>Total Watt Hours: {selectedResult.data.dataSource.reduce((total, item) => total + (item.quantity * item.watts * item.hours), 0)}</p>
             </>
           )}
         </Modal>

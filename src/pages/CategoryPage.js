@@ -1,53 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Form, Input, Table, Popconfirm, message, Row, Col } from 'antd';
-import axios from 'axios';
+import {
+  DeleteOutlined,
+} from "@ant-design/icons";
+import { db, collection, addDoc, getDocs, doc, deleteDoc } from './firebase';
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [form] = Form.useForm();
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await axios.get('https://andonesolar.onrender.com/api/categories');
-      setCategories(response.data);
-      setFilteredCategories(response.data);
+      const querySnapshot = await getDocs(collection(db, 'categories'));
+      const categoriesList = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setCategories(categoriesList);
+      setFilteredCategories(categoriesList);
     } catch (error) {
+      message.error('Error fetching categories');
       console.error('Error fetching categories:', error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleAddCategory = async (values) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await axios.post('https://andonesolar.onrender.com/api/categories', values);
+      await addDoc(collection(db, 'categories'), values);
       fetchCategories();
       form.resetFields();
       message.success('Category added successfully');
     } catch (error) {
+      message.error('Error adding category');
       console.error('Error adding category:', error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleDeleteCategory = async (id) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await axios.delete(`https://andonesolar.onrender.com/api/categories/${id}`);
+      await deleteDoc(doc(db, 'categories', id));
       fetchCategories();
       message.success('Category deleted successfully');
     } catch (error) {
+      message.error('Error deleting category');
       console.error('Error deleting category:', error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleSearch = (event) => {
@@ -69,14 +76,15 @@ const CategoryPage = () => {
       title: 'Actions',
       dataIndex: 'actions',
       key: 'actions',
+      width: 100,
       render: (_, record) => (
         <Popconfirm
           title="Are you sure to delete this category?"
-          onConfirm={() => handleDeleteCategory(record._id)}
+          onConfirm={() => handleDeleteCategory(record.id)}
           okText="Yes"
           cancelText="No"
         >
-          <Button type="danger" size="small">Delete</Button>
+          <Button type="default" danger size="small" icon={<DeleteOutlined />} />
         </Popconfirm>
       ),
     },
@@ -94,7 +102,7 @@ const CategoryPage = () => {
         </Col>
         <Col span={16} style={{ textAlign: 'right' }}>
           <Form form={form} onFinish={handleAddCategory} layout="inline">
-            <Form.Item label="New Category" name="name">
+            <Form.Item label="New Category" name="name" rules={[{ required: true, message: 'Please input the category name!' }]}>
               <Input />
             </Form.Item>
             <Form.Item>
@@ -103,7 +111,7 @@ const CategoryPage = () => {
           </Form>
         </Col>
       </Row>
-      <Table loading={loading} dataSource={filteredCategories} columns={columns} rowKey="_id" />
+      <Table loading={loading} dataSource={filteredCategories} columns={columns} rowKey="id" />
     </Card>
   );
 };

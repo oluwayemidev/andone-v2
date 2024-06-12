@@ -1,43 +1,83 @@
-import React from 'react';
-import { Layout, Row, Col, Card, Typography, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Layout, Row, Col, Card, Typography, Button, Skeleton, Alert } from 'antd';
 import { Link } from "react-router-dom";
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
-import { SettingOutlined, SolutionOutlined, CustomerServiceOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { SolutionOutlined, SettingOutlined, CustomerServiceOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { db, doc, getDoc } from '../pages/firebase';
 import '../styles/Service.css';
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const services = [
-  {
-    title: 'Consultation',
-    description: 'Professional consultation services to help you with your solar energy needs.',
-    icon: <SolutionOutlined />,
-  },
-  {
-    title: 'Installation',
-    description: 'Expert installation of solar panels and related equipment.',
-    icon: <SettingOutlined />,
-  },
-  {
-    title: 'Customer Support',
-    description: '24/7 customer support to assist you with any issues or questions.',
-    icon: <CustomerServiceOutlined />,
-  },
-  {
-    title: 'Maintenance',
-    description: 'Regular maintenance services to ensure your solar system is always running efficiently.',
-    icon: <CheckCircleOutlined />,
-  },
-];
+const iconMap = {
+  SolutionOutlined: <SolutionOutlined />,
+  SettingOutlined: <SettingOutlined />,
+  CustomerServiceOutlined: <CustomerServiceOutlined />,
+  CheckCircleOutlined: <CheckCircleOutlined />,
+};
 
 const ServicePage = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const animationProps = useSpring({
     from: { opacity: 0, transform: 'translateY(20px)' },
     to: { opacity: 1, transform: 'translateY(0)' },
     config: { duration: 800 },
   });
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const docRef = doc(db, 'pages', 'services');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setServices(docSnap.data().services);
+        } else {
+          setError('No such document!');
+        }
+      } catch (error) {
+        setError('Error getting document: ' + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  if (loading) {
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <Header style={{ backgroundColor: '#001529', padding: '0 50px' }}>
+          <Title level={2} style={{ color: 'white', lineHeight: '64px', textAlign: 'center' }}>Our Services</Title>
+        </Header>
+        <Content style={{ padding: '50px' }}>
+          <Skeleton active paragraph={{ rows: 2 }} />
+          <Row gutter={[16, 16]}>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Col xs={24} sm={12} md={8} lg={6} key={index}>
+                <Card style={{ textAlign: 'center', borderRadius: '10px' }}>
+                  <Skeleton.Avatar size={64} shape="circle" style={{ marginBottom: 20 }} />
+                  <Skeleton active title={false} paragraph={{ rows: 2 }} />
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          <div style={{ textAlign: 'center', marginTop: '50px' }}>
+            <Skeleton.Button active size="large" />
+          </div>
+        </Content>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return <Alert message="Error" description={error} type="error" />;
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -58,7 +98,7 @@ const ServicePage = () => {
                 <Card
                   hoverable
                   style={{ textAlign: 'center', borderRadius: '10px' }}
-                  cover={<div style={{ fontSize: '64px', color: '#1890ff', padding: '20px 0' }}>{service.icon}</div>}
+                  cover={<div style={{ fontSize: '64px', color: '#1890ff', padding: '20px 0' }}>{iconMap[service.icon]}</div>}
                 >
                   <Card.Meta
                     title={<Title level={4}>{service.title}</Title>}

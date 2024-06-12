@@ -1,8 +1,8 @@
-// src/components/Products.js
 import React, { useState, useEffect } from "react";
 import { Layout, Input, Select, Typography, Row, Col, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import axios from "axios";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase"; // Import Firestore instance
 import ProductList from "../components/ProductList";
 import Filters from "../components/Filters";
 import "../styles/Products.css";
@@ -26,8 +26,12 @@ const ProductPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("https://andonesolar.onrender.com/api/categories");
-      setCategories(response.data);
+      const querySnapshot = await getDocs(collection(db, "categories"));
+      const categoriesData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setCategories(categoriesData);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -36,9 +40,13 @@ const ProductPage = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("https://andonesolar.onrender.com/api/products");
-      setProducts(response.data);
-      setFilteredProducts(response.data);
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const productsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setProducts(productsData);
+      setFilteredProducts(productsData);
     } catch (error) {
       console.error("Error fetching products!", error);
     }

@@ -1,27 +1,60 @@
-// src/components/CompanyInfo.js
-import React from "react";
-import { Card, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Typography, Skeleton, Alert } from "antd";
+import { db, doc, getDoc } from '../pages/firebase';
 
 const { Title, Paragraph } = Typography;
 
-const CompanyInfo = () => (
-  <Card title="About Us" bordered={false} style={{ width: "100%" }}>
-    <Typography>
-      <Title level={4}>We Make Sustainable Energy Solutions</Title>
-      <Paragraph>
-        We are a leading provider of solar energy solutions, committed to
-        delivering high-quality solar products and services to our customers.
-        Our mission is to promote sustainable energy and reduce carbon
-        footprints through innovative and efficient solar technologies.
-      </Paragraph>
-      <Paragraph>
-        With a team of experienced professionals, we offer comprehensive
-        solutions from consultation to installation and maintenance of solar
-        panels, ensuring a seamless transition to renewable energy for homes and
-        businesses.
-      </Paragraph>
-    </Typography>
-  </Card>
-);
+const CompanyInfo = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [companyInfo, setCompanyInfo] = useState({
+    title: "",
+    paragraph1: "",
+    paragraph2: "",
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const docRef = doc(db, "companyInfo", "info");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setCompanyInfo(docSnap.data());
+        } else {
+          setError("No such document!");
+        }
+      } catch (error) {
+        setError("Error getting document: " + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card title="About Us" bordered={false} style={{ width: "100%" }}>
+        <Skeleton active />
+      </Card>
+    );
+  }
+
+  if (error) {
+    return <Alert message="Error" description={error} type="error" />;
+  }
+
+  return (
+    <Card title="About Us" bordered={false} style={{ width: "100%" }}>
+      <Typography>
+        <Title level={4}>{companyInfo.title}</Title>
+        <Paragraph>{companyInfo.paragraph1}</Paragraph>
+        <Paragraph>{companyInfo.paragraph2}</Paragraph>
+      </Typography>
+    </Card>
+  );
+};
 
 export default CompanyInfo;

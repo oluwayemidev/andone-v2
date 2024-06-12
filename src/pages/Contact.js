@@ -1,10 +1,9 @@
-// src/pages/ContactPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Row, Col, Form, Input, Button, Typography, message } from 'antd';
 import { MailOutlined, PhoneOutlined, EnvironmentOutlined, UserOutlined, FileTextOutlined } from '@ant-design/icons';
 import { animated } from '@react-spring/web';
 import { useSpring } from '@react-spring/core';
-import axios from 'axios';
+import { db, collection, addDoc, doc, getDoc } from './firebase';  // Import Firestore functions
 import '../styles/Contact.css';
 
 const { Header, Content } = Layout;
@@ -13,11 +12,17 @@ const { Title, Paragraph } = Typography;
 const ContactPage = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [contactDetails, setContactDetails] = useState({});
 
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await axios.post('https://andonesolar.onrender.com/api/contacts', values);
+      // Add a new document with the form values to Firestore
+      await addDoc(collection(db, 'contacts'), {
+        ...values,
+        status: 'unread',
+        createdAt: new Date().toISOString()
+      });
       message.success('Message sent successfully!');
       form.resetFields(); // Reset the form fields
     } catch (error) {
@@ -25,6 +30,21 @@ const ContactPage = () => {
     }
     setLoading(false);
   };
+
+  const fetchContactDetails = async () => {
+    const docRef = doc(db, 'pages', 'contactDetails');
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setContactDetails(docSnap.data());
+    } else {
+      message.error('No contact details found!');
+    }
+  };
+
+  useEffect(() => {
+    fetchContactDetails();
+  }, []);
 
   // Animation for form
   const formAnimation = useSpring({
@@ -83,7 +103,7 @@ const ContactPage = () => {
                   label="Message"
                   rules={[{ required: true, message: 'Please enter your message' }]}
                 >
-                  <Input.TextArea rows={4} prefix={<FileTextOutlined />} placeholder="Your Message" />
+                  <Input.TextArea rows={4} placeholder="Your Message" />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" htmlType="submit" loading={loading} block>
@@ -99,20 +119,20 @@ const ContactPage = () => {
                 <Title level={4}>Contact Information</Title>
                 <Paragraph>
                   <EnvironmentOutlined style={{ marginRight: 8 }} />
-                  Nigeria.
+                  {contactDetails.address || 'Loading...'}
                 </Paragraph>
                 <Paragraph>
                   <PhoneOutlined style={{ marginRight: 8 }} />
-                  (+234) 802-141-6820
+                  {contactDetails.phone || 'Loading...'}
                 </Paragraph>
                 <Paragraph>
                   <MailOutlined style={{ marginRight: 8 }} />
-                  info@andonesolar.com
+                  {contactDetails.email || 'Loading...'}
                 </Paragraph>
                 <Title level={4} style={{ marginTop: '40px' }}>Business Hours</Title>
-                <Paragraph>Monday - Friday: 9:00 AM - 5:00 PM</Paragraph>
-                <Paragraph>Saturday: 10:00 AM - 4:00 PM</Paragraph>
-                <Paragraph>Sunday: Closed</Paragraph>
+                <Paragraph>Monday - Friday: {contactDetails.businessHours?.mondayFriday || 'Loading...'}</Paragraph>
+                <Paragraph>Saturday: {contactDetails.businessHours?.saturday || 'Loading...'}</Paragraph>
+                <Paragraph>Sunday: {contactDetails.businessHours?.sunday || 'Loading...'}</Paragraph>
               </div>
             </animated.div>
           </Col>

@@ -1,0 +1,72 @@
+/* General Card Styles */
+.ant-card {
+    margin: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .ant-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Cover Image Styles */
+  .ant-card-cover img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  /* Card Actions */
+  .ant-card-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Button Styles */
+  .ant-btn-primary {
+    background-color: #1890ff;
+    border-color: #1890ff;
+  }
+  
+  .ant-btn-primary:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+  }
+  
+  /* Product Details */
+  .ant-typography-title {
+    margin-bottom: 0.5rem;
+  }
+  
+  .ant-typography-secondary {
+    color: #8c8c8c;
+  }
+  
+  .ant-typography-strong {
+    color: #000;
+  }
+  
+  /* Loading Spinner */
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  /* Search Container */
+  .search-container {
+    margin-bottom: 24px;
+  }
+  
+  /* Header Styles */
+  .header {
+    background-color: #001529;
+    padding: 0 24px;
+  }
+  
+  .header .ant-typography {
+    color: #fff;
+  }
+  

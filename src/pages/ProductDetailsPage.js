@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../pages/firebase";
 import { Card, Typography, Spin, Alert, Button, Row, Col } from 'antd';
 
 const { Title, Text } = Typography;
@@ -9,6 +10,7 @@ const ProductDetailsPage = () => {
   const { id } = useParams(); // Get the product ID from the URL
   const history = useNavigate(); // Use history for navigation
   const [product, setProduct] = useState(null);
+  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,8 +18,18 @@ const ProductDetailsPage = () => {
     // Fetch product details by ID
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`https://andonesolar.onrender.com/api/products/${id}`);
-        setProduct(response.data);
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
+
+        const querySnapshot = await getDocs(collection(db, "images"));
+        const imagesData = querySnapshot.docs.map(doc => doc.data().url); // Assuming each document has a URL field
+        setImages(imagesData);
+
+        if (docSnap.exists()) {
+          setProduct(docSnap.data());
+        } else {
+          setError('Product not found');
+        }
       } catch (err) {
         setError('Error fetching product details');
       } finally {
@@ -53,7 +65,7 @@ const ProductDetailsPage = () => {
         <Col xs={24} md={12}>
           <img
             alt={product.name}
-            src={`https://andonesolar.onrender.com/uploads/${product.image}`}
+            src={product.imageUrl}
             style={{ width: '100%', height: '300px', objectFit: 'cover' }}
           />
         </Col>

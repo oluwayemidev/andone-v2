@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';  // Import serverTimestamp
+import { db } from './firebase';
 import { Layout, Table, Input, Button, Form, Typography, notification, AutoComplete, Popconfirm } from 'antd';
 import { PrinterFilled, EditOutlined, DeleteOutlined, UserOutlined, MailOutlined, MessageOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import '../styles/SolarCalculations.css'
@@ -213,8 +215,10 @@ const SolarCalculationPage = () => {
   const handleSubmit = async (values) => {
     try {
       // Send the data to the backend
-      const response = await axios.post('https://andonesolar.onrender.com/api/solarCalculations', {
+      const response = await addDoc(collection(db, 'submissions'), {
         data: { dataSource, ...values },
+        createdAt: serverTimestamp(),  // Set createdAt with serverTimestamp
+        updatedAt: serverTimestamp(),  // Set updatedAt with serverTimestamp
       });
 
       // Display a success notification
@@ -224,7 +228,7 @@ const SolarCalculationPage = () => {
       });
 
       // Log the response data
-      console.log('Response:', response.data);
+      console.log('Response:', response.id);  // response.data doesn't exist, use response.id
     } catch (error) {
       // Handle errors
       console.error('Error:', error);

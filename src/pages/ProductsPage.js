@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Card, Upload, Select, message, Popconfirm, Row, Col } from 'antd';
 import { UploadOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import axios from 'axios';
 import moment from 'moment';
+import { db, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, storage, ref, uploadBytes, getDownloadURL } from './firebase';
 
 const { Option } = Select;
 
@@ -15,7 +15,8 @@ const ProductsPage = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -23,22 +24,24 @@ const ProductsPage = () => {
   }, []);
 
   const fetchProducts = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await axios.get('https://andonesolar.onrender.com/api/products');
-      const sortedProducts = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const querySnapshot = await getDocs(collection(db, 'products'));
+      const productsList = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      const sortedProducts = productsList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setProducts(sortedProducts);
       setFilteredProducts(sortedProducts);
     } catch (error) {
       message.error('Failed to load products');
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('https://andonesolar.onrender.com/api/categories');
-      setCategories(response.data);
+      const querySnapshot = await getDocs(collection(db, 'categories'));
+      const categoriesList = querySnapshot.docs.map(doc => doc.data());
+      setCategories(categoriesList);
     } catch (error) {
       message.error('Failed to load categories');
     }
@@ -55,48 +58,69 @@ const ProductsPage = () => {
     setEditingProduct(record);
     setIsModalVisible(true);
     form.setFieldsValue(record);
-    setFileList(record.image ? [{ url: `https://andonesolar.onrender.com/uploads/${record.image}`, name: record.image }] : []);
+    setFileList(record.imageUrl ? [{ url: record.imageUrl, name: record.imageName }] : []);
   };
 
   const handleDeleteProduct = async (id) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await axios.delete(`https://andonesolar.onrender.com/api/products/${id}`);
+      await deleteDoc(doc(db, 'products', id));
       fetchProducts();
       message.success('Product deleted successfully');
     } catch (error) {
       message.error('Failed to delete product');
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const handleOk = async (values) => {
-    const formData = new FormData();
-    formData.append('name', values.name);
-    formData.append('category', values.category);
-    formData.append('price', values.price);
-    formData.append('description', values.description);
-
-    if (fileList.length > 0) {
-      formData.append('image', values.image.fileList[0].originFileObj);
-    }
+    let imageUrl = '';
+    let imageName = '';
+    setLoading2(true)
 
     try {
-      if (editingProduct) {
-        await axios.put(`https://andonesolar.onrender.com/api/products/${editingProduct._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-      } else {
-        await axios.post('https://andonesolar.onrender.com/api/products', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+      if (fileList.length > 0 && fileList[0].originFileObj) {
+        const imageFile = fileList[0].originFileObj;
+        const imageRef = ref(storage, `images/${imageFile.name}`);
+        console.log("Uploading file:", imageFile.name);
+        await uploadBytes(imageRef, imageFile);
+        imageUrl = await getDownloadURL(imageRef);
+        imageName = imageFile.name;
+        console.log("File uploaded, URL:", imageUrl);
+      } else if (editingProduct) {
+        imageUrl = editingProduct.imageUrl || '';
+        imageName = editingProduct.imageName || '';
       }
-      setIsModalVisible(false);
-      fetchProducts();
+
+      const productData = {
+        ...values,
+        imageUrl,
+        imageName,
+        createdAt: editingProduct ? editingProduct.createdAt : new Date().toISOString()
+      };
+
+      if (editingProduct) {
+        await updateDoc(doc(db, 'products', editingProduct.id), productData);
+      } else {
+        await addDoc(collection(db, 'products'), productData);
+      }
+
       message.success('Product saved successfully');
+      setIsModalVisible(false);
+      form.resetFields(); // Reset form fields
+      setFileList([]);    // Clear file list
+      fetchProducts();
     } catch (error) {
       message.error('Error uploading product');
+      console.error("Error details:", error);
     }
+    setLoading2(false)
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields(); // Reset form fields
+    setFileList([]);    // Clear file list
   };
 
   const uploadProps = {
@@ -105,6 +129,7 @@ const ProductsPage = () => {
       setFileList([file]);
       return false;
     },
+    onChange: ({ fileList: newFileList }) => setFileList(newFileList),
     fileList,
   };
 
@@ -123,9 +148,9 @@ const ProductsPage = () => {
     { title: 'Name', dataIndex: 'name', key: 'name' },
     { title: 'Category', dataIndex: 'category', key: 'category' },
     { title: 'Price', dataIndex: 'price', key: 'price' },
-    { 
-      title: 'Date Added', 
-      dataIndex: 'createdAt', 
+    {
+      title: 'Date Added',
+      dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm'),
     },
@@ -134,20 +159,20 @@ const ProductsPage = () => {
       key: 'actions',
       render: (text, record) => (
         <span>
-          <Button 
-            type="link" 
-            icon={<EditOutlined />} 
+          <Button
+            type="link"
+            icon={<EditOutlined />}
             onClick={() => handleEditProduct(record)}
           />
           <Popconfirm
             title="Are you sure you want to delete this product?"
-            onConfirm={() => handleDeleteProduct(record._id)}
+            onConfirm={() => handleDeleteProduct(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <Button 
-              type="link" 
-              icon={<DeleteOutlined />} 
+            <Button
+              type="link"
+              icon={<DeleteOutlined />}
               danger
             />
           </Popconfirm>
@@ -171,9 +196,9 @@ const ProductsPage = () => {
           <Button type="primary" onClick={handleAddProduct}>Add Product</Button>
         </Col>
       </Row>
-      <Table 
-        dataSource={filteredProducts} 
-        rowKey="_id"
+      <Table
+        dataSource={filteredProducts}
+        rowKey="id"
         columns={columns}
         loading={loading}
         expandable={{
@@ -184,7 +209,7 @@ const ProductsPage = () => {
       <Modal
         title={editingProduct ? "Edit Product" : "Add Product"}
         visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={handleCancel} // Use handleCancel here
         footer={null}
       >
         <Form
@@ -198,7 +223,7 @@ const ProductsPage = () => {
           <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select a category!' }]}>
             <Select>
               {categories.map(category => (
-                <Option key={category._id} value={category.name}>{category.name}</Option>
+                <Option key={category.name} value={category.name}>{category.name}</Option>
               ))}
             </Select>
           </Form.Item>
@@ -208,13 +233,13 @@ const ProductsPage = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the product description!' }]}>
             <Input.TextArea rows={4} />
           </Form.Item>
-          <Form.Item label="Image" name="image">
-            <Upload {...uploadProps} name='image' listType="picture">
+          <Form.Item label="Image">
+            <Upload {...uploadProps} listType="picture">
               <Button icon={<UploadOutlined />}>Upload (Max: 1)</Button>
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">Save</Button>
+            <Button loading={loading2} type="primary" htmlType="submit">Save</Button>
           </Form.Item>
         </Form>
       </Modal>

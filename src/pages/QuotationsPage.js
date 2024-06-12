@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Card, Modal, Form, Select, message, Typography } from "antd";
-import axios from "axios";
+import { db, collection, getDocs, updateDoc, doc } from './firebase';
 import moment from "moment";
 
 const { Option } = Select;
@@ -19,25 +19,22 @@ const QuotationsPage = () => {
   const fetchQuotations = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("https://andonesolar.onrender.com/api/quotations");
-      // Sort quotations by createdAt in descending order
-      const sortedQuotations = response.data.sort(
+      const querySnapshot = await getDocs(collection(db, "quotations"));
+      const quotationsList = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      const sortedQuotations = quotationsList.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setQuotations(sortedQuotations);
-      setLoading(false);
     } catch (error) {
       message.error("Failed to load quotations");
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleUpdateStatus = async (values) => {
     try {
-      await axios.put("/api/quotations/status", {
-        id: selectedQuotation._id,
-        status: values.status,
-      });
+      const quotationDoc = doc(db, "quotations", selectedQuotation.id);
+      await updateDoc(quotationDoc, { status: values.status });
       message.success("Status updated successfully");
       setVisible(false);
       fetchQuotations();
@@ -78,7 +75,7 @@ const QuotationsPage = () => {
       <Table
         dataSource={quotations}
         columns={columns}
-        rowKey="_id"
+        rowKey="id"
         loading={loading}
         expandable={{
           expandedRowRender: (record) => (
@@ -90,7 +87,8 @@ const QuotationsPage = () => {
                 <Text strong>Product:</Text> {record.product}
               </Paragraph>
               <Paragraph>
-                <Text strong>Installation Date:</Text> {moment(record.installation_date).format("YYYY-MM-DD")}
+                <Text strong>Installation Date:</Text>{" "}
+                {moment(record.installation_date.toDate()).format("YYYY-MM-DD")}
               </Paragraph>
               <Paragraph>
                 <Text strong>Location:</Text> {record.location}

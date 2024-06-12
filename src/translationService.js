@@ -1,21 +1,22 @@
-// src/translationService.js
+// translationService.js
 import axios from 'axios';
 
 const translateText = async (text, targetLanguage) => {
-  const url = 'https://libretranslate.com/translate';
+  if (targetLanguage === 'en') {
+    return text; // If the target language is English, return the original text
+  }
 
   try {
-    const response = await axios.post(url, {
-      q: text,
-      source: 'en',
-      target: targetLanguage,
-      format: 'text'
+    const response = await axios.get('https://api.mymemory.translated.net/get', {
+      params: {
+        q: text,
+        langpair: `en|${targetLanguage}`
+      }
     });
-
-    return response.data.translatedText;
+    return response.data.responseData.translatedText;
   } catch (error) {
-    console.error('Error translating text:', error);
-    return text;
+    console.error('Translation error:', error);
+    return text; // Fallback to original text in case of error
   }
 };
 

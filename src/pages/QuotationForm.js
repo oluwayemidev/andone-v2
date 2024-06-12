@@ -1,7 +1,7 @@
 // src/pages/QuotationForm.js
 import React, { useState } from "react";
 import { Form, Input, Button, Select, DatePicker, Card, Layout, Typography } from "antd";
-import { UserOutlined, MailOutlined, PhoneOutlined, CalendarOutlined, MessageOutlined, EnvironmentOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import { UserOutlined, MailOutlined, PhoneOutlined, CalendarOutlined, MessageOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { submitQuotation } from "../utils/api";
 import "../styles/QuotationForm.css";
 
@@ -15,12 +15,18 @@ const QuotationForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
-    form.resetFields()
-    setLoading(true)
-    await submitQuotation(values)
-    setLoading(false)
-  };
+    form.resetFields();
+    setLoading(true);
 
+    // Convert moment object to JavaScript Date object
+    const formattedValues = {
+      ...values,
+      installation_date: values.installation_date.toDate(),
+    };
+
+    await submitQuotation(formattedValues);
+    setLoading(false);
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -44,12 +50,8 @@ const QuotationForm = () => {
             <Form.Item name="phone" label="Phone Number" rules={[{ required: true, message: "Please input your phone number!" }]}>
               <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
             </Form.Item>
-            <Form.Item
-                name="location"
-                label="Location"
-                rules={[{ required: true, message: 'Please input your location!' }]}
-            >
-                <Input prefix={<EnvironmentOutlined />} placeholder="Location" />
+            <Form.Item name="location" label="Location" rules={[{ required: true, message: 'Please input your location!' }]}>
+              <Input prefix={<EnvironmentOutlined />} placeholder="Location" />
             </Form.Item>
             <Form.Item name="product" label="Product" rules={[{ required: true, message: "Please select a product!" }]}>
               <Select placeholder="Select a product">

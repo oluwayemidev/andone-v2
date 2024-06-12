@@ -1,8 +1,6 @@
-// src/components/AdminDashboard.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Layout, Menu, Badge } from "antd";
-import axios from "axios";
-import { Outlet, Link, Navigate } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
 import {
   BulbOutlined,
   ContainerOutlined,
@@ -17,10 +15,15 @@ import {
   DashboardOutlined,
   BellOutlined,
   LogoutOutlined,
+  SettingOutlined,
+  FileMarkdownOutlined,
+  SkinOutlined,
+  ToolOutlined
 } from "@ant-design/icons";
 import "../styles/AdminDashboard.css";
 
 const { Header, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,38 +33,8 @@ const AdminDashboard = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("user")
     window.location.href = "/"
-  }
-
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const { data } = await axios.get(
-            "https://andonesolar.onrender.com/api/auth/profile",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUser(data);
-        } catch (error) {
-          console.error(error);
-          localStorage.removeItem("token");
-          setUser(null);
-        }
-      }
-    };
-    fetchUser();
-  }, []);
-
-  if (user === null) {
-    // You might want to show a loading indicator while fetching the user
-    <Navigate to="/pagenotfound" replace />;
   }
 
   return (
@@ -105,10 +78,21 @@ const AdminDashboard = () => {
           <Menu.Item key="7" icon={<BulbOutlined />}>
             <Link to="/admin/solar-results">Solar Results</Link>
           </Menu.Item>
-          <Menu.Item key="8" icon={<FormOutlined />}>
-            <Link to="/quotation">Request Quotation</Link>
-          </Menu.Item>
-          <Menu.Item key="9" onClick={logout} icon={<LogoutOutlined />}>
+          <SubMenu key="sub1" icon={<SettingOutlined />} title="Customization">
+            <Menu.Item key="9" icon={<FileMarkdownOutlined />}>
+              <Link to="/admin/pages">Pages</Link>
+            </Menu.Item>
+            <Menu.Item key="10" icon={<SkinOutlined />}>
+              <Link to="/admin/appearance">Appearance</Link>
+            </Menu.Item>
+            <Menu.Item key="11" icon={<ToolOutlined />}>
+              <Link to="/admin/widgets">Widgets</Link>
+            </Menu.Item>
+            <Menu.Item key="12" icon={<SettingOutlined />}>
+              <Link to="/admin/settings">Settings</Link>
+            </Menu.Item>
+          </SubMenu>
+          <Menu.Item key="13" onClick={logout} icon={<LogoutOutlined />} style={{ marginBottom: '120px' }}>
             Logout
           </Menu.Item>
         </Menu>

@@ -1,0 +1,33 @@
+/* src/styles/AppearanceCustomizer.css */
+.appearance-customizer-container {
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appearance-form .ant-form-item-label > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.background-image-preview {
+  margin-top: 10px;
+}
+
+.background-image-preview img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  display: block;
+}
+
+.spin-container {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
