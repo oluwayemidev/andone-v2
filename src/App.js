@@ -9,6 +9,7 @@ import HeaderComponent from "./components/Header";
 import FooterComponent from "./components/Footer";
 import LanguageMenu from "./components/LanguageMenu";
 import DrawerMenu from "./components/DrawerMenu";
+import StyledBackground from './components/StyledBackground';
 import AppRoutes from "./AppRoutes";
 import "./App.css";
 
@@ -36,7 +37,10 @@ const App = () => {
       const translations = {};
 
       for (const key in textsToTranslate) {
-        translations[key] = await translateText(textsToTranslate[key], language);
+        translations[key] = await translateText(
+          textsToTranslate[key],
+          language
+        );
       }
 
       setTranslatedTexts(translations);
@@ -56,6 +60,7 @@ const App = () => {
 
   return (
     <AuthProvider>
+      <StyledBackground />
       <Router>
         <ScrollToTop />
         <Layout style={{ minHeight: "100vh" }}>
@@ -75,7 +80,7 @@ const App = () => {
           <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
             {loading ? (
               <Spin tip="Loading translations...">
-                <div style={{ minHeight: '80vh' }}></div>
+                <div style={{ minHeight: "80vh" }}></div>
               </Spin>
             ) : (
               <AppRoutes />

@@ -4,6 +4,7 @@
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+  background: transparent;
 }
 
 .advantage-card {
@@ -11,6 +12,11 @@
   margin: 16px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex: 1 1 calc(33% - 32px);
+  background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+  backdrop-filter: blur(10px); /* Blur effect */
+  border-radius: 16px; /* Rounded corners */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .advantage-card:hover {
@@ -22,6 +28,8 @@
   width: 100%;
   height: 200px;
   object-fit: cover;
+  border-top-left-radius: 16px; /* Rounded corners for the image */
+  border-top-right-radius: 16px;
 }
 
 @media (max-width: 768px) {

@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, Card, Modal, Form, Select, message, Typography } from "antd";
-import { db, collection, getDocs, updateDoc, doc } from './firebase';
+import {
+  Table,
+  Button,
+  Card,
+  Modal,
+  Form,
+  Select,
+  message,
+  Typography,
+  Input,
+  Space,
+  Popconfirm,
+} from "antd";
+import { db, collection, getDocs, updateDoc, doc, deleteDoc } from "./firebase";
 import moment from "moment";
 
 const { Option } = Select;
 const { Paragraph, Text } = Typography;
+const { TextArea } = Input;
 
 const QuotationsPage = () => {
   const [quotations, setQuotations] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
+  const [replyModalVisible, setReplyModalVisible] = useState(false);
   const [selectedQuotation, setSelectedQuotation] = useState(null);
 
   useEffect(() => {
@@ -20,7 +34,10 @@ const QuotationsPage = () => {
     setLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, "quotations"));
-      const quotationsList = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      const quotationsList = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
       const sortedQuotations = quotationsList.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -36,11 +53,29 @@ const QuotationsPage = () => {
       const quotationDoc = doc(db, "quotations", selectedQuotation.id);
       await updateDoc(quotationDoc, { status: values.status });
       message.success("Status updated successfully");
-      setVisible(false);
+      setStatusModalVisible(false);
       fetchQuotations();
     } catch (error) {
       message.error("Failed to update status");
     }
+  };
+
+  const handleReply = async (values) => {
+    // Implement your reply functionality here
+    message.success("Reply sent successfully!");
+    setReplyModalVisible(false);
+  };
+
+  const handleDelete = async (id) => {
+    setLoading(true);
+    try {
+      await deleteDoc(doc(db, "quotations", id));
+      message.success("Quotation deleted successfully");
+      fetchQuotations();
+    } catch (error) {
+      message.error("Failed to delete quotation");
+    }
+    setLoading(false);
   };
 
   const columns = [
@@ -58,14 +93,34 @@ const QuotationsPage = () => {
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Button
-          onClick={() => {
-            setSelectedQuotation(record);
-            setVisible(true);
-          }}
-        >
-          Update Status
-        </Button>
+        <Space size="middle">
+          <Button
+            onClick={() => {
+              setSelectedQuotation(record);
+              setStatusModalVisible(true);
+            }}
+          >
+            Update Status
+          </Button>
+          <Button
+            onClick={() => {
+              setSelectedQuotation(record);
+              setReplyModalVisible(true);
+            }}
+          >
+            Reply
+          </Button>
+          <Popconfirm
+            title="Are you sure to delete this message?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="default" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -99,8 +154,8 @@ const QuotationsPage = () => {
       />
       <Modal
         title="Update Status"
-        visible={visible}
-        onCancel={() => setVisible(false)}
+        visible={statusModalVisible}
+        onCancel={() => setStatusModalVisible(false)}
         footer={null}
       >
         <Form onFinish={handleUpdateStatus}>
@@ -117,6 +172,36 @@ const QuotationsPage = () => {
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="Reply to Quotation"
+        visible={replyModalVisible}
+        onCancel={() => setReplyModalVisible(false)}
+        footer={null}
+      >
+        {selectedQuotation && (
+          <>
+            <p>
+              <b>Name: </b> {selectedQuotation.name}
+            </p>
+            <p>
+              <b>Email: </b> {selectedQuotation.email}
+            </p>
+            <p>
+              <b>Message: </b> {selectedQuotation.message}
+            </p>
+            <Form onFinish={handleReply}>
+              <Form.Item name="reply" label="Reply" rules={[{ required: true }]}>
+                <TextArea rows={4} placeholder="Write your reply here" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Send Reply
+                </Button>
+              </Form.Item>
+            </Form>
+          </>
+        )}
       </Modal>
     </Card>
   );

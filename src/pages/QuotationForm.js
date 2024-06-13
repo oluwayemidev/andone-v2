@@ -39,22 +39,22 @@ const QuotationForm = () => {
         <Card title="Request a Quotation" className="quotation-form-card">
           <Form form={form} name="quotation_form" layout="vertical" onFinish={onFinish} className="quotation-form">
             <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please input your name!" }]}>
-              <Input prefix={<UserOutlined />} placeholder="Enter your name" />
+              <Input prefix={<UserOutlined />} placeholder="Enter your name" style={{ background: 'transparent' }} />
             </Form.Item>
             <Form.Item name="email" label="Email address" rules={[
               { required: true, message: "Please input your email!" },
               { type: "email", message: "Please enter a valid email!" }
             ]}>
-              <Input prefix={<MailOutlined />} type="email" placeholder="Enter your email" />
+              <Input prefix={<MailOutlined />} type="email" placeholder="Enter your email" style={{ background: 'transparent' }} />
             </Form.Item>
             <Form.Item name="phone" label="Phone Number" rules={[{ required: true, message: "Please input your phone number!" }]}>
-              <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
+              <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" style={{ background: 'transparent' }} />
             </Form.Item>
             <Form.Item name="location" label="Location" rules={[{ required: true, message: 'Please input your location!' }]}>
-              <Input prefix={<EnvironmentOutlined />} placeholder="Location" />
+              <Input prefix={<EnvironmentOutlined />} placeholder="Location" style={{ background: 'transparent' }} />
             </Form.Item>
             <Form.Item name="product" label="Product" rules={[{ required: true, message: "Please select a product!" }]}>
-              <Select placeholder="Select a product">
+              <Select placeholder="Select a product" style={{ background: 'transparent' }}>
                 <Option value="solar_panel">Solar Panel</Option>
                 <Option value="battery">Battery</Option>
                 <Option value="inverter">Inverter</Option>
@@ -62,10 +62,10 @@ const QuotationForm = () => {
               </Select>
             </Form.Item>
             <Form.Item name="installation_date" label="Preferred Installation Date" rules={[{ required: true, message: "Please select a date!" }]}>
-              <DatePicker style={{ width: '100%' }} prefix={<CalendarOutlined />} />
+              <DatePicker style={{ width: '100%', background: 'transparent' }} prefix={<CalendarOutlined />} />
             </Form.Item>
             <Form.Item name="message" label="Additional Message">
-              <TextArea rows={4} placeholder="Enter your message" prefix={<MessageOutlined />} />
+              <TextArea rows={4} placeholder="Enter your message" style={{ background: 'transparent' }} prefix={<MessageOutlined />} />
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit" loading={loading}>Submit</Button>

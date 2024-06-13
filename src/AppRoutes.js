@@ -40,53 +40,56 @@ import AboutPageEditor from './components/AboutPageEditor';
 import ServicePageEditor from './components/ServicePageEditor';
 import EditContactDetailsPage from './components/EditContactDetailsPage';
 import SettingsWidget from './components/SettingsWidget';
+import { MessagesProvider } from './context/MessagesContext';
 
 const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/featured-product/:productId" element={<FeaturedProductInfo />} />
-    <Route path="/about" element={<About />} />
-    <Route path="/products" element={<Products />} />
-    <Route path="/products/:id" element={<ProductDetailsPage />} />
-    <Route path="/services" element={<Services />} />
-    <Route path="/contact" element={<Contact />} />
-    <Route path="/quotation" element={<QuotationForm />} />
-    <Route path="/solar-calculation" element={<SolarCalculations />} />
-    <Route path="/xyz/admin" element={<AdminLogin />} />
-    <Route path="/xyz/admin/signup" element={<AdminSignup />} />
-    <Route path="/chat" element={<ProtectRoute />}>
-      <Route path="" element={<UserChat />} />
-    </Route>
-    <Route path="/admin" element={<AdminRoute />}>
-      <Route path="" element={<AdminDashboard />}>
-        <Route index element={<AdminOverview />} />
-        <Route path="products" element={<ProductsPage />} />
-        <Route path="messages" element={<MessagesPage />} />
-        <Route path="contacts" element={<ContactsPage />} />
-        <Route path="quotations" element={<QuotationsPage />} />
-        <Route path="categories" element={<CategoryPage />} />
-        <Route path="solar-results" element={<SolarResult />} />
-        <Route path="pages" element={<PagesList />} />
-        <Route path="pages/about" element={<AboutPageEditor />} />
-        <Route path="pages/services" element={<ServicePageEditor />} />
-        <Route path="pages/contact" element={<EditContactDetailsPage />} />
-        <Route path="appearance" element={<AppearanceCustomizer />} />
-        <Route path="widgets" element={<WidgetsList />} />
-        <Route path="widgets/slider-carousel" element={<SliderCarouselEditor />} />
-        <Route path="widgets/featured-products" element={<FeaturedProductsFormWidget />} />
-        <Route path="widgets/company-info" element={<CompanyInfoEditor />} />
-        <Route path="widgets/advantages" element={<AdvantagesWidgetEditor />} />
-        <Route path="widgets/testimonials" element={<TestimonialsWidgetEditor />} />
-        <Route path="widgets/recent-projects" element={<RecentProjectsWidgetEditor />} />
-        <Route path="widgets/faqs" element={<FAQsWidgetEditor />} />
-        <Route path="widgets/video-gallery" element={<VideoGalleryWidgetEditor />} />
-        <Route path="settings" element={<SettingsWidget />} />
-        <Route path="chat" element={<AdminChat />} />
+  <MessagesProvider>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/featured-product/:productId" element={<FeaturedProductInfo />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/products" element={<Products />} />
+      <Route path="/products/:id" element={<ProductDetailsPage />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/quotation" element={<QuotationForm />} />
+      <Route path="/solar-calculation" element={<SolarCalculations />} />
+      <Route path="/xyz/admin" element={<AdminLogin />} />
+      <Route path="/xyz/admin/signup" element={<AdminSignup />} />
+      <Route path="/chat" element={<ProtectRoute />}>
+        <Route path="" element={<UserChat />} />
       </Route>
-    </Route>
-    <Route path="/pagenotfound" element={<NotFoundPage />} />
-    <Route path="*" element={<NotFoundPage />} />
-  </Routes>
+      <Route path="/admin" element={<AdminRoute />}>
+        <Route path="" element={<AdminDashboard />}>
+          <Route index element={<AdminOverview />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="messages" element={<MessagesPage />} />
+          <Route path="contacts" element={<ContactsPage />} />
+          <Route path="quotations" element={<QuotationsPage />} />
+          <Route path="categories" element={<CategoryPage />} />
+          <Route path="solar-results" element={<SolarResult />} />
+          <Route path="pages" element={<PagesList />} />
+          <Route path="pages/about" element={<AboutPageEditor />} />
+          <Route path="pages/services" element={<ServicePageEditor />} />
+          <Route path="pages/contact" element={<EditContactDetailsPage />} />
+          <Route path="appearance" element={<AppearanceCustomizer />} />
+          <Route path="widgets" element={<WidgetsList />} />
+          <Route path="widgets/slider-carousel" element={<SliderCarouselEditor />} />
+          <Route path="widgets/featured-products" element={<FeaturedProductsFormWidget />} />
+          <Route path="widgets/company-info" element={<CompanyInfoEditor />} />
+          <Route path="widgets/advantages" element={<AdvantagesWidgetEditor />} />
+          <Route path="widgets/testimonials" element={<TestimonialsWidgetEditor />} />
+          <Route path="widgets/recent-projects" element={<RecentProjectsWidgetEditor />} />
+          <Route path="widgets/faqs" element={<FAQsWidgetEditor />} />
+          <Route path="widgets/video-gallery" element={<VideoGalleryWidgetEditor />} />
+          <Route path="settings" element={<SettingsWidget />} />
+          <Route path="chat" element={<AdminChat />} />
+        </Route>
+      </Route>
+      <Route path="/pagenotfound" element={<NotFoundPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  </MessagesProvider>
 );
 
 export default AppRoutes;

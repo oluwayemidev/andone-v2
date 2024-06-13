@@ -281,7 +281,7 @@ const SolarCalculationPage = () => {
         <Form className='addup-form' form={inputForm} layout="inline" onFinish={onFinish} style={{ marginTop: '20px', gap: '20px' }}>
           <Form.Item name="item" rules={[{ required: true, message: 'Please input the item!' }]}>
             <AutoComplete
-              style={{ width: '200px' }}
+              style={{ width: '200px', background: 'transparent' }}
               options={suggestedItems.map(item => ({ value: item }))}
               placeholder="Item"
               filterOption={(inputValue, option) =>
@@ -290,13 +290,13 @@ const SolarCalculationPage = () => {
             />
           </Form.Item>
           <Form.Item name="quantity" rules={[{ required: true, message: 'Please input the quantity!' }]}>
-            <Input type="number" placeholder="Quantity" />
+            <Input type="number" placeholder="Quantity" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item name="watts" rules={[{ required: true, message: 'Please input the watts!' }]}>
-            <Input type="number" placeholder="Watts" />
+            <Input type="number" placeholder="Watts" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item name="hours" rules={[{ required: true, message: 'Please input the hours!' }]}>
-            <Input type="number" placeholder="Hours" />
+            <Input type="number" placeholder="Hours" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">Add Item</Button>
@@ -323,20 +323,20 @@ const SolarCalculationPage = () => {
             rules={[{ required: true, message: 'Please input your name!' }]}
             prefix={<UserOutlined />}
           >
-            <Input placeholder="Your Name" />
+            <Input placeholder="Your Name" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item 
             name="email" 
             rules={[{ required: true, message: 'Please input your email!' }]}
             prefix={<MailOutlined />}
           >
-            <Input placeholder="Your Email" />
+            <Input placeholder="Your Email" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item 
             name="message"
             prefix={<MessageOutlined />}
           >
-            <Input.TextArea rows={4} placeholder="Additional Message" />
+            <Input.TextArea rows={4} placeholder="Additional Message" style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">Submit</Button>

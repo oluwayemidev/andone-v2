@@ -79,7 +79,7 @@ const ContactPage = () => {
                   label="Name"
                   rules={[{ required: true, message: 'Please enter your name' }]}
                 >
-                  <Input prefix={<UserOutlined />} placeholder="Your Name" />
+                  <Input prefix={<UserOutlined />} placeholder="Your Name" style={{ background: 'transparent' }} />
                 </Form.Item>
                 <Form.Item
                   name="email"
@@ -89,21 +89,21 @@ const ContactPage = () => {
                     { type: 'email', message: 'Please enter a valid email' },
                   ]}
                 >
-                  <Input prefix={<MailOutlined />} placeholder="Your Email" />
+                  <Input prefix={<MailOutlined />} placeholder="Your Email" style={{ background: 'transparent' }} />
                 </Form.Item>
                 <Form.Item
                   name="subject"
                   label="Subject"
                   rules={[{ required: true, message: 'Please enter the subject' }]}
                 >
-                  <Input prefix={<FileTextOutlined />} placeholder="Subject" />
+                  <Input prefix={<FileTextOutlined />} placeholder="Subject" style={{ background: 'transparent' }} />
                 </Form.Item>
                 <Form.Item
                   name="message"
                   label="Message"
                   rules={[{ required: true, message: 'Please enter your message' }]}
                 >
-                  <Input.TextArea rows={4} placeholder="Your Message" />
+                  <Input.TextArea rows={4} placeholder="Your Message" style={{ background: 'transparent' }} />
                 </Form.Item>
                 <Form.Item>
                   <Button type="primary" htmlType="submit" loading={loading} block>

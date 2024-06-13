@@ -21,6 +21,7 @@ const HeaderComponent = ({ translatedTexts, textsToTranslate, showDrawer, setLan
         display: "flex",
         alignItems: "center",
         padding: "0 0 0 16px",
+        backgroundColor: "white",
       }}
     >
       <div
