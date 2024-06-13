@@ -54,7 +54,7 @@ const WeatherWidget = () => {
   }
 
   return (
-    <Card title="Current Weather" bordered={false} style={{ width: '100%' }}>
+    <Card title="Current Weather" bordered={false} style={{ }}>
       <p>Location: {weather.location.name}</p>
       <p>Temperature: {weather.current.temp_c}°C</p>
       <p>Condition: {weather.current.condition.text}</p>

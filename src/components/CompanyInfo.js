@@ -36,7 +36,7 @@ const CompanyInfo = () => {
 
   if (loading) {
     return (
-      <Card title="About Us" bordered={false} style={{ width: "100%" }}>
+      <Card title="About Us" bordered={false} style={{ }}>
         <Skeleton active />
       </Card>
     );
@@ -47,7 +47,7 @@ const CompanyInfo = () => {
   }
 
   return (
-    <Card title="About Us" bordered={false} style={{ width: "100%" }}>
+    <Card title="About Us" bordered={false} style={{ }}>
       <Typography>
         <Title level={4}>{companyInfo.title}</Title>
         <Paragraph>{companyInfo.paragraph1}</Paragraph>

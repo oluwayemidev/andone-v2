@@ -5,14 +5,24 @@ import { useSpring } from '@react-spring/core';
 import { TeamOutlined, SmileOutlined, GlobalOutlined } from '@ant-design/icons';
 import { db, doc, getDoc } from '../pages/firebase';
 import '../styles/About.css';
+import translateText from '../translationService';
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
-const AboutPage = () => {
+const AboutPage = ({ language }) => {
   const [aboutData, setAboutData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [translatedTexts, setTranslatedTexts] = useState({});
+
+  const textsToTranslate = { 
+    title: "About Us",
+    meetOurTeam: "Meet Our Team",
+    whoWeAre: "Who We Are",
+    ourMission: "Our Mission",
+    ourVision: "Our Vision"
+  };
 
   const overviewAnimation = useSpring({
     from: { opacity: 0, transform: 'translateY(-50px)' },
@@ -35,16 +45,41 @@ const AboutPage = () => {
   });
 
   useEffect(() => {
-    const fetchAboutData = async () => {
+    const fetchAndTranslateAboutData = async () => {
       try {
+        setLoading(true);
+
         const docRef = doc(db, 'pages', 'about');
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setAboutData(docSnap.data());
+          const data = docSnap.data();
+
+          // Translate the data fields
+          const translatedData = {
+            whoWeAre: await translateText(data.whoWeAre, language),
+            mission: await translateText(data.mission, language),
+            vision: await translateText(data.vision, language),
+            team: await Promise.all(data.team.map(async (member) => ({
+              ...member,
+              name: await translateText(member.name, language),
+              role: await translateText(member.role, language),
+              description: await translateText(member.description, language),
+            })))
+          };
+
+          setAboutData(translatedData);
         } else {
           setError('No such document!');
         }
+
+        // Translate static texts
+        const translations = {};
+        for (const key in textsToTranslate) {
+          translations[key] = await translateText(textsToTranslate[key], language);
+        }
+        setTranslatedTexts(translations);
+        
       } catch (error) {
         setError('Error getting document: ' + error.message);
       } finally {
@@ -52,8 +87,8 @@ const AboutPage = () => {
       }
     };
 
-    fetchAboutData();
-  }, []);
+    fetchAndTranslateAboutData();
+  }, [language]);
 
   if (loading) {
     return (
@@ -63,7 +98,7 @@ const AboutPage = () => {
             level={2}
             style={{ color: "white", lineHeight: "64px", textAlign: "center" }}
           >
-            About Us
+            {translatedTexts.title || textsToTranslate.title}
           </Title>
         </Header>
         <Content className="about-content">
@@ -83,7 +118,7 @@ const AboutPage = () => {
             </Col>
           </Row>
           <div style={{ textAlign: 'center', margin: '50px 0' }}>
-            <Title level={2}>Meet Our Team</Title>
+            <Title level={2}>{translatedTexts.meetOurTeam || textsToTranslate.meetOurTeam}</Title>
           </div>
           <Row gutter={[16, 16]}>
             {Array.from({ length: 3 }).map((_, index) => (
@@ -115,13 +150,13 @@ const AboutPage = () => {
           level={2}
           style={{ color: "white", lineHeight: "64px", textAlign: "center" }}
         >
-          About Us
+          {translatedTexts.title || textsToTranslate.title || 'About Us'}
         </Title>
       </Header>
       <Content className="about-content">
         <animated.div style={overviewAnimation}>
           <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <Title level={2}>Who We Are</Title>
+            <Title level={2}>{translatedTexts.whoWeAre || "Who We Are"}</Title>
             <Paragraph>{aboutData.whoWeAre}</Paragraph>
           </div>
         </animated.div>
@@ -130,7 +165,7 @@ const AboutPage = () => {
             <animated.div style={missionVisionAnimation}>
               <Card className="about-card">
                 <GlobalOutlined className="about-icon" />
-                <Title level={3}>Our Mission</Title>
+                <Title level={3}>{translatedTexts.ourMission || "Our Mission"}</Title>
                 <Paragraph>{aboutData.mission}</Paragraph>
               </Card>
             </animated.div>
@@ -139,7 +174,7 @@ const AboutPage = () => {
             <animated.div style={missionVisionAnimation}>
               <Card className="about-card">
                 <SmileOutlined className="about-icon" />
-                <Title level={3}>Our Vision</Title>
+                <Title level={3}>{translatedTexts.ourVision || "Our Vision"}</Title>
                 <Paragraph>{aboutData.vision}</Paragraph>
               </Card>
             </animated.div>
@@ -147,7 +182,7 @@ const AboutPage = () => {
         </Row>
         <animated.div style={teamAnimation}>
           <div style={{ textAlign: 'center', margin: '50px 0' }}>
-            <Title level={2}>Meet Our Team</Title>
+            <Title level={2}>{translatedTexts.meetOurTeam || "Meet Our Team"}</Title>
           </div>
           <Row gutter={[16, 16]}>
             {aboutData.team && aboutData.team.map((member, index) => (

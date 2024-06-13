@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';  // Import serverTimestamp
 import { db } from './firebase';
 import { Layout, Table, Input, Button, Form, Typography, notification, AutoComplete, Popconfirm } from 'antd';
 import { PrinterFilled, EditOutlined, DeleteOutlined, UserOutlined, MailOutlined, MessageOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import '../styles/SolarCalculations.css'
+import '../styles/SolarCalculations.css';
+import translateText from '../translationService'; // Import your translation service
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -22,7 +23,7 @@ const suggestedItems = [
   'Solar Inverter',
 ];
 
-const SolarCalculationPage = () => {
+const SolarCalculationPage = ({ language }) => {
   const [dataSource, setDataSource] = useState([
     { key: '1', item: 'Demo Item', quantity: 1, watts: 100, hours: 1, wattHour: 100 },
   ]);
@@ -30,6 +31,40 @@ const SolarCalculationPage = () => {
   const [editingKey, setEditingKey] = useState('');
   const [form] = Form.useForm();  // Create form instance for table editing
   const [inputForm] = Form.useForm();  // Create form instance for new item inputs
+
+  const [labels, setLabels] = useState({
+    name: "Your Name",
+    email: "Your Email",
+    message: "Additional Message",
+    addItem: "Add Item",
+    submit: "Submit",
+    header: "Solar Calculation",
+    title: "Solar Power Consumption Calculator",
+    description: "Use this calculator to estimate your solar power needs. Add items, their quantities, and power ratings below.",
+    item: "Item",
+    quantity: "Quantity",
+    watts: "Watts",
+    hours: "Hours",
+    wattHour: "Watt Hour",
+    action: "Action",
+    total: "Total",
+    printResult: "Print Result",
+    simpleCalculator: "This is just a simple Calculator to help you estimate the solar you need. This is not a guarantee that the solar you calculate will be perfect for your situation.",
+    sureToDelete: "Sure to delete?",
+    pleaseInput: "Please input the",
+  });
+
+  const translateLabels = async () => {
+    const translatedLabels = {};
+    for (const [key, value] of Object.entries(labels)) {
+      translatedLabels[key] = await translateText(value, language);
+    }
+    setLabels(translatedLabels);
+  };
+
+  useEffect(() => {
+    translateLabels();
+  }, [language]);
 
   const isEditing = (record) => record.key === editingKey;
 
@@ -76,36 +111,36 @@ const SolarCalculationPage = () => {
 
   const columns = [
     {
-      title: 'Item',
+      title: labels.item,
       dataIndex: 'item',
       key: 'item',
       editable: true,
     },
     {
-      title: 'Quantity',
+      title: labels.quantity,
       dataIndex: 'quantity',
       key: 'quantity',
       editable: true,
     },
     {
-      title: 'Watts',
+      title: labels.watts,
       dataIndex: 'watts',
       key: 'watts',
       editable: true,
     },
     {
-      title: 'Hours',
+      title: labels.hours,
       dataIndex: 'hours',
       key: 'hours',
       editable: true,
     },
     {
-      title: 'Watt Hour',
+      title: labels.wattHour,
       dataIndex: 'wattHour',
       key: 'wattHour',
     },
     {
-      title: 'Action',
+      title: labels.action,
       dataIndex: 'action',
       render: (_, record) => {
         const editable = isEditing(record);
@@ -128,7 +163,7 @@ const SolarCalculationPage = () => {
               style={{ marginRight: 8 }}
             >
             </Button>
-            <Popconfirm title="Sure to delete?" onConfirm={() => deleteRow(record.key)}>
+            <Popconfirm title={labels.sureToDelete} onConfirm={() => deleteRow(record.key)}>
               <Button 
                 disabled={editingKey !== ''} 
                 icon={<DeleteOutlined />} 
@@ -178,7 +213,7 @@ const SolarCalculationPage = () => {
             rules={[
               {
                 required: true,
-                message: `Please Input ${title}!`,
+                message: `${labels.pleaseInput} ${title}!`,
               },
             ]}
           >
@@ -246,12 +281,12 @@ const SolarCalculationPage = () => {
   return (
     <Layout className='calculations-container' style={{ minHeight: '100vh' }}>
       <Header style={{ backgroundColor: '#001529', padding: '0 50px', textAlign: 'center' }}>
-        <Title level={2} style={{ color: 'white', lineHeight: '64px' }}>Solar Calculation</Title>
+        <Title level={2} style={{ color: 'white', lineHeight: '64px' }}>{labels.header}</Title>
       </Header>
       <Content className='calculations-content' style={{ padding: '50px' }}>
-        <Title level={3}>Solar Power Consumption Calculator</Title>
+        <Title level={3}>{labels.title}</Title>
         <Paragraph>
-          Use this calculator to estimate your solar power needs. Add items, their quantities, and power ratings below.
+          {labels.description}
         </Paragraph>
         <Form className='solar-calcualtions-table' form={form} component={false}>
           <Table
@@ -267,7 +302,7 @@ const SolarCalculationPage = () => {
             summary={() => (
               <Table.Summary fixed>
                 <Table.Summary.Row>
-                  <Table.Summary.Cell colSpan={3}><b>Total</b></Table.Summary.Cell>
+                  <Table.Summary.Cell colSpan={3}><b>{labels.total}</b></Table.Summary.Cell>
                   <Table.Summary.Cell><b>{totalWatts} W</b></Table.Summary.Cell>
                   <Table.Summary.Cell><b>{totalWattHours} Wh</b></Table.Summary.Cell>
                   <Table.Summary.Cell />
@@ -283,63 +318,61 @@ const SolarCalculationPage = () => {
             <AutoComplete
               style={{ width: '200px', background: 'transparent' }}
               options={suggestedItems.map(item => ({ value: item }))}
-              placeholder="Item"
+              placeholder={labels.item}
               filterOption={(inputValue, option) =>
                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
             />
           </Form.Item>
           <Form.Item name="quantity" rules={[{ required: true, message: 'Please input the quantity!' }]}>
-            <Input type="number" placeholder="Quantity" style={{ background: 'transparent' }} />
+            <Input type="number" placeholder={labels.quantity} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item name="watts" rules={[{ required: true, message: 'Please input the watts!' }]}>
-            <Input type="number" placeholder="Watts" style={{ background: 'transparent' }} />
+            <Input type="number" placeholder={labels.watts} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item name="hours" rules={[{ required: true, message: 'Please input the hours!' }]}>
-            <Input type="number" placeholder="Hours" style={{ background: 'transparent' }} />
+            <Input type="number" placeholder={labels.hours} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">Add Item</Button>
+            <Button type="primary" htmlType="submit">{labels.addItem}</Button>
           </Form.Item>
         </Form>
 
         <Paragraph style={{ padding: '2rem 0' }}>
-          This is just a simple Calculator to help you estimate the solar you
-          need. This is not a guarantee that the solar you calculate will be
-          perfect for your situation.
+          {labels.simpleCalculator}
         </Paragraph>
 
         <Paragraph style={{ fontWeight: "bold" }}>
-          Print Result: &nbsp;
+          {labels.printResult}: &nbsp;
           <Button onClick={handlePrint}>
             <PrinterFilled />
           </Button>
         </Paragraph>
 
         <Form className='submit-form' onFinish={handleSubmit} style={{ marginTop: '40px', maxWidth: '500px' }}>
-          <Title level={4}>Submit Your Calculation</Title>
+          <Title level={4}>{labels.submit}</Title>
           <Form.Item 
             name="name" 
             rules={[{ required: true, message: 'Please input your name!' }]}
             prefix={<UserOutlined />}
           >
-            <Input placeholder="Your Name" style={{ background: 'transparent' }} />
+            <Input placeholder={labels.name} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item 
             name="email" 
             rules={[{ required: true, message: 'Please input your email!' }]}
             prefix={<MailOutlined />}
           >
-            <Input placeholder="Your Email" style={{ background: 'transparent' }} />
+            <Input placeholder={labels.email} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item 
             name="message"
             prefix={<MessageOutlined />}
           >
-            <Input.TextArea rows={4} placeholder="Additional Message" style={{ background: 'transparent' }} />
+            <Input.TextArea rows={4} placeholder={labels.message} style={{ background: 'transparent' }} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">Submit</Button>
+            <Button type="primary" htmlType="submit">{labels.submit}</Button>
           </Form.Item>
         </Form>
       </Content>

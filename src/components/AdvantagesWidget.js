@@ -28,7 +28,7 @@ const AdvantagesWidget = () => {
     <Card
       title="Our Values"
       bordered={false}
-      style={{ width: "100%" }}
+      style={{ }}
       className="advantages-container"
     >
       <Row gutter={[16, 16]}>
@@ -47,7 +47,7 @@ const AdvantagesWidget = () => {
               </Col>
             ))
           : advantages.map((advantage, index) => (
-              <Col xs={24} sm={12} md={8} key={index}>
+              <Col style={{ justifyContent: 'center', alignItems: 'center' }} xs={24} sm={12} md={8} key={index}>
                 <Card
                   hoverable
                   cover={

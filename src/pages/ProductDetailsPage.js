@@ -3,12 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../pages/firebase";
 import { Card, Typography, Spin, Alert, Button, Row, Col } from 'antd';
+import translateText from "../translationService"; // Import your translation service
 
 const { Title, Text } = Typography;
 
-const ProductDetailsPage = () => {
+const ProductDetailsPage = ({ language }) => {
   const { id } = useParams(); // Get the product ID from the URL
-  const history = useNavigate(); // Use history for navigation
+  const navigate = useNavigate(); // Use navigate for navigation
   const [product, setProduct] = useState(null);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,9 @@ const ProductDetailsPage = () => {
         setImages(imagesData);
 
         if (docSnap.exists()) {
-          setProduct(docSnap.data());
+          const productData = docSnap.data();
+          const translatedProduct = await translateProductDetails(productData, language);
+          setProduct(translatedProduct);
         } else {
           setError('Product not found');
         }
@@ -38,7 +41,20 @@ const ProductDetailsPage = () => {
     };
 
     fetchProduct();
-  }, [id]);
+  }, [id, language]);
+
+  const translateProductDetails = async (product, language) => {
+    const translatedName = await translateText(product.name, language);
+    const translatedCategory = await translateText(product.category, language);
+    const translatedDescription = await translateText(product.description, language);
+
+    return {
+      ...product,
+      name: translatedName,
+      category: translatedCategory,
+      description: translatedDescription,
+    };
+  };
 
   if (loading) {
     return (
@@ -58,7 +74,7 @@ const ProductDetailsPage = () => {
 
   return (
     <Card style={{ width: '90%', maxWidth: 1200, margin: 'auto', marginTop: '30px', padding: 12 }}>
-      <Button type="primary" onClick={() => history(-1)} style={{ marginBottom: 16 }}>
+      <Button type="primary" onClick={() => navigate(-1)} style={{ marginBottom: 16 }}>
         Back
       </Button>
       <Row gutter={[16, 16]}>

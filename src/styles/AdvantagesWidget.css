@@ -2,16 +2,13 @@
 .advantages-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
   justify-content: center;
   background: transparent;
 }
 
 .advantage-card {
-  width: calc(100% - 32px);
-  margin: 16px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex: 1 1 calc(33% - 32px);
+  flex: 1 1 calc(30% - 32px);
   background: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
   backdrop-filter: blur(10px); /* Blur effect */
   border-radius: 16px; /* Rounded corners */

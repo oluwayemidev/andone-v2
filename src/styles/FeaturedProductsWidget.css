@@ -15,6 +15,10 @@
   padding: 20px;
 }
 
+.featured-products-card .ant-card-body{
+  padding: 24px 0;
+}
+
 .product-card {
   border-radius: 10px;
   padding: 0;
@@ -30,6 +34,9 @@
 
 .product-details {
   text-align: center;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .price {
@@ -51,4 +58,12 @@
 
 .slick-prev:before, .slick-next:before {
   color: #3A3A8D;
+}
+
+.rate-md .ant-rate-star {
+  font-size: 24px; /* Default size for medium and larger screens */
+}
+
+.rate-sm .ant-rate-star {
+  font-size: 10px; /* Smaller size for small screens */
 }

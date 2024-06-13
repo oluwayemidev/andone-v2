@@ -83,7 +83,7 @@ const App = () => {
                 <div style={{ minHeight: "80vh" }}></div>
               </Spin>
             ) : (
-              <AppRoutes />
+              <AppRoutes language={language} setLanguage={setLanguage} />
             )}
           </Content>
           <FooterComponent translatedTexts={translatedTexts} />
