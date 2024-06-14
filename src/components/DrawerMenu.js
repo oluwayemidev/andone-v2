@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Drawer, Menu } from 'antd';
-import { HomeOutlined, InfoCircleOutlined, AppstoreOutlined, ToolOutlined, PhoneOutlined, FileSearchOutlined, SunOutlined } from '@ant-design/icons';
+import { Button, Drawer, Dropdown, Menu } from 'antd';
+import { HomeOutlined, InfoCircleOutlined, AppstoreOutlined, ToolOutlined, PhoneOutlined, FileSearchOutlined, SunOutlined, GlobalOutlined } from '@ant-design/icons';
 
-const DrawerMenu = ({ visible, closeDrawer, translatedTexts, textsToTranslate }) => (
+const DrawerMenu = ({ visible, closeDrawer, translatedTexts, textsToTranslate, setLanguage, languageMenu }) => (
   <Drawer
     title="Menu"
     placement="left"
@@ -33,6 +33,15 @@ const DrawerMenu = ({ visible, closeDrawer, translatedTexts, textsToTranslate })
       <Menu.Item key="7" icon={<SunOutlined />} onClick={closeDrawer}>
         <Link to="/solar-calculation">{translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}</Link>
       </Menu.Item>
+      <Menu.Item
+            style={{
+              background: "transparent",
+            }}
+          >
+            <Dropdown overlay={languageMenu} trigger={["click"]}>
+              <Button icon={<GlobalOutlined />}>Language</Button> 
+            </Dropdown>
+          </Menu.Item>
     </Menu>
   </Drawer>
 );

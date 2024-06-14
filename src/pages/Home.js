@@ -21,66 +21,66 @@ import MottoWidget from "../components/MottoWidget";
 import "../styles/Home.css";
 import AdvantagesWidget from "../components/AdvantagesWidget";
 
-const Home = () => (
+const Home = ({ language }) => (
   <div className="home-container">
     <Row gutter={[0, 0]} style={{ marginBottom: 16 }}>
       <Col span={24}>
-        <SliderCarousel className="glass-widget" />
+        <SliderCarousel className="glass-widget" language={language} />
       </Col>
     </Row>
     <Row style={{ marginBottom: 16 }}>
       <Col span={24}>
-        <FeaturedProductsWidget className="glass-widget" />
+        <FeaturedProductsWidget className="glass-widget" language={language} />
       </Col>
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} md={6}>
-        <SolarEfficiencyWidget className="glass-widget" />
+        <SolarEfficiencyWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} md={10}>
-        <CompanyInfo className="glass-widget" />
+        <CompanyInfo className="glass-widget" language={language} />
       </Col>
       <Col xs={24} md={8}>
-        <MottoWidget className="glass-widget" />
-        <WeatherWidget className="glass-widget" />
+        <MottoWidget className="glass-widget" language={language} />
+        <WeatherWidget className="glass-widget" language={language} />
       </Col>
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24}>
-        <AdvantagesWidget />
+        <AdvantagesWidget language={language} />
       </Col>
       {/* <Col xs={24} lg={8}>
-        <SolarNewsWidget className="glass-widget" />
+        <SolarNewsWidget className="glass-widget" language={language} />
       </Col> */}
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} lg={6}>
-        <TestimonialsWidget className="glass-widget" />
+        <TestimonialsWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} lg={18}>
-        <RecentProjectsWidget className="glass-widget" />
+        <RecentProjectsWidget className="glass-widget" language={language} />
       </Col>
     </Row>
     <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} sm={12} md={8}>
-        <FAQsWidget className="glass-widget" />
+        <FAQsWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} sm={12} md={16}>
-        <VideoGalleryWidget className="glass-widget" />
+        <VideoGalleryWidget className="glass-widget" language={language} />
       </Col>
     </Row>
     {/* <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
       <Col xs={24} sm={12} md={8}>
-        <InteractiveMapWidget className="glass-widget" />
+        <InteractiveMapWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} sm={12} md={8}>
-        <SocialMediaFeedWidget className="glass-widget" />
+        <SocialMediaFeedWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} sm={12} md={8}>
-        <LiveChatWidget className="glass-widget" />
+        <LiveChatWidget className="glass-widget" language={language} />
       </Col>
       <Col xs={24} sm={12} md={8}>
-        <NewsletterSignupWidget className="glass-widget" />
+        <NewsletterSignupWidget className="glass-widget" language={language} />
       </Col>
     </Row> */}
   </div>

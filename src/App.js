@@ -76,6 +76,8 @@ const App = () => {
             closeDrawer={closeDrawer}
             translatedTexts={translatedTexts}
             textsToTranslate={textsToTranslate}
+            setLanguage={setLanguage}
+            languageMenu={<LanguageMenu setLanguage={setLanguage} />}
           />
           <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
             {loading ? (
