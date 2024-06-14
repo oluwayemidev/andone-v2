@@ -27,7 +27,7 @@ const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
-const QuotationForm = ({ language }) => {
+const QuotationForm = ({ language = 'en' }) => { // Provide a default value for language
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
   const [form] = Form.useForm();
@@ -60,7 +60,11 @@ const QuotationForm = ({ language }) => {
 
   useEffect(() => {
     setLoading(true); // Set loading to true whenever language changes
-    translateLabels();
+    if (language) {
+      translateLabels();
+    } else {
+      setLoading(false);
+    }
   }, [language]);
 
   const onFinish = async (values) => {
