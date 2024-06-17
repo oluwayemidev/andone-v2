@@ -1,9 +1,9 @@
-// src/components/WeatherWidget.js
 import React, { useState, useEffect } from 'react';
 import { Card, Spin, Alert } from 'antd';
 import axios from 'axios';
+import translateText from '../translationService'; // Import your translation service
 
-const WeatherWidget = () => {
+const WeatherWidget = ({ language }) => {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +17,23 @@ const WeatherWidget = () => {
             q: `${lat},${lon}`, // query for the weather based on latitude and longitude
           },
         });
-        setWeather(response.data);
+        const translatedLocation = await translateText(response.data.location.name, language);
+        const translatedCondition = await translateText(response.data.current.condition.text, language);
+        const translatedWeatherData = {
+          ...response.data,
+          location: {
+            ...response.data.location,
+            name: translatedLocation,
+          },
+          current: {
+            ...response.data.current,
+            condition: {
+              ...response.data.current.condition,
+              text: translatedCondition,
+            },
+          },
+        };
+        setWeather(translatedWeatherData);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -43,7 +59,7 @@ const WeatherWidget = () => {
     };
 
     getLocation();
-  }, []);
+  }, [language]);
 
   if (loading) {
     return <Spin tip="Loading weather data..." />;
@@ -55,9 +71,9 @@ const WeatherWidget = () => {
 
   return (
     <Card title="Current Weather" bordered={false} style={{ }}>
-      <p>Location: {weather.location.name}</p>
-      <p>Temperature: {weather.current.temp_c}°C</p>
-      <p>Condition: {weather.current.condition.text}</p>
+      <p>{`Location: ${weather.location.name}`}</p>
+      <p>{`Temperature: ${weather.current.temp_c}°C`}</p>
+      <p>{`Condition: ${weather.current.condition.text}`}</p>
     </Card>
   );
 };

@@ -28,7 +28,6 @@ import {
   FileMarkdownOutlined,
   ToolOutlined,
 } from "@ant-design/icons";
-import { MessagesContext } from "../context/MessagesContext";
 import {
   db,
   collection,
@@ -91,8 +90,8 @@ const AdminDashboard = () => {
         <Menu.Item key={index}>
           <Link to={`/admin/contacts`}>
             <Row gutter={10}>
-              <Col style={{ paddingTop: '6px' }}>
-                <Avatar>{message.name.slice(0,1).toUpperCase()}</Avatar>
+              <Col style={{ paddingTop: "6px" }}>
+                <Avatar>{message.name.slice(0, 1).toUpperCase()}</Avatar>
               </Col>
               <Col>
                 <Typography type="primary">{message.name}</Typography>
@@ -138,20 +137,25 @@ const AdminDashboard = () => {
           <Menu.Item key="4" icon={<ContactsOutlined />}>
             <Link to="/admin/contacts">Contacts</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<FileTextOutlined />}>
+          <Menu.Item key="5" icon={<MessageOutlined />}>
+            <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
+              <Link style={{ color: '#ffffffa6' }} to="/admin/chat">Live Chat</Link>
+            </Badge>
+          </Menu.Item>
+          <Menu.Item key="6" icon={<FileTextOutlined />}>
             <Link to="/admin/quotations">Quotations</Link>
           </Menu.Item>
-          <Menu.Item key="6" icon={<BulbOutlined />}>
+          <Menu.Item key="7" icon={<BulbOutlined />}>
             <Link to="/admin/solar-results">Solar Results</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<SettingOutlined />} title="Customization">
-            <Menu.Item key="7" icon={<FileMarkdownOutlined />}>
+            <Menu.Item key="9" icon={<FileMarkdownOutlined />}>
               <Link to="/admin/pages">Pages</Link>
             </Menu.Item>
-            <Menu.Item key="8" icon={<ToolOutlined />}>
+            <Menu.Item key="9" icon={<ToolOutlined />}>
               <Link to="/admin/widgets">Widgets</Link>
             </Menu.Item>
-            <Menu.Item key="9" icon={<SettingOutlined />}>
+            <Menu.Item key="10" icon={<SettingOutlined />}>
               <Link to="/admin/settings">Settings</Link>
             </Menu.Item>
           </SubMenu>

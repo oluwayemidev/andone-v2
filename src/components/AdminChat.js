@@ -8,10 +8,20 @@ import {
   serverTimestamp,
   addDoc,
   getDocs,
+  doc,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { Button, Input, Skeleton, Avatar, Divider } from "antd";
-import { LogoutOutlined, SendOutlined, UserOutlined } from "@ant-design/icons";
-import { format, isValid, startOfDay, differenceInMinutes, formatDistanceToNowStrict, differenceInSeconds } from "date-fns";
+import { Button, Input, Skeleton, Avatar, Divider, Badge } from "antd";
+import { SendOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  format,
+  isValid,
+  startOfDay,
+  differenceInMinutes,
+  formatDistanceToNowStrict,
+  differenceInSeconds,
+} from "date-fns";
 import "../styles/AdminChat.css";
 
 const AdminChat = () => {
@@ -24,14 +34,42 @@ const AdminChat = () => {
   const messagesContainerRef = useRef(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const updateAdminStatus = async (status) => {
       try {
-        const querySnapshot = await getDocs(collection(db, "users"));
-        const usersList = querySnapshot.docs.map((doc) => doc.data());
-        setUsers(usersList);
+        const adminDocRef = doc(db, "users", "klEUZ49aaOVI3POtOiJXXCDAn2J2"); // Replace 'adminUID' with your admin user's UID
+        await updateDoc(adminDocRef, {
+          online: status,
+        });
       } catch (error) {
-        console.error("Error fetching users: ", error);
+        console.error("Error updating admin status:", error);
       }
+    };
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.email === "admin@andonesolar.com") {
+        updateAdminStatus(true); // Admin is online
+      } else {
+        updateAdminStatus(false); // Admin is offline
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = () => {
+      const usersQuery = query(collection(db, "users"));
+      const unsubscribe = onSnapshot(usersQuery, (querySnapshot) => {
+        const usersList = querySnapshot.docs
+          .filter((doc) => doc.id !== "klEUZ49aaOVI3POtOiJXXCDAn2J2") // Exclude admin user
+          .map((doc) => ({
+            ...doc.data(),
+            uid: doc.id,
+          }));
+        setUsers(usersList);
+      });
+
+      return unsubscribe;
     };
 
     fetchUsers();
@@ -59,6 +97,19 @@ const AdminChat = () => {
           messagesContainerRef.current.scrollTop =
             messagesContainerRef.current.scrollHeight;
         }
+
+        // Mark messages as read
+        const unreadMessages = snapshot.docs.filter(
+          (doc) =>
+            doc.data().uid === selectedUser.uid &&
+            doc.data().responseTo === "klEUZ49aaOVI3POtOiJXXCDAn2J2" && // Replace 'adminUID' with your admin user's UID
+            !doc.data().read
+        );
+
+        unreadMessages.forEach(async (msg) => {
+          const msgRef = doc(db, "messages", msg.id);
+          await updateDoc(msgRef, { read: true });
+        });
       });
 
       return () => unsubscribe();
@@ -84,6 +135,7 @@ const AdminChat = () => {
       displayName: "Admin",
       responseTo: selectedUser.uid,
       email,
+      read: false,
     });
 
     setNewMessage("");
@@ -102,13 +154,12 @@ const AdminChat = () => {
       const diffInSeconds = differenceInSeconds(now, date);
 
       if (diffInSeconds < 10) {
-        return 'just now';
+        return "just now";
       } else if (diffInMinutes < 60) {
-        return format(date, 'hh:mm a');
+        return format(date, "hh:mm a");
       } else {
         return formatDistanceToNowStrict(date, { addSuffix: true });
       }
-      
     } catch (error) {
       console.error("Error formatting date:", error);
       return "";
@@ -162,12 +213,22 @@ const AdminChat = () => {
     return groupedMessages;
   };
 
+  const getUnreadMessagesCount = (userUid) => {
+    return messages.filter((msg) => msg.uid === userUid && !msg.read).length;
+  };
+
+  const sortedUsers = [...users].sort((a, b) => {
+    const aMessageTime = a.latestMessage?.createdAt?.toDate() || new Date(0);
+    const bMessageTime = b.latestMessage?.createdAt?.toDate() || new Date(0);
+    return bMessageTime - aMessageTime;
+  });
+
   return (
     <div className="admin-chat-container">
       <div className="user-list">
         <h2>Chat</h2>
         <Divider />
-        {users.map((user) => (
+        {sortedUsers.map((user) => (
           <div
             key={user.uid}
             className={`user-item ${
@@ -178,6 +239,7 @@ const AdminChat = () => {
             <Avatar className="user-avatar" icon={<UserOutlined />} />
             <div>
               <b>{user.displayName}</b> ({user.email})
+              <Badge count={getUnreadMessagesCount(user.uid)} style={{ backgroundColor: '#52c41a' }} />
             </div>
           </div>
         ))}

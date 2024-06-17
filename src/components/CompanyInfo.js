@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, Typography, Skeleton, Alert } from "antd";
 import { db, doc, getDoc } from '../pages/firebase';
+import translateText from "../translationService"; // Import your translation service
 
 const { Title, Paragraph } = Typography;
 
-const CompanyInfo = () => {
+const CompanyInfo = ({ language }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [companyInfo, setCompanyInfo] = useState({
@@ -20,7 +21,14 @@ const CompanyInfo = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setCompanyInfo(docSnap.data());
+          const data = docSnap.data();
+          // Translate fetched data
+          const translatedData = {
+            title: await translateText(data.title, language),
+            paragraph1: await translateText(data.paragraph1, language),
+            paragraph2: await translateText(data.paragraph2, language),
+          };
+          setCompanyInfo(translatedData);
         } else {
           setError("No such document!");
         }
@@ -32,11 +40,11 @@ const CompanyInfo = () => {
     };
 
     fetchData();
-  }, []);
+  }, [language]); // Trigger fetch and translation when language changes
 
   if (loading) {
     return (
-      <Card title="About Us" bordered={false} style={{ }}>
+      <Card title="About Us" bordered={false} style={{}}>
         <Skeleton active />
       </Card>
     );
@@ -47,7 +55,7 @@ const CompanyInfo = () => {
   }
 
   return (
-    <Card title="About Us" bordered={false} style={{ }}>
+    <Card title="About Us" bordered={false} style={{}}>
       <Typography>
         <Title level={4}>{companyInfo.title}</Title>
         <Paragraph>{companyInfo.paragraph1}</Paragraph>

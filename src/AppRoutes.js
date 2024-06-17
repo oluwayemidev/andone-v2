@@ -54,7 +54,7 @@ const AppRoutes = ({ language }) => {
       <Route path="/" element={<Home language={language} />} />
       <Route path="/featured-product/:productId" element={<FeaturedProductInfo language={language} />} />
       <Route path="/about" element={<About language={language} />} />
-      <Route path="/chat-system" element={user ? <Chat /> : <Auth />} />
+      <Route path="/chat" element={user ? <Chat /> : <Auth />} />
       <Route path="/products" element={<Products language={language} />} />
       <Route path="/products/:id" element={<ProductDetailsPage language={language} />} />
       <Route path="/services" element={<Services language={language} />} />
@@ -63,9 +63,9 @@ const AppRoutes = ({ language }) => {
       <Route path="/solar-calculation" element={<SolarCalculations language={language} />} />
       <Route path="/xyz/admin" element={<AdminLogin language={language} />} />
       <Route path="/xyz/admin/signup" element={<AdminSignup language={language} />} />
-      <Route path="/chat" element={<ProtectRoute />}>
+      {/* <Route path="/chat" element={<ProtectRoute />}>
         <Route path="" element={<UserChat language={language} />} />
-      </Route>
+      </Route> */}
       <Route path="/admin" element={<AdminRoute />}>
         <Route path="" element={<AdminDashboard language={language} />}>
           <Route index element={<AdminOverview language={language} />} />

@@ -20,7 +20,7 @@ const config = {
 ],
   customComponents: {
     header: () => {},
-    botAvatar: (props) => <Avatar><img src={logo} width='100%' alt='A' {...props} /></Avatar>,
+    botAvatar: (props) => <Avatar style={{ backgroundColor: 'transparent' }}><img src={logo} width='100%' alt='A' {...props} /></Avatar>,
   },
   customStyles: {
     botMessageBox: {

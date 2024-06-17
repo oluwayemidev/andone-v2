@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { Layout, Drawer, Spin } from "antd";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { Layout, Drawer, Spin, FloatButton } from "antd";
+import { WechatFilled } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
@@ -9,16 +15,27 @@ import HeaderComponent from "./components/Header";
 import FooterComponent from "./components/Footer";
 import LanguageMenu from "./components/LanguageMenu";
 import DrawerMenu from "./components/DrawerMenu";
-import StyledBackground from './components/StyledBackground';
+import StyledBackground from "./components/StyledBackground";
 import AppRoutes from "./AppRoutes";
 import "./App.css";
 
 const { Content } = Layout;
 
-const AppContent = ({ language, setLanguage, translatedTexts, loading, showDrawer, closeDrawer, visible, textsToTranslate }) => {
+const AppContent = ({
+  language,
+  setLanguage,
+  translatedTexts,
+  loading,
+  showDrawer,
+  closeDrawer,
+  visible,
+  textsToTranslate,
+}) => {
   const location = useLocation();
   const adminRoutes = ["/xyz/admin", "/xyz/admin/signup", "/admin", "/admin/"];
-  const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
+  const isAdminRoute = adminRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -122,8 +139,27 @@ const App = () => {
 const ConditionalFloatingButton = () => {
   const location = useLocation();
   const adminRoutes = ["/xyz/admin", "/xyz/admin/signup", "/admin", "/admin/"];
-  const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
-  return !isAdminRoute ? <FloatingButton /> : null;
+  const isAdminRoute = adminRoutes.some((route) =>
+    location.pathname.startsWith(route)
+  );
+  return !isAdminRoute ? (
+    <>
+      <FloatingButton />
+      <FloatButton
+        icon={<WechatFilled />}
+        href="/chat"
+        type="primary"
+        badge={{
+          dot: true
+        }}
+        style={{
+          right: 24,
+          bottom: 70,
+        }}
+        tooltip={<div>Live Chat</div>}
+      />{" "}
+    </>
+  ) : null;
 };
 
 export default App;

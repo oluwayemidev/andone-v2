@@ -1,13 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Layout, Menu, Button, Dropdown, Image, Grid } from 'antd';
-import { HomeOutlined, InfoCircleOutlined, AppstoreOutlined, ToolOutlined, PhoneOutlined, FileSearchOutlined, SunOutlined, GlobalOutlined, MenuOutlined } from '@ant-design/icons';
-import logo from '../images/logo.png'; // Adjust the path accordingly
+import React from "react";
+import { Link } from "react-router-dom";
+import { Layout, Menu, Button, Dropdown, Image, Grid, Space } from "antd";
+import {
+  HomeOutlined,
+  InfoCircleOutlined,
+  AppstoreOutlined,
+  ToolOutlined,
+  PhoneOutlined,
+  FileSearchOutlined,
+  SunOutlined,
+  GlobalOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
+import logo from "../images/logo.png"; // Adjust the path accordingly
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
 
-const HeaderComponent = ({ translatedTexts, textsToTranslate, showDrawer, setLanguage, languageMenu }) => {
+const HeaderComponent = ({
+  translatedTexts,
+  textsToTranslate,
+  showDrawer,
+  setLanguage,
+  languageMenu,
+}) => {
   const screens = useBreakpoint();
 
   return (
@@ -50,22 +66,35 @@ const HeaderComponent = ({ translatedTexts, textsToTranslate, showDrawer, setLan
             <Link to="/">{translatedTexts.home || textsToTranslate.home}</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<InfoCircleOutlined />}>
-            <Link to="/about">{translatedTexts.about || textsToTranslate.about}</Link>
+            <Link to="/about">
+              {translatedTexts.about || textsToTranslate.about}
+            </Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<AppstoreOutlined />}>
-            <Link to="/products">{translatedTexts.products || textsToTranslate.products}</Link>
+            <Link to="/products">
+              {translatedTexts.products || textsToTranslate.products}
+            </Link>
           </Menu.Item>
           <Menu.Item key="4" icon={<ToolOutlined />}>
-            <Link to="/services">{translatedTexts.services || textsToTranslate.services}</Link>
+            <Link to="/services">
+              {translatedTexts.services || textsToTranslate.services}
+            </Link>
           </Menu.Item>
           <Menu.Item key="5" icon={<PhoneOutlined />}>
-            <Link to="/contact">{translatedTexts.contact || textsToTranslate.contact}</Link>
+            <Link to="/contact">
+              {translatedTexts.contact || textsToTranslate.contact}
+            </Link>
           </Menu.Item>
           <Menu.Item key="6" icon={<FileSearchOutlined />}>
-            <Link to="/quotation">{translatedTexts.getQuote || textsToTranslate.getQuote}</Link>
+            <Link to="/quotation">
+              {translatedTexts.getQuote || textsToTranslate.getQuote}
+            </Link>
           </Menu.Item>
           <Menu.Item key="7" icon={<SunOutlined />}>
-            <Link to="/solar-calculation">{translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}</Link>
+            <Link to="/solar-calculation">
+              {translatedTexts.getSolarCalculation ||
+                textsToTranslate.getSolarCalculation}
+            </Link>
           </Menu.Item>
           <Menu.Item
             style={{

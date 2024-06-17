@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { db, collection, getDocs } from "../pages/firebase";
-import "../styles/AdvantagesWidget.css";
 import { Card, Col, Row, Skeleton } from "antd";
+import translateText from "../translationService"; // Import your translation service
+import "../styles/AdvantagesWidget.css";
 
-const AdvantagesWidget = () => {
+const AdvantagesWidget = ({ language }) => {
   const [advantages, setAdvantages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [translatedTitle, setTranslatedTitle] = useState("");
 
   useEffect(() => {
     const fetchAdvantages = async () => {
@@ -13,22 +15,39 @@ const AdvantagesWidget = () => {
         const advantagesCollection = collection(db, "advantages");
         const advantagesSnapshot = await getDocs(advantagesCollection);
         const advantagesData = advantagesSnapshot.docs.map((doc) => doc.data());
-        setAdvantages(advantagesData);
+
+        // Translate static text like widget title
+        const translatedWidgetTitle = await translateText(
+          "Our Values",
+          language
+        );
+        setTranslatedTitle(translatedWidgetTitle);
+
+        // Translate dynamic content like advantage titles and descriptions
+        const translatedAdvantages = await Promise.all(
+          advantagesData.map(async (advantage) => ({
+            ...advantage,
+            title: await translateText(advantage.title, language),
+            description: await translateText(advantage.description, language),
+          }))
+        );
+
+        setAdvantages(translatedAdvantages);
       } catch (error) {
-        console.error("Error fetching advantages:", error);
+        console.error("Error fetching and translating advantages:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchAdvantages();
-  }, []);
+  }, [language]); // Trigger fetch and translation when language changes
 
   return (
     <Card
-      title="Our Values"
+      title={translatedTitle}
       bordered={false}
-      style={{ }}
+      style={{}}
       className="advantages-container"
     >
       <Row gutter={[16, 16]}>
@@ -39,15 +58,13 @@ const AdvantagesWidget = () => {
                   <Skeleton.Image className="advantage-image" />
                   <Card.Meta
                     title={<Skeleton.Input style={{ width: 100 }} active />}
-                    description={
-                      <Skeleton paragraph={{ rows: 2 }} active />
-                    }
+                    description={<Skeleton paragraph={{ rows: 2 }} active />}
                   />
                 </Card>
               </Col>
             ))
           : advantages.map((advantage, index) => (
-              <Col style={{ justifyContent: 'center', alignItems: 'center' }} xs={24} sm={12} md={8} key={index}>
+              <Col xs={24} sm={12} md={8} key={index}>
                 <Card
                   hoverable
                   cover={

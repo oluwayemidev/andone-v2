@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
+import bot from '../icons/bot.svg';
 import ChatbotComponent from './Chatbot';
 import '../styles/FloatingButton.css';
 
@@ -15,16 +16,24 @@ const FloatingButton = () => {
     setVisible(false);
   };
 
+  const Bot = () => {
+    return (
+      <img src={bot} alt="bot" style={{ width: 30, height: 30 }} />
+    );
+  };
+
   return (
     <div>
-      <Button
-        type="primary"
-        shape="circle"
-        icon={<MessageOutlined />}
-        size="large"
-        className="floating-button"
-        onClick={showPanel}
-      />
+      <Tooltip placement='left' title="Chat with SolarBot">
+        <Button
+          type="primary"
+          shape="circle"
+          icon={<Bot />}
+          size="large"
+          className="floating-button"
+          onClick={showPanel}
+        />
+      </Tooltip>
       <div className={`slide-panel ${visible ? 'visible' : ''}`}>
         <div className="slide-panel-header">
           <span>Chat with SolarBot</span>
