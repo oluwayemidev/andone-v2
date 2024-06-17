@@ -13,7 +13,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AdminLogin from './components/Auth/AdminLogin';
 import AdminSignup from './components/Auth/AdminSignup';
 import UserChat from './components/Chat/UserChat';
-import AdminChat from './components/Chat/AdminChat';
+import AdminChat from './components/AdminChat';
 import ProtectRoute from './components/ProtectRoutes';
 import AdminRoute from './components/AdminRoutes';
 import AdminOverview from './components/AdminOverview';
@@ -40,13 +40,21 @@ import ServicePageEditor from './components/ServicePageEditor';
 import EditContactDetailsPage from './components/EditContactDetailsPage';
 import SettingsWidget from './components/SettingsWidget';
 import { MessagesProvider } from './context/MessagesContext';
+import Chat from './components/Chat';
+import { auth } from './pages/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import Auth from './components/Auth';
 
-const AppRoutes = ({ language }) => (
+const AppRoutes = ({ language }) => {
+  const [user] = useAuthState(auth);
+
+  return(
   <MessagesProvider>
     <Routes>
       <Route path="/" element={<Home language={language} />} />
       <Route path="/featured-product/:productId" element={<FeaturedProductInfo language={language} />} />
       <Route path="/about" element={<About language={language} />} />
+      <Route path="/chat-system" element={user ? <Chat /> : <Auth />} />
       <Route path="/products" element={<Products language={language} />} />
       <Route path="/products/:id" element={<ProductDetailsPage language={language} />} />
       <Route path="/services" element={<Services language={language} />} />
@@ -64,6 +72,7 @@ const AppRoutes = ({ language }) => (
           <Route path="products" element={<ProductsPage language={language} />} />
           <Route path="messages" element={<MessagesPage language={language} />} />
           <Route path="contacts" element={<ContactsPage language={language} />} />
+          <Route path="chat" element={user ? <AdminChat /> : <Auth />} />
           <Route path="quotations" element={<QuotationsPage language={language} />} />
           <Route path="categories" element={<CategoryPage language={language} />} />
           <Route path="solar-results" element={<SolarResult language={language} />} />
@@ -89,6 +98,7 @@ const AppRoutes = ({ language }) => (
       <Route path="*" element={<NotFoundPage language={language} />} />
     </Routes>
   </MessagesProvider>
-);
+  )
+}
 
 export default AppRoutes;

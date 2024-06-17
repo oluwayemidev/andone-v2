@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, setDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { getDatabase, set, onDisconnect, onValue } from 'firebase/database';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDBtAFhXsShmLSlNZDMkToEcZXEJDV9d1s",
@@ -18,5 +19,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const rtdb = getDatabase(app); // Add Realtime Database
 
-export { db, collection, addDoc, getDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, storage, ref, uploadBytes, getDownloadURL, auth, googleProvider };
+
+export { db, rtdb, set, onDisconnect, onValue, collection, addDoc, getDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, storage, ref, uploadBytes, getDownloadURL, auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile };

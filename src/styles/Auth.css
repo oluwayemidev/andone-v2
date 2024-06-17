@@ -1,0 +1,54 @@
+/* src/styles/Auth.css */
+
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  background-color: #fff;
+}
+
+.auth-container .google-btn {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.auth-container .auth-form {
+  width: 100%;
+}
+
+.auth-container .ant-input-affix-wrapper {
+  width: 100%;
+}
+
+.auth-container .ant-btn-primary {
+  width: 100%;
+}
+
+/* Skeleton styles */
+.auth-skeleton {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.auth-skeleton .ant-skeleton-input,
+.auth-skeleton .ant-skeleton-title,
+.auth-skeleton .ant-skeleton-paragraph {
+  width: 100%;
+}
+
+.auth-skeleton .ant-skeleton-title {
+  margin-bottom: 20px;
+}
+
+.auth-skeleton .ant-skeleton-paragraph > li {
+  margin-bottom: 20px;
+}

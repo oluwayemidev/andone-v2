@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Layout, Drawer, Spin } from "antd";
 import translateText from "./translationService"; // Import the translation service
 import ScrollToTop from "./components/ScrollToTop";
@@ -14,6 +14,44 @@ import AppRoutes from "./AppRoutes";
 import "./App.css";
 
 const { Content } = Layout;
+
+const AppContent = ({ language, setLanguage, translatedTexts, loading, showDrawer, closeDrawer, visible, textsToTranslate }) => {
+  const location = useLocation();
+  const adminRoutes = ["/xyz/admin", "/xyz/admin/signup", "/admin", "/admin/"];
+  const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
+
+  return (
+    <Layout style={{ minHeight: "100vh" }}>
+      {!isAdminRoute && (
+        <HeaderComponent
+          translatedTexts={translatedTexts}
+          textsToTranslate={textsToTranslate}
+          showDrawer={showDrawer}
+          setLanguage={setLanguage}
+          languageMenu={<LanguageMenu setLanguage={setLanguage} />}
+        />
+      )}
+      <DrawerMenu
+        visible={visible}
+        closeDrawer={closeDrawer}
+        translatedTexts={translatedTexts}
+        textsToTranslate={textsToTranslate}
+        setLanguage={setLanguage}
+        languageMenu={<LanguageMenu setLanguage={setLanguage} />}
+      />
+      <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
+        {loading ? (
+          <Spin tip="Loading translations...">
+            <div style={{ minHeight: "80vh" }}></div>
+          </Spin>
+        ) : (
+          <AppRoutes language={language} setLanguage={setLanguage} />
+        )}
+      </Content>
+      {!isAdminRoute && <FooterComponent translatedTexts={translatedTexts} />}
+    </Layout>
+  );
+};
 
 const App = () => {
   const [visible, setVisible] = useState(false);
@@ -63,37 +101,29 @@ const App = () => {
       <StyledBackground />
       <Router>
         <ScrollToTop />
-        <Layout style={{ minHeight: "100vh" }}>
-          <HeaderComponent
-            translatedTexts={translatedTexts}
-            textsToTranslate={textsToTranslate}
-            showDrawer={showDrawer}
-            setLanguage={setLanguage}
-            languageMenu={<LanguageMenu setLanguage={setLanguage} />}
-          />
-          <DrawerMenu
-            visible={visible}
-            closeDrawer={closeDrawer}
-            translatedTexts={translatedTexts}
-            textsToTranslate={textsToTranslate}
-            setLanguage={setLanguage}
-            languageMenu={<LanguageMenu setLanguage={setLanguage} />}
-          />
-          <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
-            {loading ? (
-              <Spin tip="Loading translations...">
-                <div style={{ minHeight: "80vh" }}></div>
-              </Spin>
-            ) : (
-              <AppRoutes language={language} setLanguage={setLanguage} />
-            )}
-          </Content>
-          <FooterComponent translatedTexts={translatedTexts} />
-        </Layout>
-        <FloatingButton />
+        <AppContent
+          language={language}
+          setLanguage={setLanguage}
+          translatedTexts={translatedTexts}
+          loading={loading}
+          showDrawer={showDrawer}
+          closeDrawer={closeDrawer}
+          visible={visible}
+          textsToTranslate={textsToTranslate}
+        />
+        <Routes>
+          <Route path="*" element={<ConditionalFloatingButton />} />
+        </Routes>
       </Router>
     </AuthProvider>
   );
+};
+
+const ConditionalFloatingButton = () => {
+  const location = useLocation();
+  const adminRoutes = ["/xyz/admin", "/xyz/admin/signup", "/admin", "/admin/"];
+  const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith(route));
+  return !isAdminRoute ? <FloatingButton /> : null;
 };
 
 export default App;
