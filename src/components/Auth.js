@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { auth, db, signInWithPopup, googleProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, updateProfile } from '../pages/firebase';
 import { GoogleOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Input, Form, Typography, Tabs, message, Alert } from 'antd';
@@ -11,6 +11,25 @@ const { TabPane } = Tabs;
 const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [verificationNeeded, setVerificationNeeded] = useState(false);
+  const [showVerificationAlert, setShowVerificationAlert] = useState(false)
+
+  useEffect(() => {
+    if (showVerificationAlert) {
+      const timer = setTimeout(() => {
+        setShowVerificationAlert(false);
+      }, 10000); // Display alert for 10 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showVerificationAlert]); useEffect(() => {
+    if (showVerificationAlert) {
+      const timer = setTimeout(() => {
+        setShowVerificationAlert(false);
+      }, 10000); // Display alert for 10 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showVerificationAlert]);
 
   const signInWithGoogle = async () => {
     try {
@@ -90,9 +109,10 @@ const Auth = () => {
 
       // Check if email is verified
       if (!user.emailVerified) {
-        message.error('Please verify your email before signing in.');
+        message.warning('Please verify your email before signing in.');
         await auth.signOut();
         setVerificationNeeded(true);
+        setShowVerificationAlert(true);
         return;
       }
 
