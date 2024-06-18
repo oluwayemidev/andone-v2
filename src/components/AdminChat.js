@@ -10,7 +10,15 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { Button, Input, Skeleton, Avatar, Divider, Badge } from "antd";
+import {
+  Button,
+  Input,
+  Skeleton,
+  Avatar,
+  Divider,
+  Badge,
+  Typography,
+} from "antd";
 import { SendOutlined, UserOutlined } from "@ant-design/icons";
 import {
   format,
@@ -30,6 +38,8 @@ const AdminChat = () => {
   const [newMessage, setNewMessage] = useState("");
   const [selectedUserId, setSelectedUserId] = useState(null); // Store selected user ID
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State to hold search query
+  const [filteredUsers, setFilteredUsers] = useState([]); // State to hold filtered users
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const location = useLocation();
@@ -73,6 +83,7 @@ const AdminChat = () => {
             uid: doc.id,
           }));
         setUsers(usersList);
+        setFilteredUsers(usersList); // Initialize filtered users with all users
       });
 
       return unsubscribe;
@@ -170,8 +181,6 @@ const AdminChat = () => {
     await updateDoc(userDocRef, {
       lastMessageTime: timestamp,
     });
-
-    
   };
 
   const handleLogout = () => {
@@ -259,13 +268,46 @@ const AdminChat = () => {
     ).length;
   };
 
-  const sortedUsers = [...users];
+  // Function to handle search query change
+  const handleSearchChange = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    // Filter users based on search query
+    const filteredUsers = users.filter((user) => {
+      // Check if display name or email matches the query
+      const matchesDisplayName = user.displayName.toLowerCase().includes(query);
+      const matchesEmail = user.email.toLowerCase().includes(query);
+
+      // Check if any message sent by any user matches the query
+      const hasMatchingMessage = allMessages.some(
+        (message) =>
+          message.uid === user.uid && message.text.toLowerCase().includes(query)
+      );
+
+      return matchesDisplayName || matchesEmail || hasMatchingMessage;
+    });
+
+    setFilteredUsers(filteredUsers);
+  };
+
+  const sortedUsers = [...filteredUsers]; // Use filteredUsers instead of users
 
   return (
     <div className="admin-chat-container">
       <div className="user-list">
-        <h2>Chat</h2>
+        <h2>Chats</h2>
         <Divider />
+        {/* Search input */}
+        <Input
+          placeholder="Search"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{
+            marginBottom: "1rem",
+          }}
+        />
+        {/* User list */}
         {sortedUsers.map((user) => (
           <div
             key={user.uid}
@@ -276,14 +318,27 @@ const AdminChat = () => {
             id={user.uid}
           >
             <Avatar className="user-avatar" icon={<UserOutlined />} />
-            <div>
+            <div
+              style={{
+                width: "fit-content",
+                overflow: "hidden",
+              }}
+            >
               <b>{user.displayName}</b>
               <Badge
                 offset={[10, -10]}
                 count={getUnreadMessagesCount(user.uid)}
                 style={{ backgroundColor: "#52c41a" }}
               />
-              ({user.email})
+              <Typography
+                style={{
+                  width: "fit-content",
+                  overflow: "hidden",
+                  wordBreak: "keep-all",
+                }}
+              >
+                ({user.email})
+              </Typography>
             </div>
           </div>
         ))}

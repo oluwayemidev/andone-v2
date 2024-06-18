@@ -191,11 +191,11 @@ const AdminDashboard = () => {
           </Menu.Item>
           {!collapsed ? (
             <Menu.Item key="5" icon={<MessageOutlined />}>
-              <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
                 <Link style={{ color: "#ffffffa6" }} to="/admin/chat">
-                  Live Chat
-                </Link>
+              <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
+                  <span style={{ color: "#ffffffa6" }}>Live Chat</span>
               </Badge>
+                </Link>
             </Menu.Item>
           ) : (
             <Menu.Item
