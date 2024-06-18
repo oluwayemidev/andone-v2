@@ -195,10 +195,10 @@ const AdminChat = () => {
       const diffInMinutes = differenceInMinutes(now, date);
       const diffInSeconds = differenceInSeconds(now, date);
 
-      if (diffInSeconds < 10) {
-        return "just now";
-      } else if (diffInMinutes < 60) {
+      if (diffInMinutes < 60) {
         return format(date, "hh:mm a");
+      }else if (diffInSeconds < 10) {
+        return "just now";
       } else {
         return formatDistanceToNowStrict(date, { addSuffix: true });
       }
@@ -337,7 +337,13 @@ const AdminChat = () => {
               onClick={() => setSelectedUserId(user.uid)}
               id={user.uid}
             >
-              <Avatar className="user-avatar" icon={<UserOutlined />} />
+              <Badge
+                size="small"
+                count={getUnreadMessagesCount(user.uid)}
+                style={{ backgroundColor: "#52c41a" }}
+              >
+                <Avatar className="user-avatar" icon={<UserOutlined />} />
+              </Badge>
               <div
                 style={{
                   width: "fit-content",
@@ -345,11 +351,6 @@ const AdminChat = () => {
                 }}
               >
                 <b>{user.displayName}</b>
-                <Badge
-                  offset={[10, -10]}
-                  count={getUnreadMessagesCount(user.uid)}
-                  style={{ backgroundColor: "#52c41a" }}
-                />
                 <Typography
                   style={{
                     width: "fit-content",

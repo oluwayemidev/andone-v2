@@ -262,7 +262,7 @@ const AdminDashboard = () => {
         </Header>
         <Content
           className={`content ${collapsed ? "collapsed" : "expanded"}`}
-          style={{ margin: "0", overflow: "initial" }}
+          style={{ margin: "0", overflow: "initial", height: 'calc(100vh - 70px)', overflowY: 'auto' }}
         >
           <Outlet />
         </Content>

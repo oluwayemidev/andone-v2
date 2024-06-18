@@ -5,7 +5,7 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import { Layout, Drawer, Spin, FloatButton } from "antd";
+import { Layout, Drawer, Spin, FloatButton, Tooltip } from "antd";
 import { WechatFilled } from "@ant-design/icons";
 import translateText from "./translationService"; // Import the translation service
 import ScrollToTop from "./components/ScrollToTop";
@@ -54,7 +54,9 @@ const AppContent = ({
         translatedTexts={translatedTexts}
         textsToTranslate={textsToTranslate}
         setLanguage={setLanguage}
-        languageMenu={<LanguageMenu closeDrawer={closeDrawer} setLanguage={setLanguage} />}
+        languageMenu={
+          <LanguageMenu closeDrawer={closeDrawer} setLanguage={setLanguage} />
+        }
       />
       <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
         {loading ? (
@@ -146,19 +148,20 @@ const ConditionalFloatingButton = () => {
   return !isAdminRoute ? (
     <>
       <FloatingButton />
-      <FloatButton
-        icon={<WechatFilled />}
-        href="/chat"
-        type="primary"
-        badge={{
-          dot: true
-        }}
-        style={{
-          right: 24,
-          bottom: 70,
-        }}
-        tooltip={<div>Live Chat</div>}
-      />{" "}
+      <Tooltip title="Live Chat" placement="left" color="blue">
+        <FloatButton
+          icon={<WechatFilled />}
+          href="/chat"
+          type="primary"
+          badge={{
+            dot: true,
+          }}
+          style={{
+            right: 24,
+            bottom: 70,
+          }}
+        />
+      </Tooltip>{" "}
     </>
   ) : null;
 };

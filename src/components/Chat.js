@@ -124,11 +124,11 @@ const Chat = () => {
       const diffInMinutes = differenceInMinutes(now, date);
       const diffInSeconds = differenceInSeconds(now, date);
 
-      if (diffInSeconds < 10) {
-        return "just now";
-      } else if (diffInMinutes < 60) {
+      if (diffInMinutes < 60) {
         return format(date, "hh:mm a");
-      } else {
+      } else if (diffInSeconds < 10) {
+        return "just now";
+      }else {
         return formatDistanceToNowStrict(date, { addSuffix: true });
       }
     } catch (error) {

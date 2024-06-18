@@ -1,0 +1,6 @@
+.site-statistic-demo-card{
+    width: 100%;
+    height: calc(100vh - 70px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

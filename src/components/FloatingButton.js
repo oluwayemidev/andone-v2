@@ -24,7 +24,7 @@ const FloatingButton = () => {
 
   return (
     <div>
-      <Tooltip placement='left' title="Chat with SolarBot">
+      <Tooltip placement='left' color='blue' title="Chat with SolarBot">
         <Button
           type="primary"
           shape="circle"
