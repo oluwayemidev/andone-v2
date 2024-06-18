@@ -309,7 +309,7 @@ const AdminChat = () => {
       <div className="user-list">
         <div className="user-list-head">
           <h2>Chats</h2>
-          <Divider />
+          {/* <Divider /> */}
           {/* Search input */}
           <Input
             placeholder="Search"

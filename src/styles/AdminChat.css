@@ -34,7 +34,7 @@
 }
 
 .user-list-head{
-  height: 120px;
+  height: 90px;
   background-color:  #001529;
   color: white;
   padding: 10px;
@@ -42,7 +42,7 @@
 
 .user-list-items{
   overflow: auto;
-  height: calc(100% - 120px);
+  height: calc(100% - 90px);
 }
 
 .user-item {
