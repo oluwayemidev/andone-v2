@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth, db, signInWithPopup, googleProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, updateProfile } from '../pages/firebase';
 import { GoogleOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Input, Form, Typography, Tabs, message, Alert } from 'antd';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import '../styles/Auth.css';
 
 const { Title } = Typography;
@@ -79,6 +79,9 @@ const Auth = () => {
         uid: user.uid,
         displayName,
         email: user.email,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        lastMessageTime: serverTimestamp(),
       });
 
       message.success('Sign up successful! Please check your email to verify your account.');

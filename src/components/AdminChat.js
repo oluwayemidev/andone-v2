@@ -7,10 +7,8 @@ import {
   onSnapshot,
   serverTimestamp,
   addDoc,
-  getDocs,
   doc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { Button, Input, Skeleton, Avatar, Divider, Badge } from "antd";
 import { SendOutlined, UserOutlined } from "@ant-design/icons";
@@ -23,15 +21,19 @@ import {
   differenceInSeconds,
 } from "date-fns";
 import "../styles/AdminChat.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AdminChat = () => {
   const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState([]);
+  const [userMessages, setUserMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null); // Store selected user ID
   const [loadingMessages, setLoadingMessages] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateAdminStatus = async (status) => {
@@ -39,6 +41,7 @@ const AdminChat = () => {
         const adminDocRef = doc(db, "users", "klEUZ49aaOVI3POtOiJXXCDAn2J2"); // Replace 'adminUID' with your admin user's UID
         await updateDoc(adminDocRef, {
           online: status,
+          updatedAt: serverTimestamp(),
         });
       } catch (error) {
         console.error("Error updating admin status:", error);
@@ -58,7 +61,10 @@ const AdminChat = () => {
 
   useEffect(() => {
     const fetchUsers = () => {
-      const usersQuery = query(collection(db, "users"));
+      const usersQuery = query(
+        collection(db, "users"),
+        orderBy("lastMessageTime", "desc")
+      );
       const unsubscribe = onSnapshot(usersQuery, (querySnapshot) => {
         const usersList = querySnapshot.docs
           .filter((doc) => doc.id !== "klEUZ49aaOVI3POtOiJXXCDAn2J2") // Exclude admin user
@@ -76,8 +82,7 @@ const AdminChat = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedUser) {
-      setLoadingMessages(true);
+    const fetchMessages = () => {
       const messagesRef = collection(db, "messages");
       const q = query(messagesRef, orderBy("createdAt", "asc"));
       const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -85,60 +90,88 @@ const AdminChat = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        setMessages(
-          allMessages.filter(
-            (message) =>
-              message.uid === selectedUser.uid ||
-              (message.responseTo && message.responseTo === selectedUser.uid)
-          )
-        );
-        setLoadingMessages(false);
-        if (messagesContainerRef.current) {
-          messagesContainerRef.current.scrollTop =
-            messagesContainerRef.current.scrollHeight;
-        }
-
-        // Mark messages as read
-        const unreadMessages = snapshot.docs.filter(
-          (doc) =>
-            doc.data().uid === selectedUser.uid &&
-            doc.data().responseTo === "klEUZ49aaOVI3POtOiJXXCDAn2J2" && // Replace 'adminUID' with your admin user's UID
-            !doc.data().read
-        );
-
-        unreadMessages.forEach(async (msg) => {
-          const msgRef = doc(db, "messages", msg.id);
-          await updateDoc(msgRef, { read: true });
-        });
+        setAllMessages(allMessages);
       });
 
-      return () => unsubscribe();
+      return unsubscribe;
+    };
+
+    fetchMessages();
+  }, []);
+
+  useEffect(() => {
+    // Parse the user ID from the hash fragment in the URL
+    const userIdFromHash = location.hash.substring(1);
+    setSelectedUserId(userIdFromHash); // Update selected user ID
+  }, [location.hash]);
+
+  useEffect(() => {
+    if (selectedUserId) {
+      setLoadingMessages(true);
+
+      // Filter messages for the selected user
+      const filteredMessages = allMessages.filter(
+        (message) =>
+          (message.uid === selectedUserId &&
+            message.responseTo === "admin@andonesolar.com") || // Messages sent by selected user
+          (message.responseTo === selectedUserId &&
+            message.uid === "klEUZ49aaOVI3POtOiJXXCDAn2J2") // Responses to selected user
+      );
+      setUserMessages(filteredMessages);
+      setLoadingMessages(false);
+
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop =
+          messagesContainerRef.current.scrollHeight;
+      }
+
+      // Mark messages as read when a user is selected
+      filteredMessages.forEach(async (msg) => {
+        if (
+          msg.uid === selectedUserId &&
+          msg.responseTo === "admin@andonesolar.com" &&
+          !msg.read
+        ) {
+          const msgRef = doc(db, "messages", msg.id);
+          await updateDoc(msgRef, { read: true });
+        }
+      });
     }
-  }, [selectedUser]);
+  }, [selectedUserId, allMessages]);
 
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [userMessages]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !selectedUser) return;
+    if (!newMessage.trim() || !selectedUserId) return;
 
     const { uid, email } = auth.currentUser;
+    const timestamp = serverTimestamp();
+
+    setNewMessage("");
 
     await addDoc(collection(db, "messages"), {
       text: newMessage,
-      createdAt: serverTimestamp(),
+      createdAt: timestamp,
       uid,
       displayName: "Admin",
-      responseTo: selectedUser.uid,
+      responseTo: selectedUserId,
       email,
       read: false,
+      updatedAt: timestamp,
     });
 
-    setNewMessage("");
+    // Update the lastMessageTime field in the users collection for the selected user
+    const userDocRef = doc(db, "users", selectedUserId);
+    await updateDoc(userDocRef, {
+      lastMessageTime: timestamp,
+    });
+
+    
   };
 
   const handleLogout = () => {
@@ -167,11 +200,13 @@ const AdminChat = () => {
   };
 
   const renderMessagesWithDateSeparator = () => {
-    const groupedMessages = groupMessagesByDate(messages);
+    const groupedMessages = groupMessagesByDate(userMessages);
 
     return Object.keys(groupedMessages).map((date) => (
       <div key={date}>
-        <div className="message-date">{format(new Date(date), "MMMM d, yyyy")}</div>
+        <div className="message-date">
+          {format(new Date(date), "MMMM d, yyyy")}
+        </div>
         {groupedMessages[date].map((message, index) => (
           <div key={index} className="message-container">
             <div
@@ -187,7 +222,9 @@ const AdminChat = () => {
                 </b>
               </span>
               {message.text}
-              <div className="message-time">{formatDate(message.createdAt)}</div>
+              <div className="message-time">
+                {formatDate(message.createdAt)}
+              </div>
             </div>
           </div>
         ))}
@@ -214,14 +251,15 @@ const AdminChat = () => {
   };
 
   const getUnreadMessagesCount = (userUid) => {
-    return messages.filter((msg) => msg.uid === userUid && !msg.read).length;
+    return allMessages.filter(
+      (msg) =>
+        msg.uid === userUid &&
+        msg.responseTo === "admin@andonesolar.com" &&
+        !msg.read
+    ).length;
   };
 
-  const sortedUsers = [...users].sort((a, b) => {
-    const aMessageTime = a.latestMessage?.createdAt?.toDate() || new Date(0);
-    const bMessageTime = b.latestMessage?.createdAt?.toDate() || new Date(0);
-    return bMessageTime - aMessageTime;
-  });
+  const sortedUsers = [...users];
 
   return (
     <div className="admin-chat-container">
@@ -232,20 +270,26 @@ const AdminChat = () => {
           <div
             key={user.uid}
             className={`user-item ${
-              selectedUser && selectedUser.uid === user.uid ? "selected" : ""
+              selectedUserId === user.uid ? "selected" : ""
             }`}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => setSelectedUserId(user.uid)}
+            id={user.uid}
           >
             <Avatar className="user-avatar" icon={<UserOutlined />} />
             <div>
-              <b>{user.displayName}</b> ({user.email})
-              <Badge count={getUnreadMessagesCount(user.uid)} style={{ backgroundColor: '#52c41a' }} />
+              <b>{user.displayName}</b>
+              <Badge
+                offset={[10, -10]}
+                count={getUnreadMessagesCount(user.uid)}
+                style={{ backgroundColor: "#52c41a" }}
+              />
+              ({user.email})
             </div>
           </div>
         ))}
       </div>
       <div className="chat-container">
-        {selectedUser ? (
+        {selectedUserId ? (
           <div className="box">
             <div className="messages" ref={messagesContainerRef}>
               {loadingMessages ? (

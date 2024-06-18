@@ -45,29 +45,6 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    const updateAdminStatus = async (status) => {
-      try {
-        const adminDocRef = doc(db, "users", "klEUZ49aaOVI3POtOiJXXCDAn2J2");
-        await updateDoc(adminDocRef, {
-          online: status,
-        });
-      } catch (error) {
-        console.error("Error updating admin status:", error);
-      }
-    };
-
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user && user.email === "admin@andonesolar.com") {
-        updateAdminStatus(true); // Admin is online
-      } else {
-        updateAdminStatus(false); // Admin is offline
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
     const messagesRef = collection(db, "messages");
     const q = query(messagesRef, orderBy("createdAt", "asc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -105,17 +82,27 @@ const Chat = () => {
       return;
     }
     const { uid, displayName, email } = auth.currentUser;
+    const timestamp = serverTimestamp();
 
+    setNewMessage("");
     try {
       await addDoc(collection(db, "messages"), {
         text: newMessage,
-        createdAt: serverTimestamp(),
+        createdAt: timestamp,
         uid,
         displayName,
         email,
         responseTo: "admin@andonesolar.com",
+        read: false,
+        updatedAt: timestamp,
       });
-      setNewMessage("");
+
+      // Update the lastMessageTime field in the users collection for the current user
+      const userDocRef = doc(db, "users", uid);
+      await updateDoc(userDocRef, {
+        lastMessageTime: timestamp,
+      });
+
     } catch (error) {
       message.error("Failed to send message");
       console.error("Error sending message: ", error);
@@ -202,7 +189,9 @@ const Chat = () => {
       <div className="chat-head">
         <div>
           <Avatar icon={<UserOutlined />} />
-          <h3>{auth.currentUser ? auth.currentUser.displayName : "Loading..."}</h3>
+          <h3>
+            {auth.currentUser ? auth.currentUser.displayName : "Loading..."}
+          </h3>
         </div>
         <div className="admin-status">
           <span>Status: </span>

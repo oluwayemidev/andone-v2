@@ -1,5 +1,5 @@
 // src/components/AdminDashboard.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Layout,
   Menu,
@@ -31,11 +31,11 @@ import {
 import {
   db,
   collection,
-  getDocs,
-  doc,
-  updateDoc,
   query,
   where,
+  orderBy,
+  onSnapshot,
+  limit,
 } from "../pages/firebase";
 import "../styles/AdminDashboard.css";
 
@@ -46,34 +46,33 @@ const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState([]);
+  const adminUid = "klEUZ49aaOVI3POtOiJXXCDAn2J2"; // Replace with your admin UID
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "contacts"));
+    const fetchMessages = () => {
+      const messagesRef = collection(db, "messages");
+      const q = query(
+        messagesRef,
+        where("read", "==", false),
+        where("uid", "!=", adminUid), // Exclude messages from admin
+        orderBy("createdAt", "desc")
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const messages = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        // Sort messages by createdAt date in descending order
-        const sortedData = messages.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
+        setUnreadCount(messages.length);
+        setUnreadMessages(messages);
+      });
 
-        setUnreadCount(
-          sortedData.filter((message) => message.status === "unread").length
-        );
-        setUnreadMessages(
-          sortedData.filter((message) => message.status === "unread")
-        );
-      } catch (error) {
-        message.error("Failed to fetch messages");
-      }
+      return () => unsubscribe();
     };
 
     fetchMessages();
-  }, []);
+  }, [adminUid]);
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -84,23 +83,76 @@ const AdminDashboard = () => {
     window.location.href = "/";
   };
 
+  // Function to group unread messages by user
+  const groupUnreadMessagesByUser = () => {
+    const unreadMessagesByUser = {};
+    unreadMessages.forEach((message) => {
+      if (!unreadMessagesByUser[message.uid]) {
+        unreadMessagesByUser[message.uid] = [];
+      }
+      unreadMessagesByUser[message.uid].push(message);
+    });
+    return unreadMessagesByUser;
+  };
+
+  // Function to get the last message for each user
+  const getLastMessageForUser = (userUid) => {
+    const messagesForUser = unreadMessages.filter(
+      (message) => message.uid === userUid
+    );
+    const lastMessage = messagesForUser.length > 0 ? messagesForUser[0] : null; // Assuming messages are sorted by createdAt desc
+    return lastMessage;
+  };
+
   const messageMenu = (
     <Menu>
-      {unreadMessages.map((message, index) => (
-        <Menu.Item key={index}>
-          <Link to={`/admin/contacts`}>
-            <Row gutter={10}>
-              <Col style={{ paddingTop: "6px" }}>
-                <Avatar>{message.name.slice(0, 1).toUpperCase()}</Avatar>
-              </Col>
-              <Col>
-                <Typography type="primary">{message.name}</Typography>
-                <Typography type="secondary">{message.email}</Typography>
-              </Col>
-            </Row>
-          </Link>
-        </Menu.Item>
-      ))}
+      {Object.keys(groupUnreadMessagesByUser()).map((userUid) => {
+        const user = unreadMessages.find((message) => message.uid === userUid);
+        const unreadCountForUser = groupUnreadMessagesByUser()[userUid].length;
+        const lastMessage = getLastMessageForUser(userUid);
+
+        return (
+          <Menu.Item key={userUid}>
+            <Link to={`/admin/chat#${userUid}`}>
+              <Row gutter={10} align="middle">
+                <Col>
+                  <Avatar>{user.displayName.slice(0, 1).toUpperCase()}</Avatar>
+                </Col>
+                <Col>
+                  <Row>
+                    <Typography.Text strong>{user.displayName}</Typography.Text>
+                  </Row>
+                  <Row>
+                    <Typography.Text type="secondary">
+                      {user.email}
+                    </Typography.Text>
+                  </Row>
+                </Col>
+                <Col flex="auto" style={{ textAlign: "right" }}>
+                  <div>
+                    {lastMessage && (
+                      <Typography.Text
+                        type="secondary"
+                        style={{ fontSize: 12 }}
+                      >
+                        {lastMessage.text.slice(0, 30) +
+                          (lastMessage.text.length > 30 ? "..." : "")}
+                      </Typography.Text>
+                    )}
+                    <br />
+                    <Badge
+                      count={unreadCountForUser}
+                      offset={[10, 0]}
+                      size="small"
+                      showZero
+                    />
+                  </div>
+                </Col>
+              </Row>
+            </Link>
+          </Menu.Item>
+        );
+      })}
       {unreadMessages.length === 0 && <Menu.Item>No new messages</Menu.Item>}
     </Menu>
   );
@@ -137,11 +189,34 @@ const AdminDashboard = () => {
           <Menu.Item key="4" icon={<ContactsOutlined />}>
             <Link to="/admin/contacts">Contacts</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<MessageOutlined />}>
-            <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
-              <Link style={{ color: '#ffffffa6' }} to="/admin/chat">Live Chat</Link>
-            </Badge>
-          </Menu.Item>
+          {!collapsed ? (
+            <Menu.Item key="5" icon={<MessageOutlined />}>
+              <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
+                <Link style={{ color: "#ffffffa6" }} to="/admin/chat">
+                  Live Chat
+                </Link>
+              </Badge>
+            </Menu.Item>
+          ) : (
+            <Menu.Item
+              key="5"
+              icon={
+                <Badge
+                  count={unreadCount}
+                  offset={[5, 10]}
+                  size='small'
+                  showZero
+                  // style={{ fontSize: '5px'}}
+                >
+                  <MessageOutlined />
+                </Badge>
+              }
+            >
+              <Link style={{ color: "#ffffffa6" }} to="/admin/chat">
+                Live Chat
+              </Link>
+            </Menu.Item>
+          )}
           <Menu.Item key="6" icon={<FileTextOutlined />}>
             <Link to="/admin/quotations">Quotations</Link>
           </Menu.Item>
@@ -182,7 +257,7 @@ const AdminDashboard = () => {
             </Dropdown>
           </div>
         </Header>
-        <Content style={{ margin: "0 16px", overflow: "initial" }}>
+        <Content style={{ margin: "0", overflow: "initial" }}>
           <Outlet />
         </Content>
       </Layout>
