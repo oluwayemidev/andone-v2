@@ -248,14 +248,14 @@ const AdminDashboard = () => {
         </Menu>
       </Sider>
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
+        <Header className="site-layout-background" style={{ padding: 0, background: '#001529' }}>
           <div className="trigger" onClick={toggle}>
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </div>
           <div style={{ float: "right", paddingRight: 24, marginTop: -50 }}>
             <Dropdown overlay={messageMenu} trigger={["click"]}>
               <Badge count={unreadCount} style={{ cursor: "pointer" }}>
-                <MessageOutlined style={{ fontSize: 24, cursor: "pointer" }} />
+                <MessageOutlined style={{ fontSize: 24, cursor: "pointer", color: 'white' }} />
               </Badge>
             </Dropdown>
           </div>

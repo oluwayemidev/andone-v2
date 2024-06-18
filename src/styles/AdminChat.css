@@ -43,6 +43,7 @@
 .user-list-items{
   overflow: auto;
   height: calc(100% - 90px);
+  padding: 10px 5px;
 }
 
 .user-item {
