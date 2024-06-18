@@ -89,8 +89,19 @@
   z-index: 1000;
 }
 
-@media screen and (max-width: 770px) {
-  .cta-container{
+@media (max-width: 770px) {
+  .get-quote-button {
+    font-size: 18px;
+    padding: 12px;
+    margin-top: 20px;
+    height: fit-content;
+    background-color: #001529;
+  }
+
+  .cta-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: static;
   }
 }

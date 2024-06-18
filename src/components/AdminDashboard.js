@@ -1,11 +1,9 @@
-// src/components/AdminDashboard.js
 import React, { useEffect, useState } from "react";
 import {
   Layout,
   Menu,
   Badge,
   Dropdown,
-  message,
   Typography,
   Row,
   Col,
@@ -21,7 +19,6 @@ import {
   ContactsOutlined,
   FileTextOutlined,
   DashboardOutlined,
-  BellOutlined,
   MessageOutlined,
   LogoutOutlined,
   SettingOutlined,
@@ -35,7 +32,6 @@ import {
   where,
   orderBy,
   onSnapshot,
-  limit,
 } from "../pages/firebase";
 import "../styles/AdminDashboard.css";
 
@@ -158,17 +154,20 @@ const AdminDashboard = () => {
   );
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout
+      className={`site-layout ${collapsed ? "collapsed" : "expanded"}`}
+      style={{ minHeight: "100vh" }}
+    >
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={toggle}
         breakpoint="lg"
         collapsedWidth="80"
+        className="sider"
         style={{
           overflow: "auto",
           height: "100vh",
-          position: "fixed",
           paddingTop: 20,
           zIndex: 1,
           left: 0,
@@ -191,11 +190,16 @@ const AdminDashboard = () => {
           </Menu.Item>
           {!collapsed ? (
             <Menu.Item key="5" icon={<MessageOutlined />}>
-                <Link style={{ color: "#ffffffa6" }} to="/admin/chat">
-              <Badge count={unreadCount} offset={[10, 0]} size="small" showZero>
+              <Link style={{ color: "#ffffffa6" }} to="/admin/chat">
+                <Badge
+                  count={unreadCount}
+                  offset={[10, 0]}
+                  size="small"
+                  showZero
+                >
                   <span style={{ color: "#ffffffa6" }}>Live Chat</span>
-              </Badge>
-                </Link>
+                </Badge>
+              </Link>
             </Menu.Item>
           ) : (
             <Menu.Item
@@ -204,9 +208,8 @@ const AdminDashboard = () => {
                 <Badge
                   count={unreadCount}
                   offset={[5, 10]}
-                  size='small'
+                  size="small"
                   showZero
-                  // style={{ fontSize: '5px'}}
                 >
                   <MessageOutlined />
                 </Badge>
@@ -257,7 +260,10 @@ const AdminDashboard = () => {
             </Dropdown>
           </div>
         </Header>
-        <Content style={{ margin: "0", overflow: "initial" }}>
+        <Content
+          className={`content ${collapsed ? "collapsed" : "expanded"}`}
+          style={{ margin: "0", overflow: "initial" }}
+        >
           <Outlet />
         </Content>
       </Layout>

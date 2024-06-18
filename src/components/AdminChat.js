@@ -19,7 +19,7 @@ import {
   Badge,
   Typography,
 } from "antd";
-import { SendOutlined, UserOutlined } from "@ant-design/icons";
+import { SendOutlined, UserOutlined, SearchOutlined } from "@ant-design/icons";
 import {
   format,
   isValid,
@@ -223,13 +223,17 @@ const AdminChat = () => {
                 message.uid === auth.currentUser.uid ? "sent" : "received"
               }`}
             >
-              <span>
+              <div style={{ marginBottom: 10 }}>
                 <b>
                   {message.displayName !== "Admin"
-                    ? `${message.displayName}: `
+                    ? `${
+                        message.displayName.length > 15
+                          ? message.displayName.slice(0, 15) + "..."
+                          : message.displayName
+                      }`
                     : ""}
                 </b>
-              </span>
+              </div>
               {message.text}
               <div className="message-time">
                 {formatDate(message.createdAt)}
@@ -293,59 +297,83 @@ const AdminChat = () => {
 
   const sortedUsers = [...filteredUsers]; // Use filteredUsers instead of users
 
+  // Function to get the selected user's details
+  const getSelectedUserDetails = () => {
+    return users.find((user) => user.uid === selectedUserId);
+  };
+
+  const selectedUserDetails = getSelectedUserDetails();
+
   return (
     <div className="admin-chat-container">
       <div className="user-list">
-        <h2>Chats</h2>
-        <Divider />
-        {/* Search input */}
-        <Input
-          placeholder="Search"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          style={{
-            marginBottom: "1rem",
-          }}
-        />
-        {/* User list */}
-        {sortedUsers.map((user) => (
-          <div
-            key={user.uid}
-            className={`user-item ${
-              selectedUserId === user.uid ? "selected" : ""
-            }`}
-            onClick={() => setSelectedUserId(user.uid)}
-            id={user.uid}
-          >
-            <Avatar className="user-avatar" icon={<UserOutlined />} />
+        <div className="user-list-head">
+          <h2>Chats</h2>
+          <Divider />
+          {/* Search input */}
+          <Input
+            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            style={{
+              marginBottom: "1rem",
+              backgroundColor: 'transparent',
+              borderBottom: 'solid 1 px white',
+              border: 'none'
+            }}
+            addonBefore={<SearchOutlined style={{ color: 'white' }} />}
+          />
+        </div>
+        <div className="user-list-items">
+          {/* User list */}
+          {sortedUsers.map((user) => (
             <div
-              style={{
-                width: "fit-content",
-                overflow: "hidden",
-              }}
+              key={user.uid}
+              className={`user-item ${
+                selectedUserId === user.uid ? "selected" : ""
+              }`}
+              onClick={() => setSelectedUserId(user.uid)}
+              id={user.uid}
             >
-              <b>{user.displayName}</b>
-              <Badge
-                offset={[10, -10]}
-                count={getUnreadMessagesCount(user.uid)}
-                style={{ backgroundColor: "#52c41a" }}
-              />
-              <Typography
+              <Avatar className="user-avatar" icon={<UserOutlined />} />
+              <div
                 style={{
                   width: "fit-content",
                   overflow: "hidden",
-                  wordBreak: "keep-all",
                 }}
               >
-                ({user.email})
-              </Typography>
+                <b>{user.displayName}</b>
+                <Badge
+                  offset={[10, -10]}
+                  count={getUnreadMessagesCount(user.uid)}
+                  style={{ backgroundColor: "#52c41a" }}
+                />
+                <Typography
+                  style={{
+                    width: "fit-content",
+                    overflow: "hidden",
+                    wordBreak: "keep-all",
+                  }}
+                >
+                  ({user.email})
+                </Typography>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <div className="chat-container">
         {selectedUserId ? (
           <div className="box">
+            <div className="chat-head">
+              <div>
+                <Avatar icon={<UserOutlined />} />
+                <h3>{selectedUserDetails?.displayName}</h3>
+              </div>
+              <div>
+                <div>{selectedUserDetails?.email}</div>
+              </div>
+            </div>
             <div className="messages" ref={messagesContainerRef}>
               {loadingMessages ? (
                 <Skeleton active />

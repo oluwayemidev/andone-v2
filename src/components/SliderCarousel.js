@@ -11,6 +11,7 @@ import {
   DatePicker,
   message,
   Skeleton,
+  Modal,
 } from "antd";
 import { db, collection, getDocs } from "../pages/firebase";
 import {
@@ -32,6 +33,8 @@ const SliderCarousel = ({ language = "en" }) => {
   const [loading1, setLoading1] = useState(true);
   const [carouselItems, setCarouselItems] = useState([]);
   const [inputForm] = Form.useForm();
+  const [isMobile, setIsMobile] = useState(false); // State to manage mobile view
+  const [isModalVisible, setIsModalVisible] = useState(false); // State to manage modal visibility
 
   const [labels, setLabels] = useState({
     getQuotation: "Get a Quotation",
@@ -51,11 +54,21 @@ const SliderCarousel = ({ language = "en" }) => {
 
   useEffect(() => {
     fetchCarouselItems();
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Check initial screen size
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   useEffect(() => {
     translateLabels();
   }, [language]);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 770); // Adjust based on your mobile breakpoint
+  };
 
   const fetchCarouselItems = async () => {
     setLoading1(true);
@@ -75,7 +88,7 @@ const SliderCarousel = ({ language = "en" }) => {
       setLoading1(false);
     }
   };
-  
+
   const translateLabels = async () => {
     setLoading1(true);
     const translatedLabels = {};
@@ -96,6 +109,7 @@ const SliderCarousel = ({ language = "en" }) => {
       };
       await submitQuotation(formattedValues);
       message.success("Quotation submitted successfully");
+      setIsModalVisible(false); // Close the modal after submission
     } catch (error) {
       console.error("Error submitting quotation:", error);
       message.error("Failed to submit quotation");
@@ -107,7 +121,7 @@ const SliderCarousel = ({ language = "en" }) => {
   return (
     <Card title="" bordered={false} className="carousel-card">
       <Row gutter={16}>
-        <Col xs={24} md={24}>
+        <Col style={{ height: "80vh" }} xs={24} md={24}>
           {loading1 ? (
             <div className="skeleton-carousel">
               <Skeleton.Image active className="skeleton-image" />
@@ -136,157 +150,176 @@ const SliderCarousel = ({ language = "en" }) => {
         </Col>
         {loading1 ? (
           <Skeleton active paragraph={{ rows: 10 }} className="skeleton-form" />
+        ) : isMobile ? (
+          <Col className="cta-container" xs={24} md={10}>
+            <Button
+              type="primary"
+              className="get-quote-button"
+              onClick={() => setIsModalVisible(true)}
+              block
+              style={{ backgroundColor: '#001529', border: 'none' }}
+            >
+              {labels.getQuotation}
+            </Button>
+            <Modal
+              title={labels.getQuotation}
+              visible={isModalVisible}
+              onCancel={() => setIsModalVisible(false)}
+              footer={null}
+            >
+              {renderForm()}
+            </Modal>
+          </Col>
         ) : (
           <Col className="cta-container" xs={24} md={10}>
-            <div className="cta-form-container">
-              <h2>{labels.getQuotation}</h2>
-              <Form
-                form={inputForm}
-                layout="vertical"
-                onFinish={onFinish}
-                style={{ width: "100%" }}
-              >
-                <Row gutter={10}>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="name"
-                      label={labels.name}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please input your ${labels.name.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <Input
-                        prefix={<UserOutlined />}
-                        placeholder={`Enter your ${labels.name.toLowerCase()}`}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="email"
-                      label={labels.email}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please input your ${labels.email.toLowerCase()}!`,
-                        },
-                        {
-                          type: "email",
-                          message: `Please enter a valid ${labels.email.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <Input
-                        prefix={<MailOutlined />}
-                        type="email"
-                        placeholder={`Enter your ${labels.email.toLowerCase()}`}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={10}>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="phone"
-                      label={labels.phone}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please input your ${labels.phone.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <Input
-                        prefix={<PhoneOutlined />}
-                        placeholder={`Enter your ${labels.phone.toLowerCase()}`}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="location"
-                      label={labels.location}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please input your ${labels.location.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <Input
-                        prefix={<EnvironmentOutlined />}
-                        placeholder={labels.location}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={10}>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="product"
-                      label={labels.product}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please select a ${labels.product.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <Select
-                        placeholder={`Select a ${labels.product.toLowerCase()}`}
-                      >
-                        <Option value="solar_panel">
-                          {labels.solar_panel}
-                        </Option>
-                        <Option value="battery">{labels.battery}</Option>
-                        <Option value="inverter">{labels.inverter}</Option>
-                        <Option value="accessory">{labels.accessory}</Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={12}>
-                    <Form.Item
-                      name="installation_date"
-                      label={labels.installation_date}
-                      rules={[
-                        {
-                          required: true,
-                          message: `Please select a ${labels.installation_date.toLowerCase()}!`,
-                        },
-                      ]}
-                    >
-                      <DatePicker style={{ width: "100%" }} />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={10}>
-                  <Col xs={24}>
-                    <Form.Item name="message" label={labels.message}>
-                      <TextArea
-                        rows={2}
-                        placeholder={`Enter your ${labels.message.toLowerCase()}`}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                >
-                  {labels.submit}
-                </Button>
-              </Form>
-            </div>
+            {renderForm()}
           </Col>
         )}
       </Row>
     </Card>
   );
+
+  function renderForm() {
+    return (
+      <div className="cta-form-container">
+        <h2>{labels.getQuotation}</h2>
+        <Form
+          form={inputForm}
+          layout="vertical"
+          onFinish={onFinish}
+          style={{ width: "100%" }}
+        >
+          <Row gutter={10}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="name"
+                label={labels.name}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please input your ${labels.name.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined />}
+                  placeholder={`Enter your ${labels.name.toLowerCase()}`}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="email"
+                label={labels.email}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please input your ${labels.email.toLowerCase()}!`,
+                  },
+                  {
+                    type: "email",
+                    message: `Please enter a valid ${labels.email.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<MailOutlined />}
+                  type="email"
+                  placeholder={`Enter your ${labels.email.toLowerCase()}`}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={10}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="phone"
+                label={labels.phone}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please input your ${labels.phone.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<PhoneOutlined />}
+                  placeholder={`Enter your ${labels.phone.toLowerCase()}`}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="location"
+                label={labels.location}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please input your ${labels.location.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<EnvironmentOutlined />}
+                  placeholder={labels.location}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={10}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="product"
+                label={labels.product}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please select a ${labels.product.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <Select
+                  placeholder={`Select a ${labels.product.toLowerCase()}`}
+                >
+                  <Option value="solar_panel">{labels.solar_panel}</Option>
+                  <Option value="battery">{labels.battery}</Option>
+                  <Option value="inverter">{labels.inverter}</Option>
+                  <Option value="accessory">{labels.accessory}</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="installation_date"
+                label={labels.installation_date}
+                rules={[
+                  {
+                    required: true,
+                    message: `Please select a ${labels.installation_date.toLowerCase()}!`,
+                  },
+                ]}
+              >
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={10}>
+            <Col xs={24}>
+              <Form.Item name="message" label={labels.message}>
+                <TextArea
+                  rows={2}
+                  placeholder={`Enter your ${labels.message.toLowerCase()}`}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Button type="primary" htmlType="submit" loading={loading} block>
+            {labels.submit}
+          </Button>
+        </Form>
+      </div>
+    );
+  }
 };
 
 export default SliderCarousel;

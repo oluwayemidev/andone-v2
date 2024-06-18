@@ -85,7 +85,7 @@
   height: 100%;
 }
 
-.chat-head{
+.user-chat-container .chat-head{
   display: flex;
   flex-direction: row;
   padding: 10px;
@@ -99,14 +99,14 @@
   border-radius: 12px 12px 0 0;
 }
 
-.chat-head > div{
+.user-chat-container .chat-head > div{
   display: flex;
   flex-direction: row;
   gap: 10px;
   align-items: center;
 }
 
-.chat-head > div > h3{
+.user-chat-container .chat-head > div > h3{
   padding-top: 5px;
 }
 
