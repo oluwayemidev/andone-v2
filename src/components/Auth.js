@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db, signInWithPopup, googleProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, updateProfile } from '../pages/firebase';
-import { GoogleOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Input, Form, Typography, Tabs, message, Alert } from 'antd';
+import { GoogleOutlined, UserOutlined, LockOutlined, MailOutlined, MailFilled } from '@ant-design/icons';
+import { Button, Input, Form, Typography, Tabs, message, Alert, notification } from 'antd';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import '../styles/Auth.css';
 
@@ -83,8 +83,8 @@ const Auth = () => {
         updatedAt: serverTimestamp(),
         lastMessageTime: serverTimestamp(),
       });
-
-      message.success('Sign up successful! Please check your email to verify your account.');
+      
+      notification.success({message:'Sign up successful! Please check your email to verify your account.', duration: 7, pauseOnHover: true, showProgress: true, style: { fontSize: 10 }});
       setVerificationNeeded(true);
     } catch (error) {
       console.error("Error signing up: ", error);
@@ -112,7 +112,7 @@ const Auth = () => {
 
       // Check if email is verified
       if (!user.emailVerified) {
-        message.warning('Please verify your email before signing in.');
+        notification.warning({message:'Please verify your email address before signing in. We\'ve sent a verification link to your email. Click on the link in the email to complete the verification process. If you didn\'t receive the email, check your spam.', duration: 20, pauseOnHover: true, icon: (<MailFilled style={{color: '#108ee9'}} />), showProgress: true, style: { fontSize: 10 }});
         await auth.signOut();
         setVerificationNeeded(true);
         setShowVerificationAlert(true);
