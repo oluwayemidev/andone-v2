@@ -13,16 +13,24 @@
   height: calc(100vh - 70px);
 }
 
-.user-list .ant-input, .user-list .ant-input-group-addon{
+.user-list .ant-input, .user-list .ant-input-group-addon {
   background: transparent;
   border: none;
   border-bottom: solid 1px white;
   color: white;
   border-radius: 0;
+  outline: none;
 }
 
-.user-list .ant-input:focus{
-  border: none,
+.user-list .ant-input:focus,
+.user-list .ant-input-focused {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.custom-search-input input::placeholder {
+  color: white !important;
 }
 
 .user-list-head{

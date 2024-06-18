@@ -317,11 +317,13 @@ const AdminChat = () => {
             onChange={handleSearchChange}
             style={{
               marginBottom: "1rem",
-              backgroundColor: 'transparent',
-              borderBottom: 'solid 1 px white',
-              border: 'none'
+              backgroundColor: "transparent",
+              border: "none",
+              borderBottom: "1px solid white",
+              color: "white",
             }}
-            addonBefore={<SearchOutlined style={{ color: 'white' }} />}
+            addonBefore={<SearchOutlined style={{ color: "white" }} />}
+            className="custom-search-input" // Add a custom class
           />
         </div>
         <div className="user-list-items">
