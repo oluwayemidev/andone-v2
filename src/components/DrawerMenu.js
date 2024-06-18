@@ -1,9 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Drawer, Dropdown, Menu } from 'antd';
-import { HomeOutlined, InfoCircleOutlined, AppstoreOutlined, ToolOutlined, PhoneOutlined, FileSearchOutlined, SunOutlined, GlobalOutlined } from '@ant-design/icons';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Badge, Button, Drawer, Dropdown, Menu } from "antd";
+import {
+  HomeOutlined,
+  InfoCircleOutlined,
+  AppstoreOutlined,
+  ToolOutlined,
+  PhoneOutlined,
+  FileSearchOutlined,
+  MessageOutlined,
+  SunOutlined,
+  GlobalOutlined,
+} from "@ant-design/icons";
 
-const DrawerMenu = ({ visible, closeDrawer, translatedTexts, textsToTranslate, setLanguage, languageMenu }) => (
+const DrawerMenu = ({
+  visible,
+  closeDrawer,
+  translatedTexts,
+  textsToTranslate,
+  setLanguage,
+  languageMenu,
+}) => (
   <Drawer
     title="Menu"
     placement="left"
@@ -16,32 +33,52 @@ const DrawerMenu = ({ visible, closeDrawer, translatedTexts, textsToTranslate, s
         <Link to="/">{translatedTexts.home || textsToTranslate.home}</Link>
       </Menu.Item>
       <Menu.Item key="2" icon={<InfoCircleOutlined />} onClick={closeDrawer}>
-        <Link to="/about">{translatedTexts.about || textsToTranslate.about}</Link>
+        <Link to="/about">
+          {translatedTexts.about || textsToTranslate.about}
+        </Link>
       </Menu.Item>
       <Menu.Item key="3" icon={<AppstoreOutlined />} onClick={closeDrawer}>
-        <Link to="/products">{translatedTexts.products || textsToTranslate.products}</Link>
+        <Link to="/products">
+          {translatedTexts.products || textsToTranslate.products}
+        </Link>
       </Menu.Item>
       <Menu.Item key="4" icon={<ToolOutlined />} onClick={closeDrawer}>
-        <Link to="/services">{translatedTexts.services || textsToTranslate.services}</Link>
+        <Link to="/services">
+          {translatedTexts.services || textsToTranslate.services}
+        </Link>
       </Menu.Item>
       <Menu.Item key="5" icon={<PhoneOutlined />} onClick={closeDrawer}>
-        <Link to="/contact">{translatedTexts.contact || textsToTranslate.contact}</Link>
+        <Link to="/contact">
+          {translatedTexts.contact || textsToTranslate.contact}
+        </Link>
       </Menu.Item>
       <Menu.Item key="6" icon={<FileSearchOutlined />} onClick={closeDrawer}>
-        <Link to="/quotation">{translatedTexts.getQuote || textsToTranslate.getQuote}</Link>
+        <Link to="/quotation">
+          {translatedTexts.getQuote || textsToTranslate.getQuote}
+        </Link>
       </Menu.Item>
       <Menu.Item key="7" icon={<SunOutlined />} onClick={closeDrawer}>
-        <Link to="/solar-calculation">{translatedTexts.getSolarCalculation || textsToTranslate.getSolarCalculation}</Link>
+        <Link to="/solar-calculation">
+          {translatedTexts.getSolarCalculation ||
+            textsToTranslate.getSolarCalculation}
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="8" icon={<MessageOutlined />} onClick={closeDrawer}>
+        <Badge dot={{ dot: true }} offset={[10, 2]}>
+          <Link to="/chat">
+            {translatedTexts.liveChat || textsToTranslate.liveChat}
+          </Link>
+        </Badge>
       </Menu.Item>
       <Menu.Item
-            style={{
-              background: "transparent",
-            }}
-          >
-            <Dropdown overlay={languageMenu} trigger={["click"]}>
-              <Button icon={<GlobalOutlined />}>Language</Button> 
-            </Dropdown>
-          </Menu.Item>
+        style={{
+          background: "transparent",
+        }}
+      >
+        <Dropdown overlay={languageMenu} trigger={["click"]}>
+          <Button icon={<GlobalOutlined />}>Language</Button>
+        </Dropdown>
+      </Menu.Item>
     </Menu>
   </Drawer>
 );

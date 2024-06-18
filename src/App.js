@@ -54,7 +54,7 @@ const AppContent = ({
         translatedTexts={translatedTexts}
         textsToTranslate={textsToTranslate}
         setLanguage={setLanguage}
-        languageMenu={<LanguageMenu setLanguage={setLanguage} />}
+        languageMenu={<LanguageMenu closeDrawer={closeDrawer} setLanguage={setLanguage} />}
       />
       <Content style={{ margin: "0", padding: 0, minHeight: 280 }}>
         {loading ? (
@@ -84,6 +84,7 @@ const App = () => {
     contact: "Contact",
     getQuote: "Get Quote",
     getSolarCalculation: "Solar Calculator",
+    liveChat: "Live Chat",
   };
 
   useEffect(() => {

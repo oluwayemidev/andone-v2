@@ -22,7 +22,7 @@
 
 .user-chat-container .box {
   height: calc(100vh - 270px);
-  width: 100%;
+  width: 90%;
   max-width: 500px;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
@@ -91,7 +91,7 @@
   padding: 10px;
   background-color: #001529;
   height: 50px;
-  width: 100%;
+  width: 90%;
   max-width: 500px;
   justify-content: space-between;
   color: white;

@@ -1,6 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu, Button, Dropdown, Image, Grid, Space } from "antd";
+import {
+  Layout,
+  Menu,
+  Button,
+  Dropdown,
+  Image,
+  Grid,
+  Space,
+  Badge,
+} from "antd";
 import {
   HomeOutlined,
   InfoCircleOutlined,
@@ -9,6 +18,7 @@ import {
   PhoneOutlined,
   FileSearchOutlined,
   SunOutlined,
+  MessageOutlined,
   GlobalOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
@@ -95,6 +105,13 @@ const HeaderComponent = ({
               {translatedTexts.getSolarCalculation ||
                 textsToTranslate.getSolarCalculation}
             </Link>
+          </Menu.Item>
+          <Menu.Item key="8" icon={<MessageOutlined />}>
+            <Badge dot={{ dot: true }} offset={[10, 2]}>
+              <Link to="/chat" style={{ color: "#ffffffa6" }}>
+                {translatedTexts.liveChat || textsToTranslate.liveChat}
+              </Link>
+            </Badge>
           </Menu.Item>
           <Menu.Item
             style={{
