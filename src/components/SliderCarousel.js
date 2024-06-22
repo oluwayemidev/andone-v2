@@ -120,7 +120,7 @@ const SliderCarousel = ({ language = "en" }) => {
 
   return (
     <Card title="" bordered={false} className="carousel-card">
-      <Row gutter={16}>
+      <Row>
         <Col style={{ height: "80vh" }} xs={24} md={24}>
           {loading1 ? (
             <div className="skeleton-carousel">

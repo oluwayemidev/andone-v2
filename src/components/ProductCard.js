@@ -43,6 +43,7 @@ const ProductCard = ({ product, language }) => {
 
   return (
     <Card
+    className="product-card"
       hoverable
       cover={
         <img

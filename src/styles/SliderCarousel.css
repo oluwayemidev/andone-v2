@@ -1,6 +1,7 @@
 /* src/styles/SliderCarousel.css */
 .carousel-card {
   padding: 0;
+  margin: 0;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -19,7 +20,7 @@
 
 .carousel-image {
   width: 100%;
-  height: 80vh;
+  height: calc(100vh - 120px);
   min-height: 400px;
   max-height: 500px;
   object-fit: cover;
