@@ -120,7 +120,6 @@ const FeaturedProductsWidget = ({ language }) => {
           : products.map((item) => (
               <div key={item.id}>
                 <Card
-                  hoverable
                   cover={
                     <img
                       alt={item.title}
