@@ -20,6 +20,7 @@ import RecentProjectsWidget from "../components/RecentProjectsWidget";
 import MottoWidget from "../components/MottoWidget";
 import "../styles/Home.css";
 import AdvantagesWidget from "../components/AdvantagesWidget";
+import AdsBanner from "../components/AdsBanner";
 
 const Home = ({ language }) => (
   <div className="home-container">
@@ -56,6 +57,11 @@ const Home = ({ language }) => (
         {/* <Col xs={24} lg={8}>
           <SolarNewsWidget className="glass-widget" language={language} />
         </Col> */}
+      </Row>
+      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24}>
+          <AdsBanner language={language} />
+        </Col>
       </Row>
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24} lg={6}>

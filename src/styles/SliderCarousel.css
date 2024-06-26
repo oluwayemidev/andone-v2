@@ -8,6 +8,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  height: calc(100vh - 120px);
 }
 .carousel-card .ant-card-body{
   padding: 0;
@@ -21,8 +22,6 @@
 .carousel-image {
   width: 100%;
   height: calc(100vh - 120px);
-  min-height: 400px;
-  max-height: 500px;
   object-fit: cover;
   border-radius: 10px;
 }

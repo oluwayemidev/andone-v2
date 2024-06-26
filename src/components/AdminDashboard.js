@@ -227,7 +227,7 @@ const AdminDashboard = () => {
             <Link to="/admin/solar-results">Solar Results</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<SettingOutlined />} title="Customization">
-            <Menu.Item key="9" icon={<FileMarkdownOutlined />}>
+            <Menu.Item key="8" icon={<FileMarkdownOutlined />}>
               <Link to="/admin/pages">Pages</Link>
             </Menu.Item>
             <Menu.Item key="9" icon={<ToolOutlined />}>
@@ -238,7 +238,7 @@ const AdminDashboard = () => {
             </Menu.Item>
           </SubMenu>
           <Menu.Item
-            key="10"
+            key="11"
             onClick={logout}
             icon={<LogoutOutlined />}
             style={{ marginBottom: "120px" }}
