@@ -151,7 +151,7 @@ const ServicePage = ({ language }) => {
   }
 
   if (error) {
-    return <Alert message="Error" description={error} type="error" />;
+    return <Alert message="Error" style={{ margin: '50px 10%' }} description='Failed to load page because you are currently offline.' type="error" />;
   }
 
   return (

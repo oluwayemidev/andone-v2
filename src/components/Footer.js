@@ -28,10 +28,10 @@ const FooterComponent = ({ translatedTexts }) => {
   return (
     <Footer
       style={{
-        backgroundColor: "#f0f2f5",
+        backgroundColor: "#001529",
         textAlign: "center",
         padding: "10px 0",
-        borderTop: "1px solid #d9d9d9"
+        color: 'white'
       }}
     >
       <Row justify="center">
@@ -39,16 +39,16 @@ const FooterComponent = ({ translatedTexts }) => {
           <Space size="middle">
           <h2 style={{ marginTop: '7px', fontSize: "16px" }}>{translatedTexts.connectWithUs || "Connect with Us:"}</h2>
             <a href={socialMedia.facebook} target="_blank" rel="noopener noreferrer">
-              <FacebookOutlined style={{ fontSize: "20px", color: "#3b5998" }} />
+              <FacebookOutlined style={{ fontSize: "20px", color: "white" }} />
             </a>
             <a href={socialMedia.twitter} target="_blank" rel="noopener noreferrer">
-              <TwitterOutlined style={{ fontSize: "20px", color: "#00acee" }} />
+              <TwitterOutlined style={{ fontSize: "20px", color: "white" }} />
             </a>
             <a href={socialMedia.instagram} target="_blank" rel="noopener noreferrer">
-              <InstagramOutlined style={{ fontSize: "20px", color: "#c32aa3" }} />
+              <InstagramOutlined style={{ fontSize: "20px", color: "white" }} />
             </a>
             <a href={socialMedia.linkedin} target="_blank" rel="noopener noreferrer">
-              <LinkedinOutlined style={{ fontSize: "20px", color: "#0077b5" }} />
+              <LinkedinOutlined style={{ fontSize: "20px", color: "white" }} />
             </a>
           </Space>
         </Col>

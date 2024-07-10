@@ -54,15 +54,17 @@ const Home = ({ language }) => (
         <Col xs={24}>
           <AdvantagesWidget language={language} />
         </Col>
-        {/* <Col xs={24} lg={8}>
-          <SolarNewsWidget className="glass-widget" language={language} />
-        </Col> */}
       </Row>
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24}>
           <AdsBanner language={language} />
         </Col>
       </Row>
+      {/* <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24}>
+          <SolarNewsWidget className="glass-widget" language={language} />
+        </Col>
+      </Row> */}
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24} lg={6}>
           <TestimonialsWidget className="glass-widget" language={language} />

@@ -74,7 +74,7 @@ const ContactPage = ({ language }) => {
         message.error('No contact details found!');
       }
     } catch (error) {
-      message.error('Error getting contact details: ' + error.message);
+      message.warning('Error getting contact details because you are currently offline.');
     }
   };
 
