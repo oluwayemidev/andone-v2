@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../pages/firebase"; // Import Firestore instance from firebase.js
 import "../styles/ProductCard.css"; // Ensure you have the necessary CSS for styling
-import translateText from '../translationService'; // Import your translation service
+import translateText from "../translationService"; // Import your translation service
 
 const { Title, Text } = Typography;
 
@@ -16,7 +16,7 @@ const ProductCard = ({ product, language }) => {
     const fetchImages = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "images"));
-        const imagesData = querySnapshot.docs.map(doc => doc.data().url); // Assuming each document has a URL field
+        const imagesData = querySnapshot.docs.map((doc) => doc.data().url); // Assuming each document has a URL field
         setImages(imagesData);
       } catch (error) {
         console.error("Error fetching images:", error);
@@ -29,7 +29,10 @@ const ProductCard = ({ product, language }) => {
   useEffect(() => {
     const translateProductDetails = async () => {
       const translatedName = await translateText(product.name, language);
-      const translatedCategory = await translateText(product.category, language);
+      const translatedCategory = await translateText(
+        product.category,
+        language
+      );
 
       setTranslatedProduct({
         ...product,
@@ -43,26 +46,29 @@ const ProductCard = ({ product, language }) => {
 
   return (
     <Card
-    className="product-card"
+      className="product-card"
       hoverable
+      size="small"
       cover={
         <img
           alt={translatedProduct.name || product.name}
           src={product.imageUrl} // Ensure the product image URL is directly used
-          style={{ height: 200, objectFit: "cover" }}
+          style={{ height: 200, objectFit: "cover", padding: '10px' }}
         />
       }
       actions={[
-        <Button type="primary" disabled>
-          Add to Cart
-        </Button>,
+        // <Button type="primary" disabled>
+        //   Add to Cart
+        // </Button>,
         <Link to={`/products/${product.id}`}>
           <Button type="default">Details</Button>
         </Link>,
       ]}
     >
       <Title level={4}>{translatedProduct.name || product.name}</Title>
-      <Text type="secondary">{translatedProduct.category || product.category}</Text>
+      <Text type="secondary">
+        {translatedProduct.category || product.category}
+      </Text>
       <Text strong style={{ display: "block", marginTop: 8 }}>
         ${product.price}
       </Text>

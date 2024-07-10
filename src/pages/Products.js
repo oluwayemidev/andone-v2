@@ -132,7 +132,7 @@ const ProductPage = ({ language }) => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh", backgroundColor: 'white' }}>
       <Header className="header">
         <Title
           level={2}
@@ -167,17 +167,15 @@ const ProductPage = ({ language }) => {
             }}
           >
             <div className="search-container">
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={12}>
                   <Input
                     prefix={<SearchOutlined />}
                     placeholder={translatedTexts.searchPlaceholder}
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
-                    style={{ width: "100%" }}
+                    style={{  }}
+                    size="large"
                   />
-                </Col>
-                <Col xs={24} sm={12} md={12}>
+                {/* <Col xs={24} sm={12} md={12}>
                   <Select
                     value={selectedCategory}
                     onChange={handleCategoryChange}
@@ -190,8 +188,7 @@ const ProductPage = ({ language }) => {
                       </Option>
                     ))}
                   </Select>
-                </Col>
-              </Row>
+                </Col> */}
             </div>
             {loading ? (
               <div className="loading-container">
