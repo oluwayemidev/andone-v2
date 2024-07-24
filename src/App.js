@@ -18,6 +18,7 @@ import DrawerMenu from "./components/DrawerMenu";
 import StyledBackground from "./components/StyledBackground";
 import AppRoutes from "./AppRoutes";
 import "./App.css";
+import GiveawayPopup from "./components/GiveawayPopup";
 
 const { Content } = Layout;
 
@@ -147,6 +148,7 @@ const ConditionalFloatingButton = () => {
   );
   return !isAdminRoute ? (
     <>
+      <GiveawayPopup />
       <FloatingButton />
       <Tooltip title="Live Chat" placement="left" color="blue">
         <FloatButton

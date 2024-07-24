@@ -58,7 +58,12 @@ const ProductsPage = () => {
     setEditingProduct(record);
     setIsModalVisible(true);
     form.setFieldsValue(record);
-    setFileList(record.imageUrl ? [{ url: record.imageUrl, name: record.imageName }] : []);
+    setFileList(record.imageUrls ? record.imageUrls.map((url, index) => ({
+      uid: index,
+      name: record.imageNames[index],
+      status: 'done',
+      url,
+    })) : []);
   };
 
   const handleDeleteProduct = async (id) => {
@@ -74,28 +79,39 @@ const ProductsPage = () => {
   };
 
   const handleOk = async (values) => {
-    let imageUrl = '';
-    let imageName = '';
-    setLoading2(true)
+    let imageUrls = [];
+    let imageNames = [];
+    setLoading2(true);
 
     try {
-      if (fileList.length > 0 && fileList[0].originFileObj) {
-        const imageFile = fileList[0].originFileObj;
-        const imageRef = ref(storage, `images/${imageFile.name}`);
-        console.log("Uploading file:", imageFile.name);
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
-        imageName = imageFile.name;
-        console.log("File uploaded, URL:", imageUrl);
+      if (fileList.length > 0) {
+        const uploadPromises = fileList.map(file => {
+          if (file.originFileObj) {  // Only upload new files
+            const imageRef = ref(storage, `images/${file.name}`);
+            console.log("Uploading file:", file.name);
+            return uploadBytes(imageRef, file.originFileObj).then(async () => {
+              const imageUrl = await getDownloadURL(imageRef);
+              imageUrls.push(imageUrl);
+              imageNames.push(file.name);
+              console.log("File uploaded, URL:", imageUrl);
+            });
+          } else {
+            // Keep the already uploaded files
+            imageUrls.push(file.url);
+            imageNames.push(file.name);
+          }
+        });
+
+        await Promise.all(uploadPromises);
       } else if (editingProduct) {
-        imageUrl = editingProduct.imageUrl || '';
-        imageName = editingProduct.imageName || '';
+        imageUrls = editingProduct.imageUrls || [];
+        imageNames = editingProduct.imageNames || [];
       }
 
       const productData = {
         ...values,
-        imageUrl,
-        imageName,
+        imageUrls,
+        imageNames,
         createdAt: editingProduct ? editingProduct.createdAt : new Date().toISOString()
       };
 
@@ -114,7 +130,7 @@ const ProductsPage = () => {
       message.error('Error uploading product');
       console.error("Error details:", error);
     }
-    setLoading2(false)
+    setLoading2(false);
   };
 
   const handleCancel = () => {
@@ -124,9 +140,13 @@ const ProductsPage = () => {
   };
 
   const uploadProps = {
-    onRemove: () => setFileList([]),
+    multiple: true, // Allow multiple file uploads
+    onRemove: (file) => {
+      const newFileList = fileList.filter(f => f.uid !== file.uid);
+      setFileList(newFileList);
+    },
     beforeUpload: (file) => {
-      setFileList([file]);
+      setFileList([...fileList, file]);
       return false;
     },
     onChange: ({ fileList: newFileList }) => setFileList(newFileList),
@@ -202,7 +222,15 @@ const ProductsPage = () => {
         columns={columns}
         loading={loading}
         expandable={{
-          expandedRowRender: record => <p style={{ margin: 0 }}><b>Description: </b> {record.description}</p>,
+          expandedRowRender: record => (
+            <>
+              <p style={{ margin: 0 }}><b>Description: </b> {record.description}</p>
+              <p style={{ margin: 0 }}><b>Images: </b></p>
+              {record.imageUrls && record.imageUrls.map((url, index) => (
+                <img key={index} src={url} alt={record.imageNames[index]} style={{ width: 100, marginRight: 8 }} />
+              ))}
+            </>
+          ),
           rowExpandable: record => record.description !== null,
         }}
       />
@@ -233,9 +261,9 @@ const ProductsPage = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the product description!' }]}>
             <Input.TextArea rows={4} />
           </Form.Item>
-          <Form.Item label="Image">
+          <Form.Item label="Images">
             <Upload {...uploadProps} listType="picture">
-              <Button icon={<UploadOutlined />}>Upload (Max: 1)</Button>
+              <Button icon={<UploadOutlined />}>Upload (Max: 10)</Button>
             </Upload>
           </Form.Item>
           <Form.Item>

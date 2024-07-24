@@ -6,15 +6,14 @@ import {
   EditOutlined,
   SlidersOutlined,
   StarOutlined,
-  BarChartOutlined,
   InfoCircleOutlined,
   SmileOutlined,
-  CloudOutlined,
   CheckCircleOutlined,
   LikeOutlined,
   ProjectOutlined,
   QuestionCircleOutlined,
   VideoCameraOutlined,
+  GiftOutlined,
 } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -22,6 +21,7 @@ const { Title, Text } = Typography;
 const widgets = [
   { name: 'Slider Carousel', route: '/admin/widgets/slider-carousel', icon: <SlidersOutlined />, color: '#FF7F50' },
   { name: 'Featured Products', route: '/admin/widgets/featured-products', icon: <StarOutlined />, color: '#FF4500' },
+  { name: 'Giveaway Popup', route: '/admin/widgets/giveaway-popup', icon: <GiftOutlined />, color: '#FFB6C1' },
   { name: 'Company Info', route: '/admin/widgets/company-info', icon: <InfoCircleOutlined />, color: '#1E90FF' },
   // { name: 'Motto', route: '/admin/widgets/motto', icon: <SmileOutlined />, color: '#FFD700' },
   { name: 'Advantages', route: '/admin/widgets/advantages', icon: <CheckCircleOutlined />, color: '#8A2BE2' },

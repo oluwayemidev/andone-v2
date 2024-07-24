@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Typography } from "antd";
+import { Card, Button, Typography, Carousel } from "antd";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../pages/firebase"; // Import Firestore instance from firebase.js
@@ -21,6 +21,7 @@ const ProductCard = ({ product, language }) => {
       } catch (error) {
         console.error("Error fetching images:", error);
       }
+      console.log(product.imageUrls)
     };
 
     fetchImages();
@@ -50,11 +51,17 @@ const ProductCard = ({ product, language }) => {
       hoverable
       size="small"
       cover={
-        <img
-          alt={translatedProduct.name || product.name}
-          src={product.imageUrl} // Ensure the product image URL is directly used
-          style={{ height: 200, objectFit: "cover", padding: '10px' }}
-        />
+        <Carousel>
+        {product.imageUrls && product.imageUrls.map((url, index) => (
+          <div key={index}>
+            <img
+              alt={translatedProduct.name || product.name}
+              src={url}
+              style={{ height: 200, objectFit: "cover", padding: "10px" }}
+            />
+          </div>
+        ))}
+      </Carousel>
       }
       actions={[
         // <Button type="primary" disabled>

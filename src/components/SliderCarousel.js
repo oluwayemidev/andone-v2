@@ -121,7 +121,7 @@ const SliderCarousel = ({ language = "en" }) => {
   return (
     <Card title="" bordered={false} className="carousel-card">
       <Row>
-        <Col style={{ height: "80vh" }} xs={24} md={24}>
+        <Col style={{ height: "500px" }} xs={24} md={24}>
           {loading1 ? (
             <div className="skeleton-carousel">
               <Skeleton.Image active className="skeleton-image" />
@@ -171,7 +171,7 @@ const SliderCarousel = ({ language = "en" }) => {
             </Modal>
           </Col>
         ) : (
-          <Col className="cta-container" xs={24} md={10}>
+          <Col className="cta-container" xs={24} md={12}>
             {renderForm()}
           </Col>
         )}
@@ -189,11 +189,14 @@ const SliderCarousel = ({ language = "en" }) => {
           onFinish={onFinish}
           style={{ width: "100%" }}
         >
-          <Row gutter={10}>
+          <Row gutter={20}>
             <Col xs={24} sm={12}>
               <Form.Item
                 name="name"
                 label={labels.name}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,
@@ -211,6 +214,9 @@ const SliderCarousel = ({ language = "en" }) => {
               <Form.Item
                 name="email"
                 label={labels.email}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,
@@ -235,6 +241,9 @@ const SliderCarousel = ({ language = "en" }) => {
               <Form.Item
                 name="phone"
                 label={labels.phone}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,
@@ -252,6 +261,9 @@ const SliderCarousel = ({ language = "en" }) => {
               <Form.Item
                 name="location"
                 label={labels.location}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,
@@ -271,6 +283,9 @@ const SliderCarousel = ({ language = "en" }) => {
               <Form.Item
                 name="product"
                 label={labels.product}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,
@@ -292,6 +307,9 @@ const SliderCarousel = ({ language = "en" }) => {
               <Form.Item
                 name="installation_date"
                 label={labels.installation_date}
+                style={{
+                  marginBottom: 0,
+                }}
                 rules={[
                   {
                     required: true,

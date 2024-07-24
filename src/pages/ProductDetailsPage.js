@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../pages/firebase";
-import { Card, Typography, Spin, Alert, Button, Row, Col } from 'antd';
+import { Card, Typography, Spin, Alert, Button, Row, Col, Carousel } from 'antd';
 import translateText from "../translationService"; // Import your translation service
 
 const { Title, Text } = Typography;
@@ -79,11 +79,17 @@ const ProductDetailsPage = ({ language }) => {
       </Button>
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
-          <img
-            alt={product.name}
-            src={product.imageUrl}
-            style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-          />
+        <Carousel>
+        {product.imageUrls && product.imageUrls.map((url, index) => (
+          <div key={index}>
+            <img
+              alt={product.name || product.name}
+              src={url}
+              style={{ height: 200, objectFit: "cover", padding: "10px" }}
+            />
+          </div>
+        ))}
+      </Carousel>
         </Col>
         <Col xs={24} md={12}>
           <Title level={2}>{product.name}</Title>

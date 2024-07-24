@@ -55,11 +55,11 @@ const Home = ({ language }) => (
           <AdvantagesWidget language={language} />
         </Col>
       </Row>
-      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+      {/* <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24}>
           <AdsBanner language={language} />
         </Col>
-      </Row>
+      </Row> */}
       {/* <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col xs={24}>
           <SolarNewsWidget className="glass-widget" language={language} />

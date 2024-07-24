@@ -17,7 +17,7 @@
 
 .carousel-image {
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(500px);
   object-fit: cover;
   border-radius: 10px;
 }
@@ -33,7 +33,7 @@
 
 .skeleton-carousel{
   width: 100%;
-  height: calc(100vh - 120px);
+  height: calc(500px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,7 +54,7 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.774);
   color: #fff;
   padding: 10px 20px;
   border-radius: 5px;

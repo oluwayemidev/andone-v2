@@ -44,6 +44,7 @@ import Chat from './components/Chat';
 import { auth } from './pages/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Auth from './components/Auth';
+import GiveawayEditor from './components/GiveawayEditor';
 
 const AppRoutes = ({ language }) => {
   const [user] = useAuthState(auth);
@@ -84,6 +85,7 @@ const AppRoutes = ({ language }) => {
           <Route path="widgets" element={<WidgetsList language={language} />} />
           <Route path="widgets/slider-carousel" element={<SliderCarouselEditor language={language} />} />
           <Route path="widgets/featured-products" element={<FeaturedProductsFormWidget language={language} />} />
+          <Route path="widgets/giveaway-popup" element={<GiveawayEditor language={language} />} />
           <Route path="widgets/company-info" element={<CompanyInfoEditor language={language} />} />
           <Route path="widgets/advantages" element={<AdvantagesWidgetEditor language={language} />} />
           <Route path="widgets/testimonials" element={<TestimonialsWidgetEditor language={language} />} />
