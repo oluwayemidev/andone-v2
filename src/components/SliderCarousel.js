@@ -121,7 +121,7 @@ const SliderCarousel = ({ language = "en" }) => {
   return (
     <Card title="" bordered={false} className="carousel-card">
       <Row>
-        <Col style={{ height: "500px" }} xs={24} md={24}>
+        <Col style={{ height: "calc(100vh - 70px)", minHeight: "500px" }} xs={24} md={24}>
           {loading1 ? (
             <div className="skeleton-carousel">
               <Skeleton.Image active className="skeleton-image" />
@@ -171,9 +171,10 @@ const SliderCarousel = ({ language = "en" }) => {
             </Modal>
           </Col>
         ) : (
-          <Col className="cta-container" xs={24} md={12}>
-            {renderForm()}
-          </Col>
+          // <Col className="cta-container" xs={24} md={12}>
+          //   {renderForm()}
+          // </Col>
+          <div></div>
         )}
       </Row>
     </Card>

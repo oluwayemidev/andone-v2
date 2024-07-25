@@ -17,7 +17,8 @@
 
 .carousel-image {
   width: 100%;
-  height: calc(500px);
+  height: calc(100vh - 70px);
+  min-height: 500px;
   object-fit: cover;
   border-radius: 10px;
 }
